@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+*.pyc
+__pycache__/
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+alembic/versions/*.pyc
+*.log
+.DS_Store
+.turbo/
+*.tsbuildinfo

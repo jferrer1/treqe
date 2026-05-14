@@ -1,0 +1,18 @@
+[build]
+  command = "pnpm build --filter=@treqe/web"
+  publish = "apps/web/dist"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://treqe-api.railway.app/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/ws/*"
+  to = "https://treqe-api.railway.app/ws/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

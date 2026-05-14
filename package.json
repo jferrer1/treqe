@@ -1,0 +1,26 @@
+{
+  "name": "treqe",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Marketplace de segunda mano con intercambio circular inteligente",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "turbo": "^2.4.0",
+    "typescript": "^5.6.0"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
