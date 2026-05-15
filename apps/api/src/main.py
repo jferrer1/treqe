@@ -1,24 +1,21 @@
+"""Treqe API — FastAPI application."""
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
+from .database import engine, Base
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # STARTUP: Inicializar Redis listener, pool DB, etc.
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
-    # SHUTDOWN: Cerrar conexiones
+    await engine.dispose()
 
 
-app = FastAPI(
-    title="Treqe API",
-    version="0.0.1",
-    description="Marketplace de intercambio circular inteligente",
-    lifespan=lifespan,
-)
+app = FastAPI(title="Treqe API", version="0.1.0", lifespan=lifespan)
 
-# CORS — Permite frontend en Netlify y desarrollo local
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -29,16 +26,13 @@ app.add_middleware(
 
 
 @app.get("/api/health")
-async def health_check():
-    """Health check para Railway y monitoreo."""
-    return {
-        "status": "ok",
-        "version": "0.0.1",
-        "service": "treqe-api",
-    }
+async def health():
+    return {"status": "ok", "version": "0.1.0"}
 
 
-# Routers (se importan aquí para evitar circular imports)
-# Cada fase añade sus routers:
-# from .routers import auth, products, ...
-# app.include_router(auth.router)
+# Routers — Fase 1
+from .routers import auth, products, favorites
+
+app.include_router(auth.router)
+app.include_router(products.router)
+app.include_router(favorites.router)
