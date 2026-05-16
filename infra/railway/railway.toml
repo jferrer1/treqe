@@ -1,0 +1,16 @@
+# Configuración Railway — Treqe Backend
+# Docs: https://docs.railway.app/
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/api/Dockerfile"
+
+[service]
+name = "treqe-api"
+
+# Railway añade automáticamente PostgreSQL y Redis cuando los añades desde el dashboard
+# No necesitas configurarlos aquí — solo añadirlos en la UI
+
+[deploy]
+numReplicas = 1
+restartPolicyType = "ON_FAILURE"
