@@ -9,10 +9,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt cryptography
 
 # App code
 COPY src/ ./src/
 
-# Run
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Railway asigna PORT automáticamente
+EXPOSE 8000
+CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}
