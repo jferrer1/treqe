@@ -63,7 +63,40 @@ app.add_middleware(
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "version": "0.1.0"}
+    """Health check con verificación real de servicios."""
+    import sys
+    db_status = "disconnected"
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(__import__("sqlalchemy", fromlist=["text"]).text("SELECT 1"))
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {e}"
+
+    redis_status = "disconnected"
+    try:
+        from .services.redis_listener import get_listener
+        rl = get_listener()
+        if rl:
+            await rl.redis.ping()
+            redis_status = "connected"
+    except Exception:
+        pass
+
+    workers_status = "unknown"
+    try:
+        from .workers.celery_app import celery_app
+        workers_status = "configured" if celery_app else "not_configured"
+    except Exception:
+        workers_status = "not_available"
+
+    return {
+        "status": "ok",
+        "version": "0.1.0",
+        "db": db_status,
+        "redis": redis_status,
+        "workers": workers_status,
+    }
 
 
 # Routers — Todas las fases

@@ -44,3 +44,18 @@ async def get_dispute(dispute_id: str, current_user=Depends(get_current_user), d
     if not dispute:
         raise HTTPException(404, "Dispute not found")
     return dispute.to_dict()
+
+
+@router.post("/{dispute_id}/resolve")
+async def resolve_dispute(
+    dispute_id: str, resolution: str = Query(...),
+    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db),
+):
+    """Resolver disputa (admin)."""
+    dispute = (await db.execute(select(Dispute).where(Dispute.id == dispute_id))).scalar_one_or_none()
+    if not dispute:
+        raise HTTPException(404, "Dispute not found")
+    dispute.status = "resolved"
+    dispute.resolution = resolution
+    await db.commit()
+    return dispute.to_dict()

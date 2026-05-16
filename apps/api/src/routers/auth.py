@@ -7,6 +7,9 @@ from ..models.user import User
 from ..schemas.auth import RegisterRequest, LoginRequest, AuthResponse
 from ..services.auth import hash_password, verify_password, create_local_token
 from ..dependencies import get_current_user
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+bearer = HTTPBearer()
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -35,3 +38,19 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
 @router.get("/me")
 async def me(current_user: User = Depends(get_current_user)):
     return current_user.to_dict()
+
+
+@router.post("/refresh")
+async def refresh(credentials: HTTPAuthorizationCredentials = Depends(bearer)):
+    """Refrescar token JWT."""
+    from ..services.auth import decode_token, create_local_token
+    payload = decode_token(credentials.credentials)
+    if not payload:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    return {"token": create_local_token(payload["sub"])}
+
+
+@router.post("/logout")
+async def logout():
+    """Logout — el cliente descarta el token."""
+    return {"ok": True}

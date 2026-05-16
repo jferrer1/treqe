@@ -92,3 +92,31 @@ async def delete_product(product_id: str, current_user=Depends(get_current_user)
     product.status = "deleted"
     await db.commit()
     return {"ok": True}
+
+
+@router.put("/{product_id}")
+async def update_product(
+    product_id: str, title: str = Query(None), description: str = Query(None),
+    price: float = Query(None), category: str = Query(None), condition: str = Query(None),
+    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db),
+):
+    """Editar producto (solo el dueño)."""
+    result = await db.execute(select(Product).where(Product.id == product_id))
+    product = result.scalar_one_or_none()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if product.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your product")
+    if title:
+        product.title = title
+    if description is not None:
+        product.description = description
+    if price is not None:
+        product.price = price
+    if category:
+        product.category = category
+    if condition:
+        product.condition = condition
+    await db.commit()
+    await db.refresh(product)
+    return product.to_dict()

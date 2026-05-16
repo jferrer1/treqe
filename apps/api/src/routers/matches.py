@@ -111,3 +111,15 @@ async def reject_match(match_id: str, current_user=Depends(get_current_user),
         match.status = "cancelled"
     await db.commit()
     return {"ok": True}
+
+
+@router.post("/{match_id}/cancel")
+async def cancel_match(match_id: str, current_user=Depends(get_current_user),
+                       db: AsyncSession = Depends(get_db)):
+    """Cancelar participación en un match."""
+    match = (await db.execute(select(Match).where(Match.id == match_id))).scalar_one_or_none()
+    if not match:
+        raise HTTPException(404, "Match not found")
+    match.status = "cancelled"
+    await db.commit()
+    return {"ok": True}
