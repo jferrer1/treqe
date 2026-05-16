@@ -1,19 +1,31 @@
 """Treqe API — FastAPI application."""
+import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+
+# Startup logging
+print(f"[treqe] Starting API...", file=sys.stderr)
+print(f"[treqe] Python {sys.version}", file=sys.stderr)
+
 from .config import settings
+print(f"[treqe] DB: {settings.DATABASE_URL[:30]}... DEBUG={settings.DEBUG}", file=sys.stderr)
+
 from .database import engine, Base
+print(f"[treqe] DB engine created", file=sys.stderr)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("[treqe] Creating database tables...", file=sys.stderr)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    print("[treqe] Database ready", file=sys.stderr)
     yield
+    print("[treqe] Shutting down...", file=sys.stderr)
     await engine.dispose()
 
 
