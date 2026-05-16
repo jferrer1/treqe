@@ -2,9 +2,10 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# System dependencies
+# System dependencies — gcc para compilar, libpq para PostgreSQL
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
