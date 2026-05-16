@@ -7,8 +7,11 @@ from .config import settings
 # Cambiar a DATABASE_URL=postgresql+asyncpg://... en Railway
 # Si Railway da postgresql:// → convertir a postgresql+asyncpg://
 db_url = settings.DATABASE_URL
-if db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
+if db_url and db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+elif not db_url or "${" in db_url:
+    # Railway reference variables no resueltas → SQLite fallback
+    db_url = "sqlite+aiosqlite:///treqe_dev.db"
 
 engine = create_async_engine(
     db_url,

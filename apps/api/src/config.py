@@ -12,12 +12,10 @@ class Settings(BaseSettings):
     JWT_EXPIRE_MINUTES: int = 60 * 24
 
     def model_post_init(self, _context):
-        """Validar que JWT_SECRET esté configurado."""
+        """Auto-configurar JWT_SECRET si no está definido."""
         if not self.JWT_SECRET:
-            if self.DEBUG:
-                self.JWT_SECRET = "treqe-dev-secret-not-for-production"
-            else:
-                raise ValueError("JWT_SECRET must be set in production")
+            import secrets
+            self.JWT_SECRET = secrets.token_hex(32)
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "https://treqe.netlify.app", "https://treqe.es"]
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""
