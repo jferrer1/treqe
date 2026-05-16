@@ -118,23 +118,33 @@ async def test_withdraw_offer(user_b):
 
 
 @pytest.mark.asyncio
-async def test_duplicate_offer_rejected(user_b):
+async def test_duplicate_offer_rejected():
     """No se puede crear la misma oferta dos veces."""
-    r = await user_b.get("/api/products/?limit=5")
-    products = r.json()["items"]
-    my_products = [p for p in products if p["user_id"] != "demo@treqe.es"]  # aprox
-    other_products = [p for p in products if p not in my_products]
-    if not my_products or not other_products:
-        pytest.skip("Need products from different users")
-    
-    r2 = await user_b.post("/api/offers/", params={
-        "product_id_offers": my_products[0]["id"],
-        "product_id_wants": other_products[0]["id"],
-    })
-    if r2.status_code == 201:
-        # Segunda vez → 409
-        r3 = await user_b.post("/api/offers/", params={
-            "product_id_offers": my_products[0]["id"],
-            "product_id_wants": other_products[0]["id"],
-        })
-        assert r3.status_code in (201, 409)
+    async with AsyncClient(base_url=API, timeout=10) as buyer:
+        # Crear usuario fresco para este test
+        import secrets
+        email = f"dup{secrets.token_hex(4)}@treqe.es"
+        r = await buyer.post("/api/auth/register", json={"email": email, "password": "test12345678", "name": "DupTest"})
+        if r.status_code == 409:
+            r = await buyer.post("/api/auth/login", json={"email": email, "password": "test12345678"})
+        buyer.headers["Authorization"] = f"Bearer {r.json()['token']}"
+        
+        # Crear producto
+        r = await buyer.post("/api/products/", params={"title": "DupProduct", "price": 10, "category": "Otros", "condition": "good"})
+        assert r.status_code == 201
+        my_product = r.json()["id"]
+        
+        # Buscar producto de otro usuario
+        r = await buyer.get("/api/products/?limit=50")
+        others = [p for p in r.json()["items"] if p["user_id"] != r.json()["items"][0]["user_id"]]
+        if not others:
+            pytest.skip("No other users' products")
+        target = others[0]["id"]
+        
+        # Primera oferta
+        r2 = await buyer.post("/api/offers/", params={"product_id_offers": my_product, "product_id_wants": target})
+        assert r2.status_code == 201
+        
+        # Segunda oferta (misma) → 409
+        r3 = await buyer.post("/api/offers/", params={"product_id_offers": my_product, "product_id_wants": target})
+        assert r3.status_code == 409
