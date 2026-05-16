@@ -7,9 +7,17 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     DATABASE_URL: str = "sqlite+aiosqlite:///treqe_dev.db"
     REDIS_URL: str = "redis://localhost:6379"
-    JWT_SECRET: str = "treqe-dev-secret-change-in-production"
+    JWT_SECRET: str = ""  # Debe configurarse en .env o Railway
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    JWT_EXPIRE_MINUTES: int = 60 * 24
+
+    def model_post_init(self, _context):
+        """Validar que JWT_SECRET esté configurado."""
+        if not self.JWT_SECRET:
+            if self.DEBUG:
+                self.JWT_SECRET = "treqe-dev-secret-not-for-production"
+            else:
+                raise ValueError("JWT_SECRET must be set in production")
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "https://treqe.netlify.app", "https://treqe.es"]
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""

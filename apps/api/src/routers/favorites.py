@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database import get_db
 from ..models.favorite import Favorite
 from ..models.product import Product
+from ..models.user import User
 from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/api/favorites", tags=["favorites"])
@@ -21,15 +22,14 @@ async def list_favorites(current_user=Depends(get_current_user), db: AsyncSessio
         r = await db.execute(select(Product).where(Product.id == fav.product_id))
         product = r.scalar_one_or_none()
         if product and product.status == "active":
-            items.append(product.to_dict())
+            d = product.to_dict()
+            # Incluir datos del owner
+            owner_r = await db.execute(select(User).where(User.id == product.user_id))  # noqa: F821
+            owner = owner_r.scalar_one_or_none()
+            if owner:
+                d["owner"] = {"id": owner.id, "name": owner.name, "reputation": owner.reputation}
+            items.append(d)
     return {"items": items, "total": len(items)}
-
-
-@router.post("/", status_code=201)
-async def add_favorite(product_id: str = Depends(lambda: None), current_user=Depends(get_current_user),
-                       db: AsyncSession = Depends(get_db)):
-    from fastapi import Query
-    return {"error": "Use POST /api/favorites?product_id=..."}
 
 
 @router.post("/{product_id}", status_code=201)
