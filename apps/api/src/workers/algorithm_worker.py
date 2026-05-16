@@ -2,10 +2,14 @@
 import json
 import sys
 from datetime import datetime
-from redis import Redis
-from .celery_app import celery_app
 
-redis_client = Redis.from_url("redis://localhost:6379", decode_responses=True)
+try:
+    from redis import Redis
+    redis_client = Redis.from_url("redis://localhost:6379", decode_responses=True)
+except (ImportError, Exception):
+    redis_client = None
+
+from .celery_app import celery_app
 
 
 @celery_app.task(name="src.workers.algorithm_worker.run_algorithm")
@@ -38,7 +42,8 @@ def run_algorithm(trigger: str = "scheduled"):
                     "reference_id": cycle.get("id", ""),
                     "timestamp": datetime.utcnow().isoformat(),
                 }
-                redis_client.publish(f"user:{user_id}", json.dumps(notification))
+                if redis_client:
+                    redis_client.publish(f"user:{user_id}", json.dumps(notification))
         
         return {"cycles_found": len(cycles_found), "trigger": trigger}
     except Exception as e:

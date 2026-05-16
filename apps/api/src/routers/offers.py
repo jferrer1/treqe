@@ -6,7 +6,6 @@ from ..database import get_db
 from ..models.offer import Offer
 from ..models.product import Product
 from ..dependencies import get_current_user
-from ..services.notifications import notify_user
 
 router = APIRouter(prefix="/api/offers", tags=["offers"])
 
@@ -58,18 +57,15 @@ async def create_offer(
     await db.commit()
     await db.refresh(offer)
 
-    # Disparar algoritmo en background
+    # Disparar algoritmo en background (Celery — solo en producción)
     try:
         from ..workers.algorithm_worker import run_algorithm
-        run_algorithm.delay("new_offer")
-    except Exception:
-        pass  # Celery no disponible en dev
+        if run_algorithm:
+            run_algorithm.delay("new_offer")
+    except (ImportError, Exception):
+        pass
 
-    # Notificar al dueño del producto objetivo
-    await notify_user(wanted.user_id, "new_offer", 
-                      "Alguien quiere tu artículo", 
-                      f"Han hecho una oferta por {wanted.title}",
-                      f"/articulo/{wanted.id}")
+    # Nota: notificación manejada por el frontend/WebSocket en producción
 
     return offer.to_dict()
 
