@@ -7,7 +7,6 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-# Startup logging
 print(f"[treqe] Starting API...", file=sys.stderr)
 print(f"[treqe] Python {sys.version}", file=sys.stderr)
 
@@ -18,13 +17,30 @@ from .database import engine, Base
 print(f"[treqe] DB engine created", file=sys.stderr)
 
 
+# Redis listener (solo si hay Redis disponible)
+from .services import redis_listener as rl
+redis_listener = None
+if settings.REDIS_URL and "redis://" in settings.REDIS_URL:
+    try:
+        redis_listener = rl.RedisListener(settings.REDIS_URL)
+        rl._listener = redis_listener
+        print(f"[treqe] Redis listener ready", file=sys.stderr)
+    except Exception as e:
+        print(f"[treqe] Redis unavailable: {e}", file=sys.stderr)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("[treqe] Creating database tables...", file=sys.stderr)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     print("[treqe] Database ready", file=sys.stderr)
+    if redis_listener:
+        await redis_listener.start()
+        print("[treqe] Redis listener started", file=sys.stderr)
     yield
+    if redis_listener:
+        await redis_listener.stop()
     print("[treqe] Shutting down...", file=sys.stderr)
     await engine.dispose()
 
@@ -51,7 +67,7 @@ async def health():
 
 
 # Routers — Fase 1 + Fase 2
-from .routers import auth, products, favorites, purchases, payments, shipments, disputes
+from .routers import auth, products, favorites, purchases, payments, shipments, disputes, notifications
 
 app.include_router(auth.router)
 app.include_router(products.router)
@@ -60,3 +76,4 @@ app.include_router(purchases.router)
 app.include_router(payments.router)
 app.include_router(shipments.router)
 app.include_router(disputes.router)
+app.include_router(notifications.router)
