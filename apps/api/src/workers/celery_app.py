@@ -27,5 +27,10 @@ celery_app.conf.update(
             "task": "src.workers.cleanup_worker.run_cleanup",
             "schedule": 3600.0,  # cada hora
         },
+        "payment-escrow-check": {
+            "task": "src.workers.payment_worker.release_escrow",
+            "schedule": 300.0,  # cada 5 min — check pendientes
+            "kwargs": {"payment_id": "batch"},
+        },
     },
 )
