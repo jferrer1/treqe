@@ -66,8 +66,8 @@ async def health():
     return {"status": "ok", "version": "0.1.0"}
 
 
-# Routers — Fase 1 + 2 + 3
-from .routers import auth, products, favorites, purchases, payments, shipments, disputes, notifications, offers, matches, algorithm
+# Routers — Todas las fases
+from .routers import auth, products, favorites, purchases, payments, shipments, disputes, notifications, offers, matches, algorithm, reviews, users
 
 app.include_router(auth.router)
 app.include_router(products.router)
@@ -80,3 +80,5 @@ app.include_router(notifications.router)
 app.include_router(offers.router)
 app.include_router(matches.router)
 app.include_router(algorithm.router)
+app.include_router(reviews.router)
+app.include_router(users.router)
