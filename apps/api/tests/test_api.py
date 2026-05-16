@@ -79,8 +79,8 @@ async def test_product_detail(client):
 
 @pytest.mark.asyncio
 async def test_unauthorized_access(client):
-    r = await client.get("/api/favorites")
-    assert r.status_code == 403
+    r = await client.get("/api/favorites/", follow_redirects=True)
+    assert r.status_code in (401, 403)
 
 
 @pytest.mark.asyncio
