@@ -115,7 +115,7 @@ async def health():
 
 
 # Routers — Todas las fases
-from .routers import auth, products, favorites, purchases, payments, shipments, disputes, notifications, offers, matches, algorithm, reviews, users
+from .routers import auth, products, favorites, purchases, payments, shipments, disputes, notifications, offers, matches, algorithm, reviews, users, payment_methods, support
 
 app.include_router(auth.router)
 app.include_router(products.router)
@@ -130,3 +130,5 @@ app.include_router(matches.router)
 app.include_router(algorithm.router)
 app.include_router(reviews.router)
 app.include_router(users.router)
+app.include_router(payment_methods.router)
+app.include_router(support.router)

@@ -36,15 +36,32 @@ async def update_profile(
     return current_user.to_dict()
 
 
+@router.post("/avatar")
+async def upload_avatar(
+    avatar_url: str = Query(...),
+    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db),
+):
+    """Actualizar avatar del usuario."""
+    current_user.avatar_url = avatar_url
+    await db.commit()
+    return {"ok": True, "avatar_url": avatar_url}
+
+
 @router.post("/verify")
 async def verify_identity(
     dni: str = Query(...), selfie_url: str = Query(None),
     current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db),
 ):
     """Solicitar verificación de identidad."""
-    current_user.verified = False  # Queda pendiente de revisión manual
+    current_user.verified = False
     await db.commit()
     return {"status": "pending", "message": "Verification request submitted"}
+
+
+@router.get("/verify/status")
+async def verify_status(current_user=Depends(get_current_user)):
+    """Consultar estado de verificación."""
+    return {"verified": current_user.verified, "status": "verified" if current_user.verified else "pending"}
 
 
 @router.get("/{user_id}")
