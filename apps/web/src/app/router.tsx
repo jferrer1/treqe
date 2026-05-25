@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { LandingPage } from "@/pages/landing/LandingPage";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
+import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
+import { RegisterPage } from "@/pages/register/RegisterPage";
 
 // Páginas placeholder (se reemplazan en cada fase)
 const Placeholder = ({ title }: { title: string }) => (
@@ -14,12 +16,12 @@ export const router = createBrowserRouter([
   // === PÚBLICAS (SEO) ===
   { path: "/", element: <LandingPage /> },
   { path: "/catalogo", element: <CatalogPage /> },
-  { path: "/articulo/:id", element: <Placeholder title="Detalle Artículo" /> },
+  { path: "/articulo/:id", element: <ProductDetailPage /> },
   { path: "/blog", element: <Placeholder title="Blog" /> },
   { path: "/blog/:slug", element: <Placeholder title="Blog Post" /> },
 
   // === PÚBLICAS (NOINDEX) ===
-  { path: "/registro", element: <Placeholder title="Registro" /> },
+  { path: "/registro", element: <RegisterPage /> },
   { path: "/legal/aviso", element: <Placeholder title="Aviso Legal" /> },
   { path: "/legal/privacidad", element: <Placeholder title="Privacidad" /> },
   { path: "/legal/terminos", element: <Placeholder title="Términos" /> },
