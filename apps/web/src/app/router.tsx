@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { LandingPage } from "@/pages/landing/LandingPage";
+import { CatalogPage } from "@/pages/catalog/CatalogPage";
 
 // Páginas placeholder (se reemplazan en cada fase)
 const Placeholder = ({ title }: { title: string }) => (
@@ -12,7 +13,7 @@ const Placeholder = ({ title }: { title: string }) => (
 export const router = createBrowserRouter([
   // === PÚBLICAS (SEO) ===
   { path: "/", element: <LandingPage /> },
-  { path: "/catalogo", element: <Placeholder title="Catálogo" /> },
+  { path: "/catalogo", element: <CatalogPage /> },
   { path: "/articulo/:id", element: <Placeholder title="Detalle Artículo" /> },
   { path: "/blog", element: <Placeholder title="Blog" /> },
   { path: "/blog/:slug", element: <Placeholder title="Blog Post" /> },
