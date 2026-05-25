@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>treqe — Onboarding</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg:#F9F7F2; --surface:#FFF; --text:#1C1915; --text-sub:#55504B; --text-dim:#8A8580; --border:#E5E0D8; --accent:#1C1915; }
+body.dark { --bg:#130B00; --surface:#1A1206; --text:#E8E2D6; --text-sub:#B0A9A0; --text-dim:#7A7570; --border:#3A3630; --accent:#E8E2D6; }
+
+html { font-size: 17px; height: 100%; overflow: hidden; }
+body {
+  font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--text);
+  height: 100dvh; overflow: hidden; -webkit-font-smoothing: antialiased; overscroll-behavior: none;
+  transition: background 0.4s, color 0.4s;
+}
+
+.onboarding { display: flex; flex-direction: column; height: 100%; width: 100%; }
+
+.top-bar { padding: 16px 20px 8px; display: flex; justify-content: flex-end; flex-shrink: 0; }
+.skip-link {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-dim); text-decoration: none;
+}
+
+.slides-wrap { flex: 1; position: relative; overflow: hidden; }
+.slides-track { display: flex; height: 100%; transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94); will-change: transform; }
+
+.slide {
+  flex: 0 0 100%; width: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px;
+}
+
+.slide-eyebrow {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.52rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;
+}
+
+.slide-icon {
+  font-size: 3rem; margin-bottom: 24px; opacity: 0.9;
+}
+
+.slide h2 {
+  font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 600;
+  letter-spacing: -1px; text-align: center; line-height: 1.15; margin-bottom: 12px;
+}
+
+.slide h2 em { font-style: italic; font-weight: 400; color: var(--text-sub); }
+body.dark .slide h2 em { color: #B0A9A0; }
+
+.slide p {
+  font-size: 0.88rem; color: var(--text-sub); text-align: center;
+  max-width: 300px; line-height: 1.6;
+}
+body.dark .slide p { color: #B0A9A0; }
+
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 40px;
+  padding: 16px 40px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--text); color: var(--bg); border: 1px solid var(--text);
+  border-radius: 2px; cursor: pointer; text-decoration: none; transition: all 0.2s;
+}
+.cta-btn:active { transform: scale(0.96); }
+body.dark .cta-btn { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+/* Dots */
+.dots { display: flex; justify-content: center; gap: 6px; padding: 16px 0 24px; flex-shrink: 0; }
+.dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border-strong); transition: all 0.3s; }
+.dot.active { background: var(--text); width: 16px; border-radius: 3px; }
+body.dark .dot.active { background: #E8E2D6; }
+</style>
+</head>
+<body>
+
+<div class="onboarding">
+  <div class="top-bar"><a href="../v1-catalogo/" class="skip-link">Saltar</a></div>
+
+  <div class="slides-wrap" id="wrap">
+    <div class="slides-track" id="track">
+
+      <div class="slide">
+        <div class="slide-eyebrow">Bienvenido a treqe</div>
+        <div class="slide-icon">⟳</div>
+        <h2>Trueque circular:<br><em>das a uno, recibes de otro.</em></h2>
+        <p>No necesitas encontrar a alguien que quiera exactamente lo tuyo. La comunidad cierra el círculo por ti.</p>
+      </div>
+
+      <div class="slide">
+        <div class="slide-eyebrow">Cómo funciona</div>
+        <div class="slide-icon">📦</div>
+        <h2>Publica lo que<br>ya no usas.<br><em>Elige lo que quieres.</em></h2>
+        <p>El algoritmo encuentra el círculo perfecto. Con o sin dinero, tú decides.</p>
+      </div>
+
+      <div class="slide">
+        <div class="slide-eyebrow">Empieza ahora</div>
+        <div class="slide-icon">🚀</div>
+        <h2>Dale una segunda<br>vida a tus cosas.<br><em>Únete gratis.</em></h2>
+        <p>Crea tu cuenta en segundos y empieza a intercambiar.</p>
+        <a href="../v10-registro/" class="cta-btn">Crear cuenta <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dots" id="dots">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+</div>
+
+<script>
+(function(){if(localStorage.getItem('treqe-darkmode')==='true'){document.body.classList.add('dark');}})();
+
+const track=document.getElementById('track'),dots=document.querySelectorAll('.dot');
+let current=0,startX=0,total=3;
+
+function go(n){current=Math.max(0,Math.min(total-1,n));track.style.transform=`translateX(-${current*100}%)`;dots.forEach((d,i)=>d.classList.toggle('active',i===current));}
+
+const wrap=document.getElementById('wrap');
+wrap.addEventListener('touchstart',function(e){startX=e.touches[0].clientX;},{passive:true});
+wrap.addEventListener('touchend',function(e){if(!e.changedTouches.length)return;var diff=startX-e.changedTouches[0].clientX;if(Math.abs(diff)>30){go(diff>0?current+1:current-1);}},{passive:true});
+</script>
+</body>
+</html>

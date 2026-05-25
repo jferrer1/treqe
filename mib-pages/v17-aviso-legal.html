@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Aviso Legal — treqe</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== MIB DESIGN SYSTEM — LEGAL PAGE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 24px 12px;
+      background: var(--bg);
+      width: 100%;
+    }
+    .header .page-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .header a.back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header a.back-link i { font-size: 0.7rem; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dark-toggle {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: var(--border); }
+
+    @media (min-width: 600px) {
+      .header { padding: 24px 32px 12px; }
+    }
+    @media (min-width: 1024px) {
+      .header { max-width: 1200px; margin: 0 auto; padding: 32px 48px 16px; }
+    }
+
+    /* ===== LEGAL PAGE CONTENT ===== */
+    .container {
+      padding: 24px 24px 40px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .container h1 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .container .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+    .container h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-top: 28px;
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+    .container h2:first-of-type { margin-top: 0; }
+    .container p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+    .container ul, .container ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+    .container ul li, .container ol li {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.8rem;
+    }
+    .container table th, .container table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      color: var(--text-sub);
+    }
+    .container table th {
+      background: var(--surface);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+    .container strong { color: var(--text); }
+    .container a { text-decoration: underline; color: var(--text); }
+    .container .card {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--surface);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .container .card .card-icon {
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    .container .card .card-icon.green { color: #2ECC71; }
+    .container .card .card-icon.orange { color: #E67E22; }
+    .container .card .card-icon.blue { color: #3498DB; }
+
+    @media (min-width: 600px) {
+      .container { padding: 24px 32px 48px; }
+    }
+    @media (min-width: 1024px) {
+      .container { padding: 32px 48px 48px; }
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      height: 68px;
+      padding-bottom: 12px;
+      z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+      overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+    .nav-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.15s;
+      padding: 4px 0;
+      flex: 1;
+      max-width: 80px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--text); }
+    .nav-item.active i { color: var(--text); }
+    .nav-add-btn {
+      width: 42px;
+      height: 42px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
+    }
+    .nav-add-btn i {
+      font-size: 1rem;
+      color: var(--bg);
+    }
+    .nav-badge {
+      width: 5px;
+      height: 5px;
+      background: var(--text);
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      right: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+  <div class="header">
+    <a href="../v16-portada/" class="back-link"><i class="fas fa-arrow-left"></i> Volver</a>
+    <span class="page-title">Aviso Legal</span>
+    <div class="header-right">
+      <button class="dark-toggle" onclick="toggleDark()"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Aviso Legal</h1>
+    <div class="meta">Última actualización: 12 de mayo de 2026</div>
+
+    <h2>1. Datos del Responsable</h2>
+    <p>En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa:</p>
+    <p><strong>Denominación:</strong> treqe (proyecto en fase de desarrollo)<br>
+    <strong>Titular:</strong> [Nombre del titular]<br>
+    <strong>NIF/CIF:</strong> [NIF del titular]<br>
+    <strong>Domicilio:</strong> [Dirección del titular]<br>
+    <strong>Correo electrónico:</strong> legal@treqe.es</p>
+
+    <h2>2. Propiedad Intelectual e Industrial</h2>
+    <p>Todos los contenidos de esta web (textos, imágenes, logos, diseño, código fuente) son propiedad de treqe o se utilizan con licencia de sus titulares. Queda prohibida la reproducción total o parcial sin autorización expresa.</p>
+    <p>El nombre "Treqe", su logotipo y el eslogan "Intercambio en cadena" son marcas en proceso de registro.</p>
+
+    <h2>3. Finalidad de la Plataforma</h2>
+    <p>treqe es un marketplace de segunda mano que facilita el intercambio de objetos entre usuarios mediante:</p>
+    <ul>
+      <li>Compraventa directa (como Wallapop o Vinted)</li>
+      <li>Intercambio circular (trueque múltiple asistido por algoritmo)</li>
+    </ul>
+    <p>treqe actúa como intermediario tecnológico y no participa en las transacciones entre usuarios, salvo en la retención de fondos (escrow) para garantizar los intercambios.</p>
+
+    <h2>4. Exención de Responsabilidad</h2>
+    <p>treqe no se responsabiliza de:</p>
+    <ul>
+      <li>El estado real de los objetos intercambiados entre usuarios</li>
+      <li>El cumplimiento de los acuerdos entre las partes</li>
+      <li>Los daños derivados del uso incorrecto de la plataforma</li>
+      <li>La veracidad de los datos proporcionados por los usuarios</li>
+    </ul>
+
+    <h2>5. Ley Aplicable y Jurisdicción</h2>
+    <p>Las presentes condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales de [ciudad del titular], renunciando a cualquier otro fuero que pudiera corresponderles.</p>
+
+    <p style="margin-top:40px;font-size:.8rem;color:#888;">Esta página es informativa y no constituye asesoramiento legal. Consulte con un profesional para adaptarla a su situación específica.</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+  function toggleDark() {
+    document.body.classList.toggle("dark");
+    var btn = document.querySelector(".dark-toggle i");
+    if (btn) btn.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
+  }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

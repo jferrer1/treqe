@@ -1,0 +1,2317 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Catálogo</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== treqe DESIGN SYSTEM ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+    input, select { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 24px 12px;
+      background: var(--bg);
+      width: 100%;
+    }
+    .header .treqe-logo { height: 36px; width: auto; } body.dark .treqe-logo { filter: brightness(0) invert(0.85); } .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .search-icon {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      color: var(--text-sub);
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .search-icon:hover { background: var(--border); }
+    .search-icon i { font-size: 0.85rem; }
+    .search-expand {
+      position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+      display: flex; align-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: 2px;
+      background: var(--surface);
+      width: 0; overflow: hidden;
+      opacity: 0;
+      transition: width 0.25s ease, opacity 0.2s ease;
+      z-index: 10;
+      padding: 0;
+      height: 38px;
+    }
+    .search-expand.open {
+      width: 220px;
+      opacity: 1;
+      padding: 0 8px 0 14px;
+    }
+    .search-expand input {
+      border: none; outline: none; background: transparent;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem;
+      color: var(--text); width: 100%;
+    }
+    .search-expand input::placeholder { color: var(--text-dim); }
+    .search-close {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .blog-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      text-decoration: none;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .blog-link:hover { background: var(--border); }
+    .blog-link i { font-size: 0.65rem; margin-right: 6px; }
+
+    /* ===== TOOLBAR ===== */
+    .toolbar {
+      display: flex; gap: 8px;
+      padding: 8px 24px 4px;
+      align-items: center;
+    }
+    .tool-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tool-btn:hover { background: var(--border); }
+    .tool-btn:active { opacity: 0.8; }
+    .tool-btn i { font-size: 0.7rem; color: var(--text-sub); }
+
+    .sort-wrapper { position: relative; }
+    .sort-dropdown {
+      position: absolute; top: calc(100% + 4px); left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 4px;
+      min-width: 200px;
+      display: none; flex-direction: column; gap: 2px;
+      z-index: 60;
+    }
+    .sort-dropdown.open { display: flex; }
+    .sort-option {
+      display: block; width: 100%; text-align: left;
+      padding: 10px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.15s;
+    }
+    .sort-option:hover { background: var(--border); }
+    .sort-option.active { background: var(--accent); color: var(--surface); }
+
+    @media (min-width: 600px) {
+      .header { padding: 24px 32px 12px; }
+      .toolbar { padding: 8px 32px 4px; }
+    }
+    @media (min-width: 1024px) {
+      .header { max-width: 1200px; margin: 0 auto; padding: 32px 48px 16px; }
+      .toolbar { max-width: 1200px; margin: 0 auto; padding: 8px 48px 4px; }
+    }
+
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 16px 24px 12px;
+    }
+    .section-title h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .section-title span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    @media (min-width: 600px) {
+      .section-title { padding: 16px 32px 12px; }
+    }
+    @media (min-width: 1024px) {
+      .section-title { max-width: 1200px; margin: 0 auto; padding: 20px 48px 16px; }
+    }
+
+    /* ===== CATALOG GRID ===== */
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      padding: 0 24px 24px;
+    }
+
+    /* ===== ITEM CARD ===== */
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .item-card:hover { border-color: var(--border-strong); }
+    .item-card:active { opacity: 0.9; }
+
+    .item-card__image {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .item-card__image .placeholder-icon {
+      font-size: 2.5rem;
+      color: var(--text-dim);
+      opacity: 0.5;
+    }
+    .item-card__image .placeholder-icon.white { color: rgba(255,255,255,0.3); }
+    .item-card__image .price-tag {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: var(--accent);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+    }
+    .item-card__image .like-btn { position: absolute; top: 8px; left: 8px; font-size: 1.1rem; color: #C5C0B8; cursor: pointer; transition: all 0.2s; z-index: 2; background: none; border: none; }
+    .item-card__image .like-btn:active { transform: scale(0.9); }
+    .item-card__image .like-btn.liked { color: #C0392B; }
+    .item-card__image .like-btn.liked i { font-weight: 900; }
+
+    .item-card__video-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.7);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 2px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .item-card__video-badge i { font-size: 0.5rem; }
+
+    .item-card__info {
+      background: var(--bg);
+      padding: 12px 14px 14px;
+    }
+    .item-card__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .item-card__meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .item-card__meta i { font-size: 0.55rem; }
+
+    /* ===== ITEM CARD BG VARIANTS ===== */
+    .item-card:nth-child(1) .item-card__image { background: #2D2D2D; }
+    .item-card:nth-child(2) .item-card__image { background: #3A2A1A; }
+    .item-card:nth-child(3) .item-card__image { background: #1A2A3A; }
+    .item-card:nth-child(4) .item-card__image { background: #2A1A2A; }
+    .item-card:nth-child(5) .item-card__image { background: #1A3A2A; }
+    .item-card:nth-child(6) .item-card__image { background: #3A3A1A; }
+    .item-card:nth-child(7) .item-card__image { background: #2A2A3A; }
+    .item-card:nth-child(8) .item-card__image { background: #3A2A3A; }
+    .item-card:nth-child(9) .item-card__image { background: #1A1A2A; }
+    .item-card:nth-child(10) .item-card__image { background: #2A3A2A; }
+    .item-card:nth-child(11) .item-card__image { background: #3A1A1A; }
+    .item-card:nth-child(12) .item-card__image { background: #1A3A3A; }
+    .item-card:nth-child(13) .item-card__image { background: #2D3D2D; }
+    .item-card:nth-child(14) .item-card__image { background: #3A2A2A; }
+    .item-card:nth-child(15) .item-card__image { background: #1A3A1A; }
+    .item-card:nth-child(16) .item-card__image { background: #2A2A1A; }
+    .item-card:nth-child(17) .item-card__image { background: #2A3A1A; }
+    .item-card:nth-child(18) .item-card__image { background: #3A1A2A; }
+    .item-card:nth-child(19) .item-card__image { background: #1A1A3A; }
+    .item-card:nth-child(20) .item-card__image { background: #3A3A2A; }
+    .item-card:nth-child(21) .item-card__image { background: #1A2A1A; }
+    .item-card:nth-child(22) .item-card__image { background: #2D1A2A; }
+    .item-card:nth-child(23) .item-card__image { background: #3A3A3A; }
+    .item-card:nth-child(24) .item-card__image { background: #2A1A1A; }
+    .item-card:nth-child(25) .item-card__image { background: #1A2A2A; }
+    .item-card:nth-child(26) .item-card__image { background: #2D2A3A; }
+    .item-card:nth-child(27) .item-card__image { background: #3A2D1A; }
+    .item-card:nth-child(28) .item-card__image { background: #1A1A1A; }
+    .item-card:nth-child(29) .item-card__image { background: #2A3D2A; }
+    .item-card:nth-child(30) .item-card__image { background: #3A1A3A; }
+    .item-card:nth-child(31) .item-card__image { background: #1A3D3A; }
+    .item-card:nth-child(32) .item-card__image { background: #2D2A1A; }
+    .item-card:nth-child(33) .item-card__image { background: #2D2D2D; }
+    .item-card:nth-child(34) .item-card__image { background: #3A2A1A; }
+    .item-card:nth-child(35) .item-card__image { background: #1A2A3A; }
+    .item-card:nth-child(36) .item-card__image { background: #2A1A2A; }
+    .item-card:nth-child(37) .item-card__image { background: #1A3A2A; }
+    .item-card:nth-child(38) .item-card__image { background: #3A3A1A; }
+    .item-card:nth-child(39) .item-card__image { background: #2A2A3A; }
+    .item-card:nth-child(40) .item-card__image { background: #3A2A3A; }
+    .item-card:nth-child(41) .item-card__image { background: #1A1A2A; }
+    .item-card:nth-child(42) .item-card__image { background: #2A3A2A; }
+    .item-card:nth-child(43) .item-card__image { background: #3A1A1A; }
+    .item-card:nth-child(44) .item-card__image { background: #1A3A3A; }
+    .item-card:nth-child(45) .item-card__image { background: #2D3D2D; }
+    .item-card:nth-child(46) .item-card__image { background: #3A2A2A; }
+    .item-card:nth-child(47) .item-card__image { background: #1A3A1A; }
+    .item-card:nth-child(48) .item-card__image { background: #2A2A1A; }
+    .item-card:nth-child(49) .item-card__image { background: #2A3A1A; }
+    .item-card:nth-child(50) .item-card__image { background: #3A1A2A; }
+    .item-card:nth-child(51) .item-card__image { background: #1A1A3A; }
+    .item-card:nth-child(52) .item-card__image { background: #3A3A2A; }
+    .item-card:nth-child(53) .item-card__image { background: #1A2A1A; }
+    .item-card:nth-child(54) .item-card__image { background: #2D1A2A; }
+    .item-card:nth-child(55) .item-card__image { background: #3A3A3A; }
+    .item-card:nth-child(56) .item-card__image { background: #2A1A1A; }
+    .item-card:nth-child(57) .item-card__image { background: #1A2A2A; }
+    .item-card:nth-child(58) .item-card__image { background: #2D2A3A; }
+    .item-card:nth-child(59) .item-card__image { background: #3A2D1A; }
+    .item-card:nth-child(60) .item-card__image { background: #1A1A1A; }
+    .item-card:nth-child(61) .item-card__image { background: #2A3D2A; }
+    .item-card:nth-child(62) .item-card__image { background: #3A1A3A; }
+    .item-card:nth-child(63) .item-card__image { background: #1A3D3A; }
+    .item-card:nth-child(64) .item-card__image { background: #2D2A1A; }
+    .item-card:nth-child(65) .item-card__image { background: #2D2D2D; }
+    .item-card:nth-child(66) .item-card__image { background: #3A2A1A; }
+    .item-card:nth-child(67) .item-card__image { background: #1A2A3A; }
+    .item-card:nth-child(68) .item-card__image { background: #2A1A2A; }
+    .item-card:nth-child(69) .item-card__image { background: #1A3A2A; }
+    .item-card:nth-child(70) .item-card__image { background: #3A3A1A; }
+
+    /* ===== RESPONSIVE GRID ===== */
+    @media (min-width: 600px) {
+      .catalog {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 0 32px 32px;
+      }
+    }
+    @media (min-width: 1024px) {
+      .catalog {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 48px 48px;
+      }
+    }
+    @media (max-width: 380px) {
+      .catalog { gap: 12px; padding: 0 16px 16px; }
+      .item-card__info {
+      background: var(--bg); padding: 10px 12px 12px; }
+      .item-card__title { font-size: 0.78rem; }
+      .item-card__image .price-tag { font-size: 0.7rem; padding: 3px 8px; }
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .empty-state__icon {
+      width: 80px;
+      height: 80px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .empty-state__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .empty-state__text {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+      max-width: 280px;
+    }
+    .empty-state__btn {
+      padding: 12px 24px;
+      border: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .empty-state__btn:hover { background: var(--border); }
+
+    /* ===== FILTER MODAL ===== */
+    .filter-modal-overlay {
+      position: sticky;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .filter-modal-overlay.visible { display: flex; }
+    .filter-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      width: 100%;
+      max-height: 80vh;
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .filter-modal__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-modal__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .filter-modal__header button {
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center; justify-content: center;
+      color: var(--text-sub);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .filter-modal__content {
+      padding: 24px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .filter-group {
+      margin-bottom: 24px;
+    }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-group__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+    .filter-range {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .filter-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      background: var(--surface);
+    }
+    .filter-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--surface);
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-chip {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--surface);
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .filter-chip:hover { border-color: var(--border-strong); }
+    .filter-chip.active {
+      background: var(--accent);
+      color: var(--surface);
+      border-color: var(--accent);
+    }
+    .filter-modal__footer {
+      display: flex;
+      gap: 12px;
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .filter-btn {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .filter-btn--primary {
+      background: var(--accent);
+      color: var(--surface);
+      border: 1px solid var(--accent);
+    }
+    .filter-btn--secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .filter-btn--secondary:hover { background: var(--border); }
+
+    /* ===== ACTIVE FILTERS ===== */
+    .active-filters { display: none; padding: 10px 24px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .active-filters.visible { display: flex !important; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .active-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--accent);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .active-filter button {
+      width: 16px; height: 16px;
+      display: flex;
+      align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.3);
+      color: #FFF;
+      font-size: 0.55rem;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .clear-all-filters {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-sub);
+      text-decoration: underline;
+      white-space: nowrap;
+      padding: 6px 8px;
+    }
+
+    /* ===== FILTER MODAL IMPROVEMENTS ===== */
+    .filter-price-input {
+      position: relative;
+      flex: 1;
+    }
+    .filter-price-symbol {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .filter-input--price {
+      padding-left: 22px !important;
+    }
+    .filter-range-separator {
+      color: var(--text-dim);
+      font-weight: 500;
+      padding: 0 4px;
+    }
+    .filter-quick-prices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .filter-quick-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--surface);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      transition: all 0.2s;
+    }
+    .filter-quick-btn:hover { border-color: var(--border-strong); }
+    .filter-quick-btn.active {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    .filter-chips--sort {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .filter-chip { text-align: center; }
+
+    /* ===== PAGING SENTINEL ===== */
+    #pagingSentinel {
+      height: 20px;
+      text-align: center;
+      padding: 24px;
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #pagingSentinel i { font-size: 0.7rem; }
+
+    /* ===== SCORING TOOLTIP ===== */
+    .scoring-info { cursor: pointer; position: relative; }
+    .scoring-info .tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      padding: 8px 12px;
+      white-space: nowrap;
+      margin-bottom: 8px;
+      pointer-events: none;
+    }
+    .scoring-info:hover .tooltip,
+    .scoring-info:focus .tooltip { display: block; }
+
+    /* ===== DEMO NOTICE ===== */
+    .demo-notice {
+      text-align: center;
+      padding: 8px 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      background: var(--bg);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-notice i { margin-right: 6px; }
+
+    /* ===== TRADE REQUEST BUTTON ===== */
+    .trade-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      z-index: 5;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.25);
+      color: #FFF;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .trade-btn.requested { background: var(--accent); color: #FFF; border-color: var(--accent); }
+
+    /* ===== NOTIFICATION BADGE ===== */
+    .notification-btn {
+      position: relative;
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center; justify-content: center;
+      color: var(--text-sub);
+      font-size: 1rem;
+      background: transparent;
+    }
+    .notification-badge {
+      position: absolute;
+      top: 0; right: 0;
+      width: 16px; height: 16px;
+      background: #E74C3C;
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center; justify-content: center;
+      border: 2px solid var(--bg);
+    }
+
+    /* ===== MATCH BANNER ===== */
+    .match-banner { display: none !important; }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.scoring-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  background: rgba(0,0,0,0.5) !important;
+  z-index: 9999 !important;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.scoring-modal-overlay.visible {
+  display: flex !important;
+}
+
+.filter-modal-overlay.visible, .filter-modal-overlay.open, .filter-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+  .dm-toggle { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-sub); background: transparent; cursor: pointer; transition: all 0.15s; }
+  .dm-toggle:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  body.dark .item-card__image { background: #1A1206; }
+  body.dark .item-card { background: #1A1206; border-color: #3A3630; }
+  body.dark .item-card__info {
+      background: var(--bg); background: #1A1206; }
+  body.dark .item-card__title { color: #E8E2D6; }
+  body.dark .item-card__sub { color: #B0A9A0; }
+  body.dark .price-tag { background: #1A1206; color: #E8E2D6; border-color: #3A3630; }
+  body.dark .filter-pill { background: #1A1206; border-color: #3A3630; color: #B0A9A0; }
+  body.dark .filter-pill.active { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+  body.dark .tool-btn { background: #1A1206; border-color: #3A3630; color: #B0A9A0; }
+  body.dark .tool-btn:hover { border-color: #E8E2D6; color: #E8E2D6; }
+  body.dark .section-title h2 { color: #E8E2D6; }
+  body.dark .section-title span { color: #B0A9A0; }
+  body.dark .blog-link { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .blog-link:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+  body.dark .search-icon { background: #1A1206; border-color: #3A3630; color: #B0A9A0; }
+  body.dark .search-expand { background: #1A1206; border-color: #3A3630; }
+  body.dark .search-expand input { color: #E8E2D6; }
+  body.dark .sort-dropdown { background: #1A1206; border-color: #3A3630; }
+  body.dark .sort-option { color: #B0A9A0; }
+  body.dark .sort-option:hover { background: #3A3630; color: #E8E2D6; }
+  body.dark .active-filters { background: #1A1206; }
+  body.dark .filter-tag { background: #1A1206; border-color: #3A3630; color: #B0A9A0; }
+  body.dark .modal-overlay { background: rgba(0,0,0,0.7); }
+  body.dark .filter-modal { background: #1A1206; border-color: #3A3630; }
+  body.dark .filter-modal h3 { color: #E8E2D6; }
+  body.dark .filter-option { color: #E8E2D6; }
+  body.dark .filter-apply { background: #E8E2D6; color: #130B00; }
+  body.dark .filter-reset { color: #B0A9A0; }
+  body.dark .match-banner { background: #1A1206; border-color: #3A3630; }
+  body.dark .match-banner span { color: #E8E2D6; }
+  body.dark .like-btn { color: #5A5650; }
+  body.dark .dm-toggle { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .dm-toggle:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+  body.dark .treqe-logo { height: 36px; width: auto; } body.dark .treqe-logo { filter: brightness(0) invert(0.85); } .logo { color: #E8E2D6; }
+
+
+/* overlay fix */
+.filter-modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.filter-modal-overlay.visible, .filter-modal-overlay.open, .filter-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+ body.dark .treqe-logo circle { fill: #E8E2D6; }
+body.dark .like-btn.liked { color: #C0392B; }
+</style>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <a href="../v16-portada/" class="logo-link"><img class="treqe-logo" src="../../assets/treqe-logo-mib.png" alt="treqe"></a>
+    <div class="header-right">
+      
+      <a href="../v13-blog/index.html" class="blog-link"><i class="fas fa-book-open"></i>Blog</a>
+      <div class="search-icon" id="searchIcon" onclick="toggleSearch()">
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="search-expand" id="searchExpand">
+        <input type="text" placeholder="Buscar artículos..." id="searchInput">
+        <button class="search-close" onclick="toggleSearch()"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOOLBAR ===== -->
+  <div class="toolbar">
+    <button class="tool-btn" onclick="openFilters()">
+      <i class="fas fa-sliders-h"></i> Filtrar
+    </button>
+    <div class="sort-wrapper">
+      <button class="tool-btn" onclick="toggleSortDropdown()">
+        <i class="fas fa-arrow-down-wide-short"></i> Ordenar
+      </button>
+      <div class="sort-dropdown" id="sortDropdown">
+        <button class="sort-option active" data-sort="relevance" onclick="pickSortFromDropdown(this,'relevance')">Relevancia</button>
+        <button class="sort-option" data-sort="price-asc" onclick="pickSortFromDropdown(this,'price-asc')">Precio: menor a mayor</button>
+        <button class="sort-option" data-sort="price-desc" onclick="pickSortFromDropdown(this,'price-desc')">Precio: mayor a menor</button>
+        <button class="sort-option" data-sort="recent" onclick="pickSortFromDropdown(this,'recent')">Más recientes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACTIVE FILTERS ===== -->
+  <div class="active-filters" id="activeFilters"></div>
+
+  <!-- ===== SECTION TITLE ===== -->
+  <div class="section-title">
+    <h2>Descubrir</h2>
+    <span id="articleCount">70 artículos</span>
+  </div>
+
+  <!-- ===== CATALOG GRID ===== -->
+  <div class="catalog" id="catalog">
+
+    <!-- Item 1 -->
+    <div class="item-card" data-category="musica" data-subcategory="guitarras" data-price="580" onclick="goToDetail(1)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-guitar placeholder-icon white"></i>
+        <span class="price-tag">€580</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Fender Stratocaster · Muy buen estado</div>
+      </div>
+    </div>
+    <!-- Item 2 -->
+    <div class="item-card" data-category="moda" data-subcategory="relojes" data-price="250" onclick="goToDetail(2)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-clock placeholder-icon white"></i>
+        <span class="price-tag">€250</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">G-SHOCK Mudmaster · Edición limitada</div>
+      </div>
+    </div>
+    <!-- Item 3 -->
+    <div class="item-card" data-category="electronica" data-subcategory="moviles" data-price="890" onclick="goToDetail(3)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <span class="item-card__video-badge"><i class="fas fa-video"></i></span>
+        <i class="fas fa-mobile-alt placeholder-icon white"></i>
+        <span class="price-tag">€890</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">iPhone 15 Pro · 256GB · Titanio natural</div>
+      </div>
+    </div>
+    <!-- Item 4 -->
+    <div class="item-card" data-category="electronica" data-subcategory="consolas" data-price="480" onclick="goToDetail(4)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <span class="item-card__video-badge"><i class="fas fa-video"></i></span>
+        <i class="fas fa-gamepad placeholder-icon white"></i>
+        <span class="price-tag">€480</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">PlayStation 5 · Edición digital · 2 mandos</div>
+      </div>
+    </div>
+    <!-- Item 5 -->
+    <div class="item-card" data-category="electronica" data-subcategory="camaras" data-price="650" onclick="goToDetail(5)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <span class="item-card__video-badge"><i class="fas fa-video"></i></span>
+        <i class="fas fa-camera placeholder-icon white"></i>
+        <span class="price-tag">€650</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Canon EOS R · Objetivo 24-70mm · Como nueva</div>
+      </div>
+    </div>
+    <!-- Item 6 -->
+    <div class="item-card" data-category="electronica" data-subcategory="portatiles" data-price="920" onclick="goToDetail(6)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-laptop placeholder-icon white"></i>
+        <span class="price-tag">€920</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">MacBook Air M3 · 16GB · 512GB · Medianoche</div>
+      </div>
+    </div>
+    <!-- Item 7 -->
+    <div class="item-card" data-category="deporte" data-subcategory="fitness" data-price="320" onclick="goToDetail(7)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-motorcycle placeholder-icon white"></i>
+        <span class="price-tag">€320</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Casco Shoei NXR2 · Talla M · Carbono</div>
+      </div>
+    </div>
+    <!-- Item 8 -->
+    <div class="item-card" data-category="deporte" data-subcategory="bicicletas" data-price="420" onclick="goToDetail(8)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <span class="item-card__video-badge"><i class="fas fa-video"></i></span>
+        <i class="fas fa-bicycle placeholder-icon white"></i>
+        <span class="price-tag">€420</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Trek Marlin 7 · Mtb · Talla L · 2023</div>
+      </div>
+    </div>
+    <!-- Item 9 -->
+    <div class="item-card" data-category="electronica" data-subcategory="audio" data-price="380" onclick="goToDetail(9)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-headphones placeholder-icon white"></i>
+        <span class="price-tag">€380</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">AirPods Max · Azul cielo · Como nuevos</div>
+      </div>
+    </div>
+    <!-- Item 10 -->
+    <div class="item-card" data-category="musica" data-subcategory="guitarras" data-price="620" onclick="goToDetail(10)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-guitar placeholder-icon white"></i>
+        <span class="price-tag">€620</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Bajo Fender Jazz Bass · Sunrise · 2019</div>
+      </div>
+    </div>
+    <!-- Item 11 -->
+    <div class="item-card" data-category="electronica" data-subcategory="moviles" data-price="720" onclick="goToDetail(11)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-mobile-alt placeholder-icon white"></i>
+        <span class="price-tag">€720</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Samsung Galaxy S25 Ultra · 512GB · Titanium</div>
+      </div>
+    </div>
+    <!-- Item 12 -->
+    <div class="item-card" data-category="electronica" data-subcategory="accesorios" data-price="550" onclick="goToDetail(12)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-apple-alt placeholder-icon white"></i>
+        <span class="price-tag">€550</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Apple Watch Ultra 2 · Naranja · 49mm</div>
+      </div>
+    </div>
+    <!-- Item 13 -->
+    <div class="item-card" data-category="hogar" data-subcategory="muebles" data-price="180" onclick="goToDetail(13)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-couch placeholder-icon white"></i>
+        <span class="price-tag">€180</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Sofá IKEA Kivik · 3 plazas · Gris claro</div>
+      </div>
+    </div>
+    <!-- Item 14 -->
+    <div class="item-card" data-category="hogar" data-subcategory="electrodomesticos" data-price="85" onclick="goToDetail(14)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-coffee placeholder-icon white"></i>
+        <span class="price-tag">€85</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Nespresso Vertuo Next · Plata · Poco uso</div>
+      </div>
+    </div>
+    <!-- Item 15 -->
+    <div class="item-card" data-category="hogar" data-subcategory="lamparas" data-price="45" onclick="goToDetail(15)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-lightbulb placeholder-icon white"></i>
+        <span class="price-tag">€45</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Lámpara de pie IKEA · Nordviken · Blanca</div>
+      </div>
+    </div>
+    <!-- Item 16 -->
+    <div class="item-card" data-category="electronica" data-subcategory="tablets" data-price="95" onclick="goToDetail(16)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-tablet-alt placeholder-icon white"></i>
+        <span class="price-tag">€95</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Kindle Paperwhite · 11a gen · 32GB · Sin marcas</div>
+      </div>
+    </div>
+    <!-- Item 17 -->
+    <div class="item-card" data-category="moda" data-subcategory="bolsos" data-price="55" onclick="goToDetail(17)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-shopping-bag placeholder-icon white"></i>
+        <span class="price-tag">€55</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Mochila The North Face · Borealis · Negra</div>
+      </div>
+    </div>
+    <!-- Item 18 -->
+    <div class="item-card" data-category="moda" data-subcategory="zapatos" data-price="75" onclick="goToDetail(18)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-shoe-prints placeholder-icon white"></i>
+        <span class="price-tag">€75</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Nike Air Max 90 · Talla 42 · Muy buen estado</div>
+      </div>
+    </div>
+    <!-- Item 19 -->
+    <div class="item-card" data-category="deporte" data-subcategory="padel" data-price="120" onclick="goToDetail(19)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-table-tennis placeholder-icon white"></i>
+        <span class="price-tag">€120</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Palas Bullpadel · Pack 2 uds. · Usadas 3 meses</div>
+      </div>
+    </div>
+    <!-- Item 20 -->
+    <div class="item-card" data-category="deporte" data-subcategory="fitness" data-price="65" onclick="goToDetail(20)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-dumbbell placeholder-icon white"></i>
+        <span class="price-tag">€65</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Set pesas 20kg · Con mancuernas · Hierro fundido</div>
+      </div>
+    </div>
+    <!-- Item 21 -->
+    <div class="item-card" data-category="musica" data-subcategory="guitarras" data-price="210" onclick="goToDetail(21)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-guitar placeholder-icon white"></i>
+        <span class="price-tag">€210</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Guitarra acústica Yamaha F310 · Clásica · 6 cuerdas</div>
+      </div>
+    </div>
+    <!-- Item 22 -->
+    <div class="item-card" data-category="musica" data-subcategory="vinilos" data-price="120" onclick="goToDetail(22)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-compact-disc placeholder-icon white"></i>
+        <span class="price-tag">€120</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Vinilos Beatles · Colección 5 LP · Edición original</div>
+      </div>
+    </div>
+    <!-- Item 23 -->
+    <div class="item-card" data-category="musica" data-subcategory="baterias" data-price="650" onclick="goToDetail(23)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-drum placeholder-icon white"></i>
+        <span class="price-tag">€650</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Batería electrónica Roland TD-1DMK · Completa</div>
+      </div>
+    </div>
+    <!-- Item 24 -->
+    <div class="item-card" data-category="libros" data-subcategory="novelas" data-price="12" onclick="goToDetail(24)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-book placeholder-icon white"></i>
+        <span class="price-tag">€12</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Cien años de soledad · Gabriel García Márquez · Tapa dura</div>
+      </div>
+    </div>
+    <!-- Item 25 -->
+    <div class="item-card" data-category="libros" data-subcategory="novelas" data-price="45" onclick="goToDetail(25)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-book-open placeholder-icon white"></i>
+        <span class="price-tag">€45</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Harry Potter · 7 libros · Tapa blanda · Casi nuevos</div>
+      </div>
+    </div>
+    <!-- Item 26 -->
+    <div class="item-card" data-category="electronica" data-subcategory="consolas" data-price="280" onclick="goToDetail(26)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-gamepad placeholder-icon white"></i>
+        <span class="price-tag">€280</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Nintendo Switch OLED · Blanco · Como nueva</div>
+      </div>
+    </div>
+    <!-- Item 27 -->
+    <div class="item-card" data-category="electronica" data-subcategory="accesorios" data-price="85" onclick="goToDetail(27)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-keyboard placeholder-icon white"></i>
+        <span class="price-tag">€85</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Logitech MX Mechanical · Inalámbrico · Táctil</div>
+      </div>
+    </div>
+    <!-- Item 28 -->
+    <div class="item-card" data-category="moda" data-subcategory="ropa-mujer" data-price="35" onclick="goToDetail(28)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-female placeholder-icon white"></i>
+        <span class="price-tag">€35</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Vestido Zara · Talla S · Floral · Puesto 2 veces</div>
+      </div>
+    </div>
+    <!-- Item 29 -->
+    <div class="item-card" data-category="deporte" data-subcategory="fitness" data-price="55" onclick="goToDetail(29)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-skating placeholder-icon white"></i>
+        <span class="price-tag">€55</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Patines en línea · Talla 42 · Ajustables · Poco uso</div>
+      </div>
+    </div>
+    <!-- Item 30 -->
+    <div class="item-card" data-category="hogar" data-subcategory="muebles" data-price="150" onclick="goToDetail(30)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-chair placeholder-icon white"></i>
+        <span class="price-tag">€150</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Silla oficina IKEA Markus · Negro · Muy cuidada</div>
+      </div>
+    </div>
+    <!-- Item 31 -->
+    <div class="item-card" data-category="libros" data-subcategory="academicos" data-price="120" onclick="goToDetail(31)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-book placeholder-icon white"></i>
+        <span class="price-tag">€120</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Enciclopedia Salvat · 12 tomos · Completa · 2005</div>
+      </div>
+    </div>
+    <!-- Item 32 -->
+    <div class="item-card" data-category="libros" data-subcategory="comics" data-price="25" onclick="goToDetail(32)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-book-open placeholder-icon white"></i>
+        <span class="price-tag">€25</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Batman Year One · Frank Miller · Edición Deluxe</div>
+      </div>
+    </div>
+
+    <div class="item-card" data-category="bicicletas" data-subcategory="bicis-electricas" data-price="890" onclick="goToDetail(33)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-bicycle placeholder-icon white"></i>
+        <span class="price-tag">€890</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Bicicleta electrica Xiaomi · 25km/h · Autonomia 60km</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bicicletas" data-subcategory="cascos" data-price="55" onclick="goToDetail(34)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-helmet-safety placeholder-icon white"></i>
+        <span class="price-tag">€55</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Casco Specialized Align II · Talla M · Negro mate</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="audio" data-price="220" onclick="goToDetail(35)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-headphones placeholder-icon white"></i>
+        <span class="price-tag">€220</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Auriculares Sony WH-1000XM5 · Cancelacion ruido</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="tablets" data-price="520" onclick="goToDetail(36)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-tablet-alt placeholder-icon white"></i>
+        <span class="price-tag">€520</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">iPad Air M2 · 11" · 128GB · WiFi · Gris espacial</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="perifericos" data-price="180" onclick="goToDetail(37)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-desktop placeholder-icon white"></i>
+        <span class="price-tag">€180</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Monitor LG Ultrawide 29" · 2560x1080 · 75Hz</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="perifericos" data-price="95" onclick="goToDetail(38)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-keyboard placeholder-icon white"></i>
+        <span class="price-tag">€95</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Teclado mecanico Keychron Q1 · Hot-swap · Negro</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="perifericos" data-price="65" onclick="goToDetail(39)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-computer-mouse placeholder-icon white"></i>
+        <span class="price-tag">€65</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Raton Logitech G Pro X Superlight · Blanco</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="camaras" data-price="1200" onclick="goToDetail(40)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-camera placeholder-icon white"></i>
+        <span class="price-tag">€1200</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Camara Sony A7 III · 24MP · Solo cuerpo</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="camaras" data-price="850" onclick="goToDetail(41)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-plane placeholder-icon white"></i>
+        <span class="price-tag">€850</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">DJI Mini 4 Pro · Drone con 4K · Fly More Combo</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="accesorios" data-price="320" onclick="goToDetail(42)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-projector placeholder-icon white"></i>
+        <span class="price-tag">€320</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Proyector Xiaomi Mi Smart · 1080p · Android TV</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="accesorios" data-price="550" onclick="goToDetail(43)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-tv placeholder-icon white"></i>
+        <span class="price-tag">€550</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Samsung QLED 55" · 4K · Smart TV · 2023</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="consolas" data-price="380" onclick="goToDetail(44)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-gamepad placeholder-icon white"></i>
+        <span class="price-tag">€380</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Xbox Series X · 1TB · 2 mandos · Como nueva</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="consolas" data-price="150" onclick="goToDetail(45)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-gamepad placeholder-icon white"></i>
+        <span class="price-tag">€150</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Nintendo Switch Lite · Turquesa · Perfecto estado</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="portatiles" data-price="1450" onclick="goToDetail(46)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-laptop placeholder-icon white"></i>
+        <span class="price-tag">€1450</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">MacBook Pro 14" M3 Pro · 18GB · 512GB</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electronica" data-subcategory="smartwatches" data-price="180" onclick="goToDetail(47)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-clock placeholder-icon white"></i>
+        <span class="price-tag">€180</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Samsung Galaxy Watch 6 Classic · 47mm · LTE</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="moda" data-subcategory="zapatos" data-price="60" onclick="goToDetail(48)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-shoe-prints placeholder-icon white"></i>
+        <span class="price-tag">€60</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Zapatillas Nike Air Force 1 · Talla 42 · Blancas</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="moda" data-subcategory="ropa-hombre" data-price="85" onclick="goToDetail(49)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-vest placeholder-icon white"></i>
+        <span class="price-tag">€85</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Chaqueta The North Face · Talla M · Impermeable</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="moda" data-subcategory="bolsos" data-price="120" onclick="goToDetail(50)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-shopping-bag placeholder-icon white"></i>
+        <span class="price-tag">€120</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Bolso Michael Kors · Piel · Color crema</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="moda" data-subcategory="belleza" data-price="70" onclick="goToDetail(51)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-spray-can placeholder-icon white"></i>
+        <span class="price-tag">€70</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Perfume Chanel Bleu · 100ml · 90% lleno</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="moda" data-subcategory="ropa-mujer" data-price="25" onclick="goToDetail(52)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-female placeholder-icon white"></i>
+        <span class="price-tag">€25</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Vestido Mango · Talla S · Largo · Floral</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="hogar" data-subcategory="muebles" data-price="250" onclick="goToDetail(53)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-couch placeholder-icon white"></i>
+        <span class="price-tag">€250</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Sofa cama IKEA Friheten · Esquinero · Gris</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="hogar" data-subcategory="muebles" data-price="140" onclick="goToDetail(54)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-table placeholder-icon white"></i>
+        <span class="price-tag">€140</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Mesa comedor redonda · 120cm · Madera</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electrodomesticos" data-subcategory="aspiradoras" data-price="350" onclick="goToDetail(55)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-robot placeholder-icon white"></i>
+        <span class="price-tag">€350</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Robot aspirador Roomba j7+ · Base autovaciado</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electrodomesticos" data-subcategory="lavanderia" data-price="280" onclick="goToDetail(56)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-tint placeholder-icon white"></i>
+        <span class="price-tag">€280</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Lavadora Bosch Serie 4 · 8kg · 1200rpm</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electrodomesticos" data-subcategory="lavanderia" data-price="320" onclick="goToDetail(57)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-wind placeholder-icon white"></i>
+        <span class="price-tag">€320</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Secadora Balay · 7kg · Bomba de calor</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="electrodomesticos" data-subcategory="cocina" data-price="450" onclick="goToDetail(58)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-snowflake placeholder-icon white"></i>
+        <span class="price-tag">€450</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Nevera Samsung · Side by Side · 600L</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bebes" data-subcategory="carritos" data-price="180" onclick="goToDetail(59)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-baby-carriage placeholder-icon white"></i>
+        <span class="price-tag">€180</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Cochecito BabyTribe PRO · Plegable · 3 en 1</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bebes" data-subcategory="sillas-coche" data-price="95" onclick="goToDetail(60)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-car-seat placeholder-icon white"></i>
+        <span class="price-tag">€95</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Silla de coche Maxi-Cosi · Grupo 0-1</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bebes" data-subcategory="cunas" data-price="75" onclick="goToDetail(61)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-bed placeholder-icon white"></i>
+        <span class="price-tag">€75</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Cuna colecho · Madera · Regulable altura</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="deporte" data-subcategory="pesas" data-price="80" onclick="goToDetail(62)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-dumbbell placeholder-icon white"></i>
+        <span class="price-tag">€80</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Set de pesas 30kg · Mancuernas · Hierro</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="deporte" data-subcategory="padel" data-price="95" onclick="goToDetail(63)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-table-tennis placeholder-icon white"></i>
+        <span class="price-tag">€95</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Raqueta Wilson Blade 98 · 2023 · Como nueva</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="deporte" data-subcategory="fitness" data-price="500" onclick="goToDetail(64)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-person-running placeholder-icon white"></i>
+        <span class="price-tag">€500</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Cinta de correr NordicTrack · Inclinacion motorizada</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bicicletas" data-subcategory="bicis-montana" data-price="350" onclick="goToDetail(65)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-bicycle placeholder-icon white"></i>
+        <span class="price-tag">€350</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Bicicleta montana Orbea · 29" · 2022</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="bicicletas" data-subcategory="accesorios" data-price="120" onclick="goToDetail(66)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-satellite-dish placeholder-icon white"></i>
+        <span class="price-tag">€120</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Garmin Edge 530 · GPS ciclismo</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="deporte" data-subcategory="patines" data-price="45" onclick="goToDetail(67)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-skating placeholder-icon white"></i>
+        <span class="price-tag">€45</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Patines en linea · Talla 42 · Ajustables</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="hogar" data-subcategory="calefaccion" data-price="40" onclick="goToDetail(68)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-fire placeholder-icon white"></i>
+        <span class="price-tag">€40</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Manta electrica · 180x200cm · 3 niveles</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="hogar" data-subcategory="lamparas" data-price="35" onclick="goToDetail(69)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-lightbulb placeholder-icon white"></i>
+        <span class="price-tag">€35</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Lampara de techo LED · 60cm · Regulable</div>
+      </div>
+    </div>
+    <div class="item-card" data-category="deporte" data-subcategory="futbol" data-price="35" onclick="goToDetail(70)">
+      <div class="item-card__image">
+        <button class="like-btn" onclick="event.stopPropagation(); this.classList.toggle('liked');"><i class="far fa-heart"></i></button>
+        <i class="fas fa-futbol placeholder-icon white"></i>
+        <span class="price-tag">€35</span>
+      </div>
+      <div class="item-card__info">
+        <div class="item-card__title">Balon futbol Adidas Champions · Talla 5</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pagingSentinel">
+    <span id="pagingLoader"><i class="fas fa-spinner fa-pulse"></i> Cargando más artículos...</span>
+  </div>
+
+  <!-- ===== EMPTY STATE ===== -->
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <div class="empty-state__icon"><i class="fas fa-search"></i></div>
+    <div class="empty-state__title">No encontramos resultados</div>
+    <div class="empty-state__text">Prueba con otros términos o filtros diferentes</div>
+    <button class="empty-state__btn" onclick="clearSearch()">
+      <i class="fas fa-times"></i> Limpiar búsqueda
+    </button>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item active"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <!-- ===== FILTER MODAL ===== -->
+  <div class="filter-modal-overlay" id="filterModal" onclick="closeFilters()">
+    <div class="filter-modal" onclick="event.stopPropagation()">
+      <div class="filter-modal__header">
+        <span class="filter-modal__title">Filtros</span>
+        <button onclick="closeFilters()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="filter-modal__content">
+        
+        <div class="filter-group">
+          <div class="filter-group__title">Categoría</div>
+          <select class="filter-select" id="categorySelect" onchange="updateSubcategories()">
+            <option value="">Todas</option>
+            <option value="electronica">Electrónica</option>
+            <option value="moda">Moda</option>
+            <option value="deporte">Deporte</option>
+            <option value="musica">Música</option>
+            <option value="hogar">Hogar</option>
+            <option value="libros">Libros</option>
+            <option value="motor">Motor</option>
+            <option value="inmuebles">Inmuebles</option>
+            <option value="bicicletas">Bicicletas</option>
+            <option value="electrodomesticos">Electrodomésticos</option>
+            <option value="bebes">Bebés y niños</option>
+            <option value="coleccionismo">Coleccionismo</option>
+            <option value="construccion">Construcción</option>
+            <option value="industria">Industria</option>
+            <option value="empleo">Empleo</option>
+            <option value="servicios">Servicios</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+        <div class="filter-group" id="subcategoryGroup" style="display: none;">
+          <div class="filter-group__title">Subcategoría</div>
+          <select class="filter-select" id="subcategorySelect">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group__title">Precio (€)</div>
+          <div class="filter-range">
+            <div class="filter-price-input">
+              <span class="filter-price-symbol">€</span>
+              <input type="number" placeholder="0" class="filter-input filter-input--price" id="priceMin" min="0">
+            </div>
+            <span class="filter-range-separator">-</span>
+            <div class="filter-price-input">
+              <span class="filter-price-symbol">€</span>
+              <input type="number" placeholder="Max" class="filter-input filter-input--price" id="priceMax" min="0">
+            </div>
+          </div>
+          <div class="filter-quick-prices">
+            <button class="filter-quick-btn" onclick="setPriceRange(0, 50, this)">Hasta €50</button>
+            <button class="filter-quick-btn" onclick="setPriceRange(50, 200, this)">€50-200</button>
+            <button class="filter-quick-btn" onclick="setPriceRange(200, 500, this)">€200-500</button>
+            <button class="filter-quick-btn" onclick="setPriceRange(500, null, this)">+€500</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-group__title">Condición</div>
+          <div class="filter-chips">
+            <button class="filter-chip active" data-condition="any" onclick="pickCondition(this)">Cualquiera</button>
+            <button class="filter-chip" data-condition="new" onclick="pickCondition(this)">Nuevo</button>
+            <button class="filter-chip" data-condition="like-new" onclick="pickCondition(this)">Como nuevo</button>
+            <button class="filter-chip" data-condition="good" onclick="pickCondition(this)">Buen estado</button>
+            <button class="filter-chip" data-condition="used" onclick="pickCondition(this)">Usado</button>
+          </div>
+        </div>
+      </div>
+      <div class="filter-modal__footer">
+        <button class="filter-btn filter-btn--secondary" onclick="resetFilters()">Restablecer</button>
+        <button class="filter-btn filter-btn--primary" onclick="applyFilters()">Aplicar filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ===== STATE =====
+    const searchInput = document.getElementById('searchInput');
+    const catalog = document.getElementById('catalog');
+    const emptyState = document.getElementById('emptyState');
+    const items = document.querySelectorAll('.item-card');
+    let activeCategory = 'all';
+
+    // ===== CATEGORY COUNTS =====
+    function updateItemCounts() {
+      const counts = {};
+      items.forEach(item => {
+        const cat = item.dataset.category || 'all';
+        counts[cat] = (counts[cat] || 0) + 1;
+      });
+      document.querySelectorAll('.filter-pill .count').forEach(el => {
+        const cat = el.closest('.filter-pill')?.dataset.category;
+        if (cat && cat !== 'all' && counts[cat] !== undefined) {
+          el.textContent = counts[cat];
+        }
+      });
+    }
+
+    function updateArticleCount() {
+      var visible = 0;
+      var query = searchInput.value.toLowerCase().trim();
+      var modalCat = (document.getElementById('categorySelect')||{}).value || '';
+      var modalSub = (document.getElementById('subcategorySelect')||{}).value || '';
+      var priceMin = parseFloat((document.getElementById('priceMin')||{}).value) || 0;
+      var priceMax = parseFloat((document.getElementById('priceMax')||{}).value) || Infinity;
+      items.forEach(item => {
+        var cat = item.dataset.category || '';
+        var title = item.querySelector('.item-card__title').textContent.toLowerCase();
+        var itemPrice = parseFloat(item.dataset.price) || 0;
+        var subcat = item.dataset.subcategory || '';
+        var matchesCategory = activeCategory === 'all' || cat === activeCategory;
+        var matchesSearch = !query || title.includes(query);
+        var matchesModalCat = !modalCat || cat === modalCat;
+        var matchesModalSub = !modalSub || subcat === modalSub;
+        var matchesPrice = itemPrice >= priceMin && itemPrice <= priceMax;
+        if (matchesCategory && matchesSearch && matchesModalCat && matchesModalSub && matchesPrice) visible++;
+      });
+      document.getElementById('articleCount').textContent = visible + ' artículos';
+    }
+
+    function filterByCategory(category) {
+      activeCategory = category;
+      document.querySelectorAll('.filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.category === category);
+      });
+      applyCurrentFilters();
+    }
+
+    // ===== APPLY ALL FILTERS =====
+    function applyCurrentFilters() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+      items.forEach(item => {
+        const cat = item.dataset.category || '';
+        const title = item.querySelector('.item-card__title').textContent.toLowerCase();
+        const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+        const matchesSearch = !query || title.includes(query);
+        if (matchesCategory && matchesSearch) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      var sortChip = document.querySelector('[data-sort].active');
+      if (sortChip && sortChip.dataset.sort !== 'relevance') {
+        var order = sortChip.dataset.sort;
+        var catEl = document.getElementById('catalog');
+        var visibleItems = Array.from(items).filter(function(it) { return it.style.display !== 'none'; });
+        if (order === 'price-asc') {
+          visibleItems.sort(function(a, b) { return (parseFloat(a.dataset.price)||0) - (parseFloat(b.dataset.price)||0); });
+        } else if (order === 'price-desc') {
+          visibleItems.sort(function(a, b) { return (parseFloat(b.dataset.price)||0) - (parseFloat(a.dataset.price)||0); });
+        } else if (order === 'newest') {
+          visibleItems.reverse();
+        }
+        visibleItems.forEach(function(item) { catEl.appendChild(item); });
+      }
+      if (visibleCount === 0) {
+        emptyState.style.display = 'flex';
+        catalog.style.display = 'none';
+      } else {
+        emptyState.style.display = 'none';
+        catalog.style.display = 'grid';
+      }
+      updateArticleCount();
+    }
+
+    // ===== SEARCH =====
+    searchInput.addEventListener('input', applyCurrentFilters);
+    function clearSearch() {
+      searchInput.value = '';
+      applyCurrentFilters();
+      searchInput.focus();
+    }
+
+    // ===== NAVIGATION =====
+    function goToNotifs() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+    function goToHome() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToSearch() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToCatalog() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToDetail(id) { window.parent.location.href = '../v2-detalle/?id=' + id; }
+    function goToMatches() { window.parent.location.href = '../v12-mis-matches/'; }
+
+    console.log('📱 treqe v1 - Catálogo · 70 productos demo');
+
+    // ===== FILTERS =====
+    function openFilters() {
+      const modal = document.getElementById('filterModal');
+      if (modal) {
+        modal.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+      } else {
+        alert('Filtros disponibles en versión completa');
+      }
+    }
+    function closeFilters() {
+      const modal = document.getElementById('filterModal');
+      if (modal) {
+        modal.classList.remove('visible');
+        document.body.style.overflow = '';
+      }
+    }
+
+    const subcategories = {
+      electronica: ['Móviles', 'Portátiles', 'Tablets', 'Cámaras', 'Audio', 'Consolas', 'Accesorios', 'TV y Proyectores', 'Smartwatches', 'Componentes PC', 'Periféricos'],
+      moda: ['Ropa hombre', 'Ropa mujer', 'Zapatos', 'Bolsos', 'Relojes', 'Joyería', 'Vintage', 'Accesorios', 'Belleza'],
+      deporte: ['Bicicletas', 'Fitness', 'Running', 'Natación', 'Fútbol', 'Padel', 'Camping', 'Montaña y Ski', 'Baloncesto', 'Golf', 'Yoga', 'Pesas', 'Patines'],
+      musica: ['Guitarras', 'Baterías', 'Teclados', 'Vinilos', 'Equipos DJ', 'Instrumentos viento', 'Micrófonos', 'Partituras'],
+      hogar: ['Muebles', 'Decoración', 'Electrodomésticos', 'Jardín', 'Bricolaje', 'Lámparas', 'Cocina', 'Baño', 'Textiles', 'Mascotas', 'Calefacción'],
+      libros: ['Novelas', 'Cómics', 'Académicos', 'Infantil', 'Idiomas', 'Arte', 'Revistas', 'Ensayo'],
+      motor: ['Coches', 'Motos', 'Recambios coche', 'Recambios moto', 'GPS', 'Herramientas', 'Neumáticos', 'Accesorios'],
+      inmuebles: ['Pisos', 'Casas', 'Garajes', 'Locales', 'Terrenos', 'Oficinas', 'Habitaciones'],
+      bicicletas: ['Bicis montaña', 'Bicis carretera', 'Bicis eléctricas', 'Cascos', 'Componentes', 'Accesorios', 'Ropa ciclismo'],
+      electrodomesticos: ['Cocina', 'Lavandería', 'Climatización', 'Pequeño electro', 'Aspiradoras', 'Recambios'],
+      bebes: ['Ropa bebé', 'Juguetes', 'Carritos', 'Sillas coche', 'Cunas', 'Alimentación', 'Seguridad', 'Maternidad'],
+      coleccionismo: ['Antigüedades', 'Monedas', 'Sellos', 'Cromos', 'Figuras', 'Pósters', 'Postales'],
+      construccion: ['Puertas', 'Ventanas', 'Suelos', 'Pintura', 'Ferretería', 'Andamios', 'Electricidad', 'Baños'],
+      industria: ['Agricultura', 'Maquinaria', 'Herramientas', 'Recambios', 'Tractores'],
+      empleo: ['Ofertas empleo', 'Busco empleo'],
+      servicios: ['Clases', 'Limpieza', 'Mudanzas', 'Reparaciones', 'Canguros', 'Terapias', 'Fontanería', 'Electricista'],
+      otros: ['Varios']
+    };
+
+    function updateSubcategories() {
+      const category = document.getElementById('categorySelect').value;
+      const subGroup = document.getElementById('subcategoryGroup');
+      const subSelect = document.getElementById('subcategorySelect');
+      if (category && subcategories[category]) {
+        subGroup.style.display = 'block';
+        subSelect.innerHTML = '<option value="">Todas</option>' +
+          subcategories[category].map(sub => `<option value="${sub.toLowerCase().replace(/ /g, '-')}">${sub}</option>`).join('');
+      } else {
+        subGroup.style.display = 'none';
+        subSelect.innerHTML = '<option value="">Todas</option>';
+      }
+    }
+
+    function setPriceRange(min, max, el) {
+      if (!el) return;
+      document.getElementById('priceMin').value = min || '';
+      document.getElementById('priceMax').value = max || '';
+      document.querySelectorAll('.filter-quick-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function getVisibleCount() {
+      let count = 0;
+      items.forEach(item => { if (item.style.display !== 'none') count++; });
+      return count;
+    }
+
+    function applyFilters() {
+      closeFilters();
+      activeCategory = 'all';
+      const category = document.getElementById('categorySelect').value;
+      const subcategory = document.getElementById('subcategorySelect').value;
+      const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
+      const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
+      const condition = document.querySelector('[data-condition].active')?.dataset.condition || 'any';
+      const query = searchInput.value.toLowerCase().trim();
+
+      let visibleCount = 0;
+      items.forEach(item => {
+        const itemPrice = parseFloat(item.dataset.price) || 0;
+        const itemCat = item.dataset.category || '';
+        const itemSubcat = item.dataset.subcategory || '';
+        const title = item.querySelector('.item-card__title').textContent.toLowerCase();
+        const matchesCategory = !category || itemCat === category;
+        const matchesSubcategory = !subcategory || itemSubcat === subcategory;
+        const matchesPrice = itemPrice >= priceMin && itemPrice <= priceMax;
+        const matchesSearch = !query || title.includes(query);
+        if (matchesCategory && matchesSubcategory && matchesPrice && matchesSearch) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      var sortChip = document.querySelector('[data-sort].active');
+      if (sortChip && sortChip.dataset.sort !== 'relevance') {
+        var order = sortChip.dataset.sort;
+        var catEl = document.getElementById('catalog');
+        var visibleItems = Array.from(items).filter(function(it) { return it.style.display !== 'none'; });
+        if (order === 'price-asc') {
+          visibleItems.sort(function(a, b) { return (parseFloat(a.dataset.price)||0) - (parseFloat(b.dataset.price)||0); });
+        } else if (order === 'price-desc') {
+          visibleItems.sort(function(a, b) { return (parseFloat(b.dataset.price)||0) - (parseFloat(a.dataset.price)||0); });
+        } else if (order === 'newest') {
+          visibleItems.reverse();
+        }
+        visibleItems.forEach(function(item) { catEl.appendChild(item); });
+      }
+
+      if (visibleCount === 0) {
+        emptyState.style.display = 'flex';
+        catalog.style.display = 'none';
+      } else {
+        emptyState.style.display = 'none';
+        catalog.style.display = 'grid';
+      }
+      updateArticleCount();
+
+      const activeFiltersEl = document.getElementById('activeFilters');
+      let filtersHTML = '';
+      if (category) filtersHTML += `<div class="active-filter" data-filter="category"><span>${document.getElementById('categorySelect').options[document.getElementById('categorySelect').selectedIndex].text}</span><button onclick="removeFilter('category')"><i class="fas fa-times"></i></button></div>`;
+      if (priceMin > 0 || priceMax < Infinity) filtersHTML += `<div class="active-filter" data-filter="price"><span>€${priceMin || 0} - €${priceMax === Infinity ? '∞' : priceMax}</span><button onclick="removeFilter('price')"><i class="fas fa-times"></i></button></div>`;
+      if (condition !== 'any') filtersHTML += `<div class="active-filter" data-filter="condition"><span>${document.querySelector('[data-condition].active').textContent}</span><button onclick="removeFilter('condition')"><i class="fas fa-times"></i></button></div>`;
+
+      if (filtersHTML) {
+        activeFiltersEl.innerHTML = filtersHTML + '<button class="clear-all-filters" onclick="clearAllFilters()">Limpiar todo</button>';
+        activeFiltersEl.classList.add('visible');
+        activeFiltersEl.style.padding = '10px ' + (window.innerWidth >= 1024 ? '48px' : window.innerWidth >= 600 ? '32px' : '24px') + ' 14px ' + (window.innerWidth >= 1024 ? '48px' : window.innerWidth >= 600 ? '32px' : '24px');
+        if (window.innerWidth >= 1024) { activeFiltersEl.style.maxWidth = '1200px'; activeFiltersEl.style.margin = '0 auto'; } else { activeFiltersEl.style.maxWidth = ''; activeFiltersEl.style.margin = ''; }
+      } else {
+        activeFiltersEl.innerHTML = '';
+        activeFiltersEl.classList.remove('visible');
+      }
+      console.log('Filtros aplicados:', { category, subcategory, priceMin, priceMax, condition, resultados: getVisibleCount() });
+    }
+
+    function removeFilter(filterType) {
+      if(filterType==='price'){var pm=document.getElementById('priceMin');pm.style.border='3px solid green';setTimeout(function(){pm.style.border='';},2000);}
+      if (filterType === 'category') {
+        document.getElementById('categorySelect').value = '';
+        document.getElementById('subcategorySelect').value = '';
+        updateSubcategories();
+      }
+      if (filterType === 'subcategory') {
+        document.getElementById('subcategorySelect').value = '';
+      }
+      if (filterType === 'price') {
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        document.querySelectorAll('.filter-quick-btn').forEach(b => b.classList.remove('active'));
+      }
+      if (filterType === 'condition') {
+        document.querySelectorAll('[data-condition]').forEach(c => c.classList.remove('active'));
+        var ac = document.querySelector('[data-condition="any"]'); if(ac) ac.classList.add('active');
+      }
+      applyFilters();
+      var af = document.getElementById('activeFilters');
+      if (af && af.querySelectorAll('.active-filter').length === 0) {
+        af.innerHTML = '';
+        af.classList.remove('visible');
+      }
+    }
+    function clearAllFilters() {
+      var cs=document.getElementById('categorySelect'),ss=document.getElementById('subcategorySelect');
+      if(cs)cs.value='';if(ss)ss.value='';updateSubcategories();
+      var pm=document.getElementById('priceMin'),px=document.getElementById('priceMax');
+      if(pm)pm.value='';if(px)px.value='';
+      document.querySelectorAll('.filter-quick-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('[data-condition]').forEach(c=>c.classList.remove('active'));
+      var ac=document.querySelector('[data-condition="any"]');if(ac)ac.classList.add('active');
+      document.querySelectorAll('.filter-chips--sort .filter-chip').forEach(c=>c.classList.remove('active'));
+      var rs=document.querySelector('[data-sort="relevance"]');if(rs)rs.classList.add('active');
+      document.querySelectorAll('.item-card').forEach(i=>i.style.display='');
+      var af=document.getElementById('activeFilters');if(af){af.innerHTML='';af.style.padding = ''; af.style.maxWidth = ''; af.style.margin = '';}
+      document.getElementById('filterModal').classList.remove('visible');
+      document.body.style.overflow='';
+      activeCategory='all';
+      applyCurrentFilters();
+    }
+    function resetFilters() { clearAllFilters(); }
+
+    // ===== PAGING =====
+    const BATCH_SIZE = 20;
+    let currentBatch = 0;
+    const pageItems = Array.from(document.querySelectorAll('.item-card'));
+    const pageTotal = pageItems.length;
+
+    function showChunk(num) {
+        const end = Math.min((num + 1) * BATCH_SIZE, pageTotal);
+        pageItems.forEach((item, i) => {
+            item.style.display = (i < end) ? '' : 'none';
+        });
+        currentBatch = num;
+        updateArticleCount();
+        updateItemCounts();
+    }
+
+    function loadChunk() {
+        const next = currentBatch + 1;
+        const end = Math.min((next + 1) * BATCH_SIZE, pageTotal);
+        if (end > currentBatch * BATCH_SIZE) {
+            for (let i = currentBatch * BATCH_SIZE; i < end; i++) {
+                pageItems[i].style.display = '';
+            }
+            currentBatch = next;
+            if (end >= pageTotal) {
+                const loader = document.getElementById('pagingLoader');
+                if (loader) loader.style.display = 'none';
+            }
+            updateArticleCount();
+            updateItemCounts();
+        }
+    }
+
+    let isLoading = false;
+    window.addEventListener('scroll', function() {
+        if (isLoading) return;
+        const sentinel = document.getElementById('pagingSentinel');
+        if (!sentinel || sentinel.style.display === 'none') return;
+        const rect = sentinel.getBoundingClientRect();
+        var isNearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200;
+        if (isNearBottom) {
+            isLoading = true;
+            loadChunk();
+            setTimeout(function() { isLoading = false; }, 800);
+        }
+    });
+
+    const origFilter = filterByCategory;
+    filterByCategory = function(cat) {
+        pageItems.forEach(i => i.style.display = '');
+        origFilter(cat);
+        if (cat === 'all') showChunk(currentBatch);
+    };
+
+    showChunk(0);
+    updateItemCounts();
+    updateArticleCount();
+
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+
+    function pickSort(chip){
+      var sort = chip.dataset.sort;
+      chip.parentElement.parentElement.querySelectorAll(".filter-chip").forEach(function(c){c.classList.remove("active")});
+      chip.classList.add("active");
+      pickSortFromDropdown(chip, sort);
+    }
+    function pickCondition(chip){
+      chip.parentElement.querySelectorAll(".filter-chip").forEach(function(c){c.classList.remove("active")});
+      chip.classList.add("active");
+    }
+
+    function toggleSearch() {
+      var icon = document.getElementById('searchIcon');
+      var expand = document.getElementById('searchExpand');
+      var input = document.getElementById('searchInput');
+      if (expand.classList.contains('open')) {
+        expand.classList.remove('open');
+        setTimeout(function() { icon.style.opacity = '1';
+        var blog = document.querySelector('.blog-link'); if(blog) blog.style.opacity = '1'; }, 200);
+        if (typeof onSearchInput === 'function') { input.value = ''; onSearchInput(); }
+      } else {
+        icon.style.opacity = '0';
+        var blog = document.querySelector('.blog-link'); if(blog) blog.style.opacity = '0';
+        expand.classList.add('open');
+        setTimeout(function() { input.focus(); }, 300);
+      }
+    }
+    function toggleSortDropdown() {
+      var dd = document.getElementById('sortDropdown');
+      dd.classList.toggle('open');
+    }
+    function pickSortFromDropdown(btn, sort) {
+      var dd = document.getElementById('sortDropdown');
+      dd.querySelectorAll('.sort-option').forEach(function(o) { o.classList.remove('active'); });
+      btn.classList.add('active');
+      dd.classList.remove('open');
+      var items = Array.from(document.querySelectorAll('.item-card'));
+      var visible = items.filter(function(i) { return i.style.display !== 'none'; });
+      var catalog = document.getElementById('catalog');
+      if (sort === 'price-asc') {
+        visible.sort(function(a, b) { return (parseFloat(a.dataset.price)||0) - (parseFloat(b.dataset.price)||0); });
+      } else if (sort === 'price-desc') {
+        visible.sort(function(a, b) { return (parseFloat(b.dataset.price)||0) - (parseFloat(a.dataset.price)||0); });
+      } else if (sort === 'recent') {
+        visible.reverse();
+      }
+      visible.forEach(function(item) { catalog.appendChild(item); });
+    }
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('sortDropdown');
+      var wrapper = document.querySelector('.sort-wrapper');
+      if (dd && wrapper && !wrapper.contains(e.target)) {
+        dd.classList.remove('open');
+      }
+    });
+
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var q = params.get('search');
+      if (q) {
+        var input = document.getElementById('searchInput');
+        input.value = q;
+        if (typeof applyCurrentFilters === 'function') applyCurrentFilters();
+      }
+    })();
+
+    // Trade Request Buttons
+    (function(){
+      var requested = JSON.parse(localStorage.getItem('treqe_trade_requests') || '[]');
+      document.querySelectorAll('.item-card').forEach(function(card){
+        var onclick = card.getAttribute('onclick');
+        var idMatch = onclick && onclick.match(/goToDetail\((\d+)\)/);
+        if (!idMatch) return;
+        var id = idMatch[1];
+        var isReq = requested.indexOf(id) !== -1;
+        var btn = document.createElement('button');
+        btn.className = 'trade-btn' + (isReq ? ' requested' : '');
+        btn.innerHTML = '<i class="fas fa-exchange-alt"></i>';
+        btn.setAttribute('aria-label', 'Solicitar trueque');
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          if (window.parent && window.parent.location) {
+            window.parent.location.href = '../v2-detalle/?id=' + id;
+          } else {
+            window.location.href = '../v2-detalle/?id=' + id;
+          }
+        });
+        var img = card.querySelector(".item-card__image");
+        if (img) { img.style.position = "relative"; img.appendChild(btn); }
+      });
+    })();
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

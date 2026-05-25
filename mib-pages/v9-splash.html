@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>treqe</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --bg:#F9F7F2; --surface:#FFF; --text:#1C1915; --text-sub:#55504B; --text-dim:#8A8580; --border:#E5E0D8; --accent:#1C1915; }
+body.dark { --bg:#130B00; --surface:#1A1206; --text:#E8E2D6; --text-sub:#B0A9A0; --text-dim:#7A7570; --border:#3A3630; --accent:#E8E2D6; }
+
+html { font-size: 17px; height: 100%; overflow: hidden; }
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg); color: var(--text);
+  height: 100dvh; overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  transition: background 0.4s, color 0.4s;
+}
+
+.splash { display: flex; flex-direction: column; height: 100%; width: 100%; }
+
+/* Top logo row */
+.top-bar { padding: 20px 24px; flex-shrink: 0; }
+.top-bar img { height: 36px; width: auto; }
+body.dark .top-bar img { filter: brightness(0) invert(0.85); }
+
+/* Slides */
+.slides-wrap { flex: 1; position: relative; overflow: hidden; }
+.slides-track {
+  display: flex; height: 100%;
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.slide {
+  flex: 0 0 100%; width: 100%;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 0 32px calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+.slide-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.52rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.slide h1 {
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  font-weight: 600; letter-spacing: -2px;
+  line-height: 1.08; margin-bottom: 8px;
+}
+
+.slide h1 em {
+  font-style: italic; font-weight: 400;
+  display: block; font-size: 0.85em;
+  letter-spacing: -1px; color: var(--text-sub);
+  margin-top: 4px;
+}
+body.dark .slide h1 em { color: #B0A9A0; }
+
+.slide p {
+  font-size: 0.88rem; color: var(--text-sub);
+  line-height: 1.6; max-width: 300px;
+  margin-top: 16px;
+}
+body.dark .slide p { color: #B0A9A0; }
+
+/* Grid decoration — mmddyyyy-inspired */
+.slide-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px; margin: 32px 0 0;
+  max-width: 280px;
+}
+.slide-grid .cell {
+  aspect-ratio: 1; border-radius: 1px;
+  background: var(--border);
+}
+body.dark .slide-grid .cell { background: #2A2520; }
+.slide-grid .cell.filled { background: var(--text); }
+body.dark .slide-grid .cell.filled { background: #E8E2D6; }
+.slide-grid .cell.highlight { background: var(--text); opacity: 0.3; }
+
+/* CTA */
+.slide-cta-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 32px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+  padding: 14px 28px; border: 1px solid var(--text);
+  border-radius: 2px; transition: all 0.2s;
+}
+.slide-cta-link:active { background: var(--text); color: var(--bg); }
+body.dark .slide-cta-link { color: #E8E2D6; border-color: #E8E2D6; }
+
+/* Bottom bar: dots + skip */
+.bottom-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 24px; flex-shrink: 0;
+}
+
+.dots { display: flex; gap: 6px; }
+.dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--border-strong); transition: all 0.3s;
+}
+.dot.active { background: var(--text); width: 16px; border-radius: 3px; }
+body.dark .dot.active { background: #E8E2D6; }
+
+.skip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.55rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-dim);
+  text-decoration: none;
+}
+body.dark .skip { color: #7A7570; }
+
+.slide-grid .cell { transition: background 0.6s ease; }
+.slide-grid .cell.flow { background: var(--text); animation: cellFlow 3s infinite; }
+@keyframes cellFlow {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="splash">
+
+  <div class="top-bar">
+    <img src="../../assets/treqe-logo-mib.png" alt="treqe">
+  </div>
+
+  <div class="slides-wrap" id="wrap">
+    <div class="slides-track" id="track">
+
+      <!-- Slide 1 -->
+      <div class="slide">
+        <div class="slide-eyebrow">Intercambio circular</div>
+        <h1><strong>Trueque circular:</strong><br>das a uno,<br>recibes de otro.</h1>
+        <p>El intercambio que no necesita coincidir.</p>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="slide">
+        <div class="slide-eyebrow">En 3 pasos</div>
+        <h1>Publica.<br>Elige.<br><em>Recibe.</em></h1>
+        <p>Tú solo tienes que publicar y elegir. Nosotros encontramos el trueque perfecto.</p>
+        <div class="slide-grid">
+          <div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div><div class="cell filled"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell highlight"></div><div class="cell highlight"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+      </div>
+
+      <!-- Slide 3 — CTA -->
+      <div class="slide">
+        <div class="slide-eyebrow">Empieza ahora</div>
+        <h1>Dale una<br>segunda vida<br><em>a tus cosas.</em></h1>
+        <p>Únete a la comunidad de intercambio.</p>
+        <a href="../v10-registro/" class="slide-cta-link">Crear cuenta <i class="fas fa-arrow-right" style="font-size:0.55rem;"></i></a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="dots" id="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <a href="../v1-catalogo/" class="skip">Saltar</a>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+const track = document.getElementById('track');
+const dots = document.querySelectorAll('.dot');
+let current = 0, total = 3, startX = 0;
+
+function go(n) {
+  current = Math.max(0, Math.min(total - 1, n));
+  track.style.transform = `translateX(-${current * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+wrap.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, {passive: true});
+wrap.addEventListener('touchend', function(e) {
+  if (!e.changedTouches.length) return;
+  var diff = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 30) { go(diff > 0 ? current + 1 : current - 1); }
+}, {passive: true});
+
+setTimeout(function() { if (current === 0) go(1); }, 4000);
+
+// Cell animation for slide 2
+(function() {
+  var cells = document.querySelectorAll('.slide-grid .cell');
+  if (!cells.length) return;
+  var filled = Array.from(cells).filter(function(c) { return c.classList.contains('filled'); });
+  var empty = Array.from(cells).filter(function(c) { return !c.classList.contains('filled') && !c.classList.contains('highlight'); });
+  var allCells = filled.concat(empty);
+  var idx = 0;
+  setInterval(function() {
+    allCells.forEach(function(c) { c.classList.remove('flow'); });
+    if (idx < filled.length) {
+      filled[idx].classList.add('flow');
+    }
+    if (idx < empty.length) {
+      empty[idx].classList.add('flow');
+    }
+    var exchangeIdx = (idx + 3) % filled.length;
+    if (exchangeIdx < filled.length) filled[exchangeIdx].classList.add('flow');
+    if (idx < empty.length) empty[(idx + 1) % empty.length].classList.add('flow');
+    idx = (idx + 1) % Math.max(filled.length, empty.length);
+  }, 1200);
+})();
+
+</script>
+</body>
+</html>

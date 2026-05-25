@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Términos y Condiciones — treqe</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== MIB DESIGN SYSTEM — LEGAL PAGE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 24px 12px;
+      background: var(--bg);
+      width: 100%;
+    }
+    .header .page-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .header a.back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header a.back-link i { font-size: 0.7rem; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dark-toggle {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: var(--border); }
+
+    @media (min-width: 600px) {
+      .header { padding: 24px 32px 12px; }
+    }
+    @media (min-width: 1024px) {
+      .header { max-width: 1200px; margin: 0 auto; padding: 32px 48px 16px; }
+    }
+
+    /* ===== LEGAL PAGE CONTENT ===== */
+    .container {
+      padding: 24px 24px 40px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .container h1 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .container .meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+    .container h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-top: 28px;
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+    .container h2:first-of-type { margin-top: 0; }
+    .container p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+    .container ul, .container ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+    .container ul li, .container ol li {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.8rem;
+    }
+    .container table th, .container table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      color: var(--text-sub);
+    }
+    .container table th {
+      background: var(--surface);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+    .container strong { color: var(--text); }
+    .container a { text-decoration: underline; color: var(--text); }
+    .container .card {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--surface);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .container .card .card-icon {
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    .container .card .card-icon.green { color: #2ECC71; }
+    .container .card .card-icon.orange { color: #E67E22; }
+    .container .card .card-icon.blue { color: #3498DB; }
+
+    @media (min-width: 600px) {
+      .container { padding: 24px 32px 48px; }
+    }
+    @media (min-width: 1024px) {
+      .container { padding: 32px 48px 48px; }
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      height: 68px;
+      padding-bottom: 12px;
+      z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+      overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+    .nav-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.15s;
+      padding: 4px 0;
+      flex: 1;
+      max-width: 80px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active { color: var(--text); }
+    .nav-item.active i { color: var(--text); }
+    .nav-add-btn {
+      width: 42px;
+      height: 42px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
+    }
+    .nav-add-btn i {
+      font-size: 1rem;
+      color: var(--bg);
+    }
+    .nav-badge {
+      width: 5px;
+      height: 5px;
+      background: var(--text);
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      right: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+  <div class="header">
+    <a href="../v16-portada/" class="back-link"><i class="fas fa-arrow-left"></i> Volver</a>
+    <span class="page-title">Términos</span>
+    <div class="header-right">
+      <button class="dark-toggle" onclick="toggleDark()"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Términos y Condiciones</h1>
+    <div class="meta">Última actualización: 12 de mayo de 2026</div>
+
+    <h2>1. Aceptación</h2>
+    <p>Al registrarte y usar treqe aceptas estos términos. Si no estás de acuerdo, no uses la plataforma.</p>
+
+    <h2>2. Descripción del Servicio</h2>
+    <p>treqe es una plataforma que conecta a personas para intercambiar objetos de segunda mano. Ofrece dos modalidades:</p>
+    <ul>
+      <li><strong>Compra directa:</strong> pagas un precio fijo por un artículo</li>
+      <li><strong>Intercambio circular:</strong> ofreces tus artículos a cambio de otros, con o sin compensación económica</li>
+    </ul>
+    <p>treqe actúa como intermediario tecnológico. No participa en la negociación, no posee los artículos y no actúa como vendedor ni comprador.</p>
+
+    <h2>3. Requisitos del Usuario</h2>
+    <ul>
+      <li>Ser mayor de 18 años o tener autorización de un tutor legal</li>
+      <li>Proporcionar datos veraces durante el registro</li>
+      <li>No utilizar la plataforma para actividades ilegales</li>
+      <li>Mantener la confidencialidad de tu cuenta</li>
+    </ul>
+
+    <h2>4. Publicación de Artículos</h2>
+    <ul>
+      <li>Los artículos deben ser reales, existentes y descritos con precisión</li>
+      <li>No se permiten artículos ilegales, peligrosos o prohibidos (armas, drogas, animales, etc.)</li>
+      <li>Las fotos deben ser reales del artículo, no imágenes de catálogo</li>
+      <li>treqe se reserva el derecho de eliminar artículos que incumplan estas normas</li>
+    </ul>
+
+    <h2>5. Proceso de Intercambio Circular</h2>
+    <p>El intercambio circular funciona de la siguiente manera:</p>
+    <ol style="margin-bottom:14px;padding-left:20px;font-size:.92rem;color:#444">
+      <li style="margin-bottom:8px">Un usuario expresa interés por un artículo y ofrece algo a cambio</li>
+      <li style="margin-bottom:8px">El algoritmo busca un círculo de intercambio (A→B→C→A)</li>
+      <li style="margin-bottom:8px">Todos los participantes reciben la propuesta y tienen 24h para aceptar</li>
+      <li style="margin-bottom:8px">Si todos aceptan, se procede al envío coordinado</li>
+      <li style="margin-bottom:8px">Si alguien rechaza o expira, el match se cancela y los artículos vuelven al pool</li>
+    </ol>
+
+    <h2>6. Escrow y Pagos</h2>
+    <p>Cuando un intercambio implica compensación económica, el importe se retiene mediante escrow hasta que todos los participantes confirmen la recepción de los artículos. Esto garantiza que nadie resulte perjudicado.</p>
+
+    <h2>7. Comisiones</h2>
+    <p>treqe cobra una comisión por cada transacción completada. El porcentaje se indicará de forma transparente antes de confirmar cualquier operación. Actualmente, durante la fase de prototipo, no se aplican comisiones.</p>
+
+    <h2>8. Conducta del Usuario</h2>
+    <ul>
+      <li>No está permitido el acoso, fraude o manipulación del sistema</li>
+      <li>Los usuarios deben cumplir los plazos de envío acordados</li>
+      <li>El sistema de reputación refleja la confianza de la comunidad</li>
+    </ul>
+
+    <h2>9. Limitación de Responsabilidad</h2>
+    <p>treqe no se hace responsable de:</p>
+    <ul>
+      <li>El estado real de los artículos intercambiados</li>
+      <li>El incumplimiento de los acuerdos entre usuarios</li>
+      <li>Daños derivados del uso de la plataforma</li>
+      <li>La pérdida o deterioro de artículos durante el envío</li>
+    </ul>
+
+    <h2>10. Modificaciones</h2>
+    <p>treqe se reserva el derecho de modificar estos términos. Los usuarios serán notificados de cambios sustanciales con al menos 30 días de antelación.</p>
+
+    <h2>11. Baja del Servicio</h2>
+    <p>Puedes eliminar tu cuenta en cualquier momento desde los ajustes de perfil. Los intercambios en curso deberán completarse antes de la eliminación.</p>
+
+    <p style="margin-top:40px;font-size:.8rem;color:#888;">Esta página es informativa y no constituye asesoramiento legal. Consulte con un profesional para adaptarla a su situación específica.</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+  function toggleDark() {
+    document.body.classList.toggle("dark");
+    var btn = document.querySelector(".dark-toggle i");
+    if (btn) btn.className = document.body.classList.contains("dark") ? "fas fa-sun" : "fas fa-moon";
+  }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

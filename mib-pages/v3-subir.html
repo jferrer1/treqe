@@ -1,0 +1,1119 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Subir artículo</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>/* v6 */
+  :root {
+    --bg:        #F9F7F2;
+    --surface:   #FFFFFF;
+    --text:      #1C1915;
+    --text-sub:  #6B6560;
+    --text-dim:  #A09A94;
+    --border:    #E5E0D8;
+    --border-strong: #C5C0B8;
+    --accent:    #1C1915;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --font-sans: 'IBM Plex Sans', 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  body.dark {
+    --bg:        #130B00;
+    --surface:   #1A1206;
+    --text:      #E8E2D6;
+    --text-sub:  #A0998F;
+    --text-dim:  #6B6560;
+    --border:    #3A3630;
+    --border-strong: #5A5650;
+    --accent:    #E8E2D6;
+  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; -webkit-text-size-adjust: 100%; overflow-y: scroll; }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background .3s, color .3s;
+    
+  overscroll-behavior: none;}
+    body.dark { background: #130B00; color: #E8E2D6; }
+    button { font-family: 'IBM Plex Mono', monospace; cursor: pointer; border: none; background: none; }
+    a { text-decoration: none; color: inherit; }
+    input, select, textarea { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+
+    /* ===== treqe HEADER ===== */
+    .treqe-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: #F9F7F2;
+      border-bottom: 1px solid #E5E0D8;
+      position: sticky; top: 0; z-index: 50;
+      transition: background .3s, border-color .3s;
+    }
+    body.dark .treqe-header { background: #130B00; border-color: #3A3630; }
+    .treqe-header__left { display: flex; align-items: center; gap: 8px; }
+    .treqe-header__back {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .9rem;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .treqe-header__back { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-header__back:active { background: #E5E0D8; }
+    body.dark .treqe-header__back:active { background: #3A3630; }
+    .treqe-header__logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .85rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #1C1915;
+    }
+    body.dark .treqe-header__logo { color: #E8E2D6; }
+    .treqe-header__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .9rem; font-weight: 400;
+      color: #1C1915;
+    }
+    body.dark .treqe-header__title { color: #E8E2D6; }
+    .treqe-header__right { display: flex; align-items: center; gap: 8px; }
+    .treqe-header__toggle {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; color: #55504B;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .treqe-header__toggle { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-header__toggle:active { background: #E5E0D8; }
+    body.dark .treqe-header__toggle:active { background: #3A3630; }
+    .treqe-pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .treqe-pill { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-pill:active { background: #E5E0D8; color: #1C1915; }
+    body.dark .treqe-pill:active { background: #3A3630; color: #E8E2D6; }
+
+    /* ===== FORM WRAP ===== */
+    .form-wrap { padding: 8px 16px 24px; max-width: 560px; margin: 0 auto; }
+
+    /* ===== FORM LABELS (MONO) ===== */
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+      margin-bottom: 10px;
+    }
+    body.dark .section-label { color: #B0A9A0; }
+    .section-label i { margin-right: 4px; }
+
+    /* ===== PHOTO UPLOAD ===== */
+    .photo-section { margin-bottom: 20px; }
+    .photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .photo-slot {
+      aspect-ratio: 1;
+      border: 1px dashed #C5C0B8;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #8A8580;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      gap: 4px;
+      cursor: pointer;
+      transition: all .2s;
+      background: transparent;
+      position: relative;
+    }
+    body.dark .photo-slot { border-color: #5A5650; color: #55504B; }
+    .photo-slot:active { background: #E5E0D8; }
+    body.dark .photo-slot:active { background: #3A3630; }
+    .photo-slot i { font-size: 1.2rem; }
+    .photo-slot.has-image {
+      border-style: solid;
+      border-color: #E5E0D8;
+      background-size: cover;
+      background-position: center;
+      cursor: default;
+    }
+    body.dark .photo-slot.has-image { border-color: #3A3630; }
+    .photo-slot.has-image .placeholder-content { display: none; }
+    .photo-slot.primary { border-color: #1C1915; border-style: solid; }
+    body.dark .photo-slot.primary { border-color: #E8E2D6; }
+    .photo-slot .photo-remove {
+      display: none; position: absolute; top: 3px; right: 3px;
+      width: 20px; height: 20px;
+      background: rgba(0,0,0,.6);
+      border-radius: 2px;
+      color: #FFF; font-size: .5rem;
+      align-items: center; justify-content: center;
+    }
+    .photo-slot.has-image .photo-remove { display: flex; }
+    .photo-slot .photo-badge {
+      position: absolute; top: 3px; left: 3px;
+      background: #1C1915; color: #F9F7F2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      width: 18px; height: 18px;
+      display: none;
+      align-items: center; justify-content: center;
+    }
+    body.dark .photo-slot .photo-badge { background: #E8E2D6; color: #130B00; }
+    .photo-slot.has-image .photo-badge { display: flex; }
+
+    /* ===== VIDEO UPLOAD ===== */
+    .video-section { margin: 20px 0; padding-top: 16px; border-top: 1px solid #E5E0D8; }
+    body.dark .video-section { border-color: #3A3630; }
+    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .video-slot {
+      aspect-ratio: 16/9;
+      border: 1px dashed #C5C0B8;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #8A8580;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    body.dark .video-slot { border-color: #5A5650; color: #55504B; }
+    .video-slot:active { border-color: #1C1915; }
+    body.dark .video-slot:active { border-color: #E8E2D6; }
+    .video-slot i { font-size: 1.2rem; margin-bottom: 4px; color: #8A8580; }
+    body.dark .video-slot i { color: #55504B; }
+
+    /* ===== FORM GROUP ===== */
+    .form-group { margin-bottom: 16px; }
+    .form-group > label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+      margin-bottom: 6px;
+    }
+    body.dark .form-group > label { color: #B0A9A0; }
+    .form-group label .optional {
+      font-weight: 400;
+      color: #8A8580;
+      font-size: .55rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    body.dark .form-group label .optional { color: #55504B; }
+    .form-group input,
+    .form-group textarea,
+    .form-group .custom-select {
+      width: 100%;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      font-size: .85rem;
+      color: #1C1915;
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    body.dark .form-group input,
+    body.dark .form-group textarea,
+    body.dark .form-group .custom-select { background: #1A1206; border-color: #3A3630; color: #E8E2D6; }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #1C1915; }
+    body.dark .form-group input:focus,
+    body.dark .form-group textarea:focus { border-color: #E8E2D6; }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #8A8580; }
+    body.dark .form-group input::placeholder,
+    body.dark .form-group textarea::placeholder { color: #55504B; }
+    .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    /* ===== SELECT ===== */
+    .select-wrap { position: relative; }
+    .select-wrap select {
+      width: 100%;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .85rem;
+      color: #1C1915;
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      padding-right: 36px;
+    }
+    body.dark .select-wrap select { background: #1A1206; border-color: #3A3630; color: #E8E2D6; }
+    .select-wrap select:focus { border-color: #1C1915; }
+    body.dark .select-wrap select:focus { border-color: #E8E2D6; }
+    .select-wrap select:invalid { color: #8A8580; }
+    body.dark .select-wrap select:invalid { color: #55504B; }
+    .select-wrap select option { color: #1C1915; }
+    body.dark .select-wrap select option { background: #1A1206; color: #E8E2D6; }
+    .select-wrap::after {
+      content: '\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8A8580;
+      font-size: .6rem;
+      pointer-events: none;
+    }
+    body.dark .select-wrap::after { color: #55504B; }
+    .category-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    /* ===== PRICE ===== */
+    .price-wrap input { padding-left: 30px; }
+    .price-wrap .currency-symbol {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .85rem; font-weight: 500;
+      color: #8A8580;
+      pointer-events: none;
+    }
+    body.dark .price-wrap .currency-symbol { color: #55504B; }
+
+    /* ===== CONDITION ===== */
+    .condition-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .condition-option {
+      padding: 10px 6px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #55504B;
+      background: #FFFFFF;
+      transition: all .2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    body.dark .condition-option { border-color: #3A3630; color: #B0A9A0; background: #1A1206; }
+    .condition-option i { font-size: .9rem; color: #8A8580; }
+    body.dark .condition-option i { color: #55504B; }
+    .condition-option:active { transform: scale(.97); }
+    .condition-option.selected {
+      border-color: #1C1915;
+      color: #1C1915;
+    }
+    body.dark .condition-option.selected { border-color: #E8E2D6; color: #E8E2D6; }
+    .condition-option.selected i { color: #1C1915; }
+    body.dark .condition-option.selected i { color: #E8E2D6; }
+
+    /* ===== SUBMIT BUTTONS ===== */
+    .submit-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem; font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: 14px;
+      border: 1px solid #1C1915;
+      border-radius: 2px;
+      background: #1C1915;
+      color: #F9F7F2;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    
+      background: #1C1915; color: #F9F7F2; border: 1px solid #1C1915;
+    }
+    body.dark body.dark .submit-btn { border-color: #E8E2D6; background: #E8E2D6; color: #130B00; 
+      background: #1C1915; color: #F9F7F2; border: 1px solid #1C1915;
+    }
+    .submit-btn:active { opacity: .8; }
+    .submit-btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+    body.dark /* ===== PREVIEW MODAL ===== */
+    .preview-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 300; overflow-y: auto; }
+    body.dark .preview-modal { background: #130B00; }
+    .preview-modal.visible { display: block; }
+    .preview-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #E5E0D8;
+      position: sticky; top: 0; z-index: 10;
+    }
+    body.dark .preview-header { background: #1A1206; border-color: #3A3630; }
+    .preview-back {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .9rem;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .preview-back { color: #B0A9A0; border-color: #3A3630; }
+    .preview-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #1C1915;
+    }
+    body.dark .preview-title { color: #E8E2D6; }
+    .preview-image {
+      aspect-ratio: 1;
+      background: #E5E0D8;
+    }
+    body.dark .preview-image { background: #3A3630; }
+    .preview-info { padding: 20px 16px; }
+    .preview-price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.4rem; font-weight: 500;
+      color: #1C1915;
+      margin-bottom: 8px;
+    }
+    body.dark .preview-price { color: #E8E2D6; }
+    .preview-name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem; font-weight: 400;
+      color: #1C1915;
+      margin-bottom: 8px;
+    }
+    body.dark .preview-name { color: #E8E2D6; }
+    .preview-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 400;
+      color: #55504B;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    body.dark .preview-meta { color: #B0A9A0; }
+    .preview-desc {
+      font-size: .85rem; color: #55504B;
+      line-height: 1.6;
+    }
+    body.dark .preview-desc { color: #B0A9A0; }
+    .preview-actions {
+      position: relative;
+      padding: 16px;
+      background: #FFFFFF;
+      border-top: 1px solid #E5E0D8;
+      display: flex; gap: 10px;
+    }
+    body.dark .preview-actions { background: #1A1206; border-color: #3A3630; }
+    .preview-btn {
+      flex: 1; padding: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem; font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-align: center;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      background: #F9F7F2;
+      color: #55504B;
+      cursor: pointer;
+    
+      background: #FFF; color: #1C1915; border: 1px solid #E5E0D8;}
+    body.dark body.dark .preview-btn { border-color: #3A3630; background: #130B00; color: #B0A9A0; }
+    .preview-btn--primary {
+      background: #1C1915;
+      color: #F9F7F2;
+      border-color: #1C1915;
+    }
+    body.dark body.dark .preview-btn--primary { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+    /* ===== SUCCESS OVERLAY ===== */
+    .success-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(249,247,242,.95);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    body.dark .success-overlay { background: rgba(19,11,0,.95); }
+    .success-overlay.visible { display: flex; }
+    .success-overlay .check {
+      width: 64px; height: 64px;
+      border: 1px solid #1C1915;
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      color: #1C1915;
+      font-size: 1.6rem;
+    }
+    body.dark .success-overlay .check { border-color: #E8E2D6; color: #E8E2D6; }
+    .success-overlay h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem; font-weight: 400;
+      color: #1C1915;
+    }
+    body.dark .success-overlay h2 { color: #E8E2D6; }
+    .success-overlay p {
+      color: #55504B;
+      font-size: .85rem;
+    }
+    body.dark .success-overlay p { color: #B0A9A0; }
+
+    
+    
+    body.dark 
+    
+    body.dark 
+    
+    
+    body.dark 
+    .nav-item 
+    body.dark .nav-item 
+    
+    
+    body.dark 
+    
+
+    /* ===== HELP MODAL ===== */
+    .help-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 400; display: none; align-items: flex-end; justify-content: center; }
+    .help-modal-overlay.visible { display: flex; }
+    .help-modal { background: #FFFFFF; border: 1px solid #E5E0D8; border-radius: 2px 2px 0 0; width: 100%; max-width: 500px; max-height: 80vh; overflow: hidden; }
+    body.dark .help-modal { background: #1A1206; border-color: #3A3630; }
+    .help-modal__header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 12px; border-bottom: 1px solid #E5E0D8; }
+    body.dark .help-modal__header { border-color: #3A3630; }
+    .help-modal__title { font-family: 'IBM Plex Mono', monospace; font-size: .55rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: #1C1915; }
+    body.dark .help-modal__title { color: #E8E2D6; }
+    .help-modal__close { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #55504B; font-size: .8rem; border: 1px solid #E5E0D8; border-radius: 2px; }
+    body.dark .help-modal__close { color: #B0A9A0; border-color: #3A3630; }
+    .help-modal__body { padding: 20px; max-height: 60vh; overflow-y: auto;}
+    .help-step { display: flex; gap: 12px; margin-bottom: 16px; }
+    .help-step__num { width: 28px; height: 28px; border: 1px solid #1C1915; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: .65rem; font-weight: 500; color: #1C1915; flex-shrink: 0; }
+    body.dark .help-step__num { border-color: #E8E2D6; color: #E8E2D6; }
+    .help-step__text { font-size: .82rem; color: #55504B; line-height: 1.5; }
+    body.dark .help-step__text { color: #B0A9A0; }
+    .help-step__text strong { color: #1C1915; }
+    body.dark .help-step__text strong { color: #E8E2D6; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 600px) {
+      .form-wrap { padding: 16px 24px 32px; background: #FFFFFF; border: 1px solid #E5E0D8; border-radius: 2px; margin-top: 12px; }
+      body.dark .form-wrap { background: #1A1206; border-color: #3A3630; }
+      .photo-grid { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .form-wrap { max-width: 640px; padding: 24px 32px; }
+    }
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.scoring-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  background: rgba(0,0,0,0.5) !important;
+  z-index: 9999 !important;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.scoring-modal-overlay.visible {
+  display: flex !important;
+}
+
+.help-modal-overlay.visible, .help-modal-overlay.open, .help-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+.success-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.success-overlay.visible, .success-overlay.open, .success-overlay.active { display: flex !important; }
+
+.help-modal-overlay.visible, .help-modal-overlay.open, .help-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+.success-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.success-overlay.visible, .success-overlay.open, .success-overlay.active { display: flex !important; }
+
+
+/* overlay fix */
+.help-modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.help-modal-overlay.visible, .help-modal-overlay.open, .help-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+.success-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.success-overlay.visible, .success-overlay.open, .success-overlay.active { display: flex !important; }
+
+  .dm-toggle { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-sub); background: transparent; cursor: pointer; transition: all 0.15s; }
+  .dm-toggle:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+  body.dark .dm-toggle { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .dm-toggle:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+  .treqe-header__help { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: var(--text-sub); border: 1px solid var(--border); border-radius: 2px; background: transparent; cursor: pointer; }
+  body.dark .treqe-header__help { color: #B0A9A0; border-color: #3A3630; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+
+  <!-- ===== treqe HEADER ===== -->
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="history.back()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Subir articulo</span>
+    </div>
+    <div class="treqe-header__right">
+      <button class="treqe-header__help" onclick="openHelpModal()" aria-label="Ayuda"><i class="fas fa-question-circle"></i></button>
+      
+    </div>
+  </div>
+
+  <!-- ===== FORM ===== -->
+  <form class="form-wrap" id="submitForm" onsubmit="return handleSubmit(event)">
+
+    <!-- Photos -->
+    <div class="photo-section">
+      <div class="section-label"><i class="fas fa-camera"></i> Fotos <span style="font-weight:400;text-transform:none;letter-spacing:0;">(min. 1, max. 8)</span></div>
+      <div class="photo-grid" id="photoGrid">
+        <div class="photo-slot primary" onclick="addPhoto(this)" id="slot0">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-camera"></i>
+            <span>Principal</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot1">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot2">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot3">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot4">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot5">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot6">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="photo-slot" onclick="addPhoto(this)" id="slot7">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Videos -->
+    <div class="video-section">
+      <div class="section-label"><i class="fas fa-video"></i> Videos <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional, max. 4)</span></div>
+      <div class="video-grid" id="videoGrid">
+        <div class="video-slot" onclick="addVideo(this)" id="video0">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="video-slot" onclick="addVideo(this)" id="video1">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="video-slot" onclick="addVideo(this)" id="video2">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+        <div class="video-slot" onclick="addVideo(this)" id="video3">
+          <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <i class="fas fa-plus"></i>
+            <span>Añadir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="title">Título del artículo</label>
+      <input type="text" id="title" placeholder="Ej. Fender Stratocaster Player Series" required>
+    </div>
+
+    <!-- Category (two-tier) -->
+    <div class="form-group">
+      <label for="mainCat">Categoría</label>
+      <div class="category-row">
+        <div class="select-wrap">
+          <select id="mainCat" required onchange="updateSubcats()">
+            <option value="" disabled selected>Categoría</option>
+            <option value="electronica">Electrónica</option>
+            <option value="moda">Moda</option>
+            <option value="deporte">Deporte</option>
+            <option value="musica">Música</option>
+            <option value="libros">Libros</option>
+            <option value="videojuegos">Videojuegos</option>
+            <option value="fotografia">Fotografía</option>
+            <option value="hogar">Hogar</option>
+            <option value="juguetes">Juguetes</option>
+            <option value="coleccionismo">Coleccionismo</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select id="subCat" required>
+            <option value="" disabled selected>Subcategoría</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-group">
+      <label>Estado</label>
+      <div class="condition-row" id="conditionRow">
+        <div class="condition-option" data-value="nuevo" onclick="selectCondition(this)">
+          <i class="fas fa-tag"></i>
+          Nuevo
+        </div>
+        <div class="condition-option selected" data-value="como-nuevo" onclick="selectCondition(this)">
+          <i class="fas fa-star"></i>
+          Como nuevo
+        </div>
+        <div class="condition-option" data-value="bueno" onclick="selectCondition(this)">
+          <i class="fas fa-check"></i>
+          Bueno
+        </div>
+        <div class="condition-option" data-value="aceptable" onclick="selectCondition(this)">
+          <i class="fas fa-undo"></i>
+          Aceptable
+        </div>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="form-group">
+      <label for="price">Precio <span class="optional">(tú fijas el valor)</span></label>
+      <div class="price-wrap" style="position:relative;">
+        <span class="currency-symbol">€</span>
+        <input type="number" id="price" placeholder="0" min="1" step="1" required>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label for="desc">Descripción <span class="optional">(opcional)</span></label>
+      <textarea id="desc" placeholder="Describe el estado, año, accesorios incluidos..."></textarea>
+    </div>
+
+    <!-- Shipping -->
+    <div class="form-group">
+      <label>Datos para el envío</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sub);margin-bottom:4px;display:block;">Peso</label>
+          <div style="display:flex;align-items:center;max-width:140px;padding:0 4px 0 0;border:1px solid #E5E0D8;border-radius:2px;background:#FFFFFF;">
+            <input type="number" id="weight" placeholder="0" min="0" step="0.1" style="padding:10px 8px;flex:1;border:none;outline:none;background:transparent;font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;color:var(--text);text-align:right;">
+            <span style="padding-right:12px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--text-sub);font-weight:500;">kg</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--text-sub);margin-bottom:4px;display:block;">Dimensiones</label>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="dimL" placeholder="Largo" min="0" step="1" style="flex:1;padding:10px 4px;border:1px solid #E5E0D8;border-radius:2px;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;text-align:center;outline:none;background:transparent;">
+            <span style="color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:.65rem;">×</span>
+            <input type="number" id="dimW" placeholder="Ancho" min="0" step="1" style="flex:1;padding:10px 4px;border:1px solid #E5E0D8;border-radius:2px;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;text-align:center;outline:none;background:transparent;">
+            <span style="color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:.65rem;">×</span>
+            <input type="number" id="dimH" placeholder="Alto" min="0" step="1" style="flex:1;padding:10px 4px;border:1px solid #E5E0D8;border-radius:2px;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;text-align:center;outline:none;background:transparent;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--text-dim);font-weight:500;padding-left:4px;">cm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview & Submit -->
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button type="button" class="submit-btn" style="flex:1;" onclick="showPreview()">
+        <i class="fas fa-eye"></i> Vista previa
+      </button>
+      <button type="submit" class="submit-btn" id="submitBtn" style="flex:2;">
+        <i class="fas fa-cloud-upload-alt"></i> Publicar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- ===== PREVIEW MODAL ===== -->
+  <div class="preview-modal" id="previewModal">
+    <div class="preview-content">
+      <div class="preview-header">
+        <button onclick="closePreview()" class="preview-back"><i class="fas fa-arrow-left"></i></button>
+        <span class="preview-title">Vista previa</span>
+        <span></span>
+      </div>
+      <div class="preview-body">
+        <div class="preview-image" id="previewImage" style="background:#2D2D2D;display:flex;align-items:center;justify-content:center;">
+          <i class="fas fa-guitar" style="font-size:4rem;color:rgba(255,255,255,0.2);"></i>
+        </div>
+        <div class="preview-info">
+          <div class="preview-price" id="previewPrice">€0</div>
+          <h3 class="preview-name" id="previewName">Título del artículo</h3>
+          <div class="preview-meta">
+            <span id="previewCondition">Como nuevo</span> · <span id="previewCategory">Categoría</span>
+          </div>
+          <p class="preview-desc" id="previewDesc">Descripción del artículo...</p>
+        </div>
+      </div>
+      <div class="preview-actions">
+        <button onclick="closePreview()" class="preview-btn">Editar</button>
+        <button onclick="confirmPublish()" class="preview-btn preview-btn--primary"><i class="fas fa-check"></i> Publicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUCCESS OVERLAY ===== -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="check"><i class="fas fa-check"></i></div>
+    <h2>Artículo publicado</h2>
+    <p>Ya está disponible en el catálogo</p>
+    <button onclick="goToCatalog()" style="margin-top:12px;padding:12px 24px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;background:#1C1915;color:#F9F7F2;border:1px solid #1C1915;border-radius:2px;cursor:pointer;">
+      <i class="fas fa-search"></i> Ver en catálogo
+    </button>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add active"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+    // ===== DARK MODE =====
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      var icon = document.getElementById('darkToggle').querySelector('i');
+      icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+      try { localStorage.setItem('treqe-dark-mode', document.body.classList.contains('dark') ? '1' : '0'); } catch(e) {}
+    }
+    try { if (localStorage.getItem('treqe-dark-mode') === '1') document.body.classList.add('dark'); } catch(e) {}
+    if (document.body.classList.contains('dark')) {
+      var icon = document.getElementById('darkToggle').querySelector('i');
+      if (icon) icon.className = 'fas fa-sun';
+    }
+
+    // ===== PHOTO UPLOAD SIMULATION =====
+    let photoCount = 0;
+    const colors = ['#2D2D2D', '#3A2A1A', '#1A2A3A', '#2A1A2A', '#1A3A2A'];
+    const icons = ['fa-guitar', 'fa-headphones', 'fa-mobile-alt', 'fa-camera', 'fa-bicycle'];
+
+    function addPhoto(slot) {
+      if (photoCount >= 5) return;
+      photoCount++;
+
+      slot.classList.add('has-image');
+      slot.style.background = colors[photoCount - 1];
+      slot.innerHTML = `
+        <i class="fas ${icons[photoCount - 1]}" style="color:rgba(255,255,255,0.2);font-size:1.6rem;"></i>
+        <span class="photo-badge">${photoCount}</span>
+        <span class="photo-remove" onclick="event.stopPropagation(); removePhoto(this, ${photoCount - 1})">
+          <i class="fas fa-times"></i>
+        </span>
+      `;
+
+      if (photoCount < 5) {
+        document.getElementById(`slot${photoCount}`).style.display = 'flex';
+      }
+      if (photoCount === 1) {
+        slot.classList.add('primary');
+      }
+      updateSubmitState();
+    }
+
+    function removePhoto(btn, index) {
+      const slot = btn.closest('.photo-slot');
+      slot.classList.remove('has-image');
+      slot.style.background = '';
+      slot.innerHTML = `
+        <div class="placeholder-content" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <i class="fas fa-plus"></i>
+          <span>Añadir</span>
+        </div>
+      `;
+      slot.onclick = function() { addPhoto(this); };
+      photoCount--;
+
+      let idx = 1;
+      document.querySelectorAll('.photo-slot.has-image').forEach(s => {
+        const badge = s.querySelector('.photo-badge');
+        if (badge) badge.textContent = idx++;
+      });
+      updateSubmitState();
+    }
+
+    function updateSubmitState() {
+      const btn = document.getElementById('submitBtn');
+      const title = document.getElementById('title').value.trim();
+      const price = document.getElementById('price').value;
+      btn.disabled = photoCount === 0 || !title || !price;
+      if (btn.disabled) btn.title = 'Necesitas al menos 1 foto, título y precio';
+      else btn.title = '';
+    }
+
+    // ===== CONDITION SELECTOR =====
+    function selectCondition(el) {
+      document.querySelectorAll('.condition-option').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    // ===== SUBCATEGORY SYSTEM =====
+    const subcategories = {
+      electronica: ['Móviles', 'Portátiles', 'Tablets', 'Smartwatches', 'Auriculares', 'Altavoces', 'Monitores', 'Componentes PC'],
+      moda: ['Camisetas', 'Chaquetas', 'Zapatillas', 'Bolsos', 'Relojes', 'Gafas', 'Joyas', 'Complementos'],
+      deporte: ['Bicicletas', 'Fitness', 'Running', 'Escalada', 'Natación', 'Esquí', 'Camping', 'Equipamiento'],
+      musica: ['Guitarras', 'Teclados', 'Batería', 'Equipo de sonido', 'Vinilos', 'Instrumentos de viento', 'Pedales', 'Micrófonos'],
+      libros: ['Novela', 'Ensayo', 'Cómic', 'Poesía', 'Infantil', 'Técnico', 'Autoayuda', 'Arte'],
+      videojuegos: ['PS5', 'Xbox', 'Nintendo Switch', 'PC', 'VR', 'Accesorios', 'Retro', 'Merchandising'],
+      fotografia: ['Cámaras', 'Objetivos', 'Flashes', 'Trípodes', 'Bolsos', 'Filtros', 'Iluminación', 'Drones'],
+      hogar: ['Muebles', 'Decoración', 'Cocina', 'Jardín', 'Herramientas', 'Iluminación', 'Textil', 'Electrodomésticos'],
+      juguetes: ['Construcción', 'Figuras', 'Puzzles', 'Coches', 'Muñecas', 'Juegos de mesa', 'Educativos', 'Peluches'],
+      coleccionismo: ['Monedas', 'Sellos', 'Figuras', 'Cromos', 'Cómics', 'Cartas', 'Minerales', 'Antigüedades']
+    };
+
+    function updateSubcats() {
+      const main = document.getElementById('mainCat').value;
+      const sub = document.getElementById('subCat');
+      sub.innerHTML = '<option value="" disabled selected>Subcategoría</option>';
+      if (main && subcategories[main]) {
+        subcategories[main].forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.toLowerCase().replace(/\s+/g, '-');
+          opt.textContent = s;
+          sub.appendChild(opt);
+        });
+      }
+    }
+    updateSubcats();
+
+    // ===== FORM SUBMIT =====
+    function handleSubmit(e) {
+      e.preventDefault();
+      showPreview();
+      return false;
+    }
+
+    // ===== PREVIEW =====
+    function showPreview() {
+      const title = document.getElementById('title').value.trim() || 'Título del artículo';
+      const price = document.getElementById('price').value || '0';
+      const desc = document.getElementById('desc').value.trim() || 'Sin descripción';
+      const condition = document.querySelector('.condition-option.selected')?.textContent.trim() || 'Como nuevo';
+      const mainCat = document.getElementById('mainCat').options[document.getElementById('mainCat').selectedIndex]?.text || 'Categoría';
+
+      document.getElementById('previewName').textContent = title;
+      document.getElementById('previewPrice').textContent = '€' + price;
+      document.getElementById('previewDesc').textContent = desc;
+      document.getElementById('previewCondition').textContent = condition;
+      document.getElementById('previewCategory').textContent = mainCat;
+
+      document.getElementById('previewModal').classList.add('visible');
+    }
+
+    function closePreview() { document.getElementById('previewModal').classList.remove('visible'); }
+
+    function confirmPublish() {
+      document.getElementById('previewModal').classList.remove('visible');
+      document.getElementById('successOverlay').classList.add('visible');
+    }
+
+    // ===== NAVIGATION =====
+    function goToHome() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToSearch() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToMatches() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+    function goToCatalog() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToDetail(id) { window.parent.location.href = '../v2-detalle/?id=' + id; }
+
+    document.getElementById('title').addEventListener('input', updateSubmitState);
+    document.getElementById('price').addEventListener('input', updateSubmitState);
+
+    console.log('📸 treqe v3 — Subir artículo');
+    console.log('🧪 treqe Prototype — May 2026');
+
+    function addVideo(slot) { alert("Selector de video (max 30s). En la versión completa podrás grabar o seleccionar de la galería."); }
+
+    function openHelpModal() { document.getElementById('helpModal').classList.add('visible'); }
+    function closeHelpModal() { document.getElementById('helpModal').classList.remove('visible'); }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+
+  <!-- ===== HELP MODAL ===== -->
+  <div class="help-modal-overlay" id="helpModal" onclick="closeHelpModal()">
+    <div class="help-modal" onclick="event.stopPropagation()">
+      <div class="help-modal__header">
+        <span class="help-modal__title">Subir artículo</span>
+        <button class="help-modal__close" onclick="closeHelpModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="help-modal__body">
+        <div class="help-step">
+          <div class="help-step__num">1</div>
+          <div class="help-step__text"><strong>Haz fotos</strong> del artículo que quieres intercambiar. Sube hasta 8 imágenes y hasta 4 vídeos cortos.</div>
+        </div>
+        <div class="help-step">
+          <div class="help-step__num">2</div>
+          <div class="help-step__text"><strong>Describe tu artículo</strong> con título, categoría, estado y precio. Cuanta más información, más posibilidades de match.</div>
+        </div>
+        <div class="help-step">
+          <div class="help-step__num">3</div>
+          <div class="help-step__text"><strong>Publícalo</strong>. Tu artículo se convierte en tu moneda de cambio: úsalo para conseguir lo que quieras mediante intercambio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
