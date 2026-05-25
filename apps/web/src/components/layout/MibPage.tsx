@@ -34,7 +34,15 @@ export function MibPage({ page }: Props) {
         if (!ref.current) return;
         const sm = html.match(/<style>([\s\S]*?)<\/style>/);
         const bm = html.match(/<body>([\s\S]*?)<\/body>/);
-        if (sm) { const s = document.createElement("style"); s.textContent = sm[1]; ref.current.appendChild(s); }
+        if (sm) {
+          // Inyectar en head para que html/body/:root funcionen
+          const existing = document.getElementById("mib-page-style");
+          if (existing) existing.remove();
+          const s = document.createElement("style");
+          s.id = "mib-page-style";
+          s.textContent = sm[1];
+          document.head.appendChild(s);
+        }
         if (bm) {
           let b = bm[1];
           b = b.replace(/<script[\s\S]*?<\/script>/g, "");
