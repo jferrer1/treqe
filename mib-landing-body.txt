@@ -1,0 +1,203 @@
+﻿<!-- ══════ HEADER ══════ -->
+<div class="header">
+    <a href="../v16-portada/" class="logo-link"><img class="treqe-logo" src="../../assets/treqe-logo-mib.png" alt="treqe"></a>
+    <div class="header-right">
+      
+      <a href="../v13-blog/index.html" class="blog-link"><i class="fas fa-book-open"></i>Blog</a>
+      <div class="search-icon" id="searchIcon" onclick="toggleSearch()">
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="search-expand" id="searchExpand">
+        <input type="text" placeholder="Buscar articulos..." id="searchInput">
+        <button class="search-close" onclick="toggleSearch()"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+  </div>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-label">Intercambio circular</div>
+  <h1><strong>Trueque circular:</strong><br>das a uno,<br>recibes de otro</h1>
+  <p class="sub"><em>Sin dinero.</em> O con dinero. Como tú decidas.</p>
+</section>
+
+<!-- ══════ EXCHANGE CARD ══════ -->
+<section class="exchange-section">
+  <div class="exchange-card">
+    <div class="exchange-label">Así funciona</div>
+    <div class="exchange-flow">
+      <div class="exchange-item">
+        <div class="exchange-icon">👶</div>
+        <div class="exchange-item-label">Tú das</div>
+        <div class="exchange-item-name">un carrito de bebé</div>
+      </div>
+      <div class="exchange-arrow">→</div>
+      <div class="exchange-item">
+        <div class="exchange-icon">📱</div>
+        <div class="exchange-item-label">Recibes</div>
+        <div class="exchange-item-name">este iPhone</div>
+      </div>
+    </div>
+    <div class="exchange-insight">
+      <strong>Trueque circular:</strong> das a uno, recibes de otro.
+    </div>
+  </div>
+</section>
+
+<!-- ══════ HOW IT WORKS ══════ -->
+<section class="how-section">
+  <div class="section-label">En 3 pasos</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Publica lo que no usas</h3>
+        <p>Rápido, sin complicaciones. Dale salida a lo que ya no necesitas.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Elige lo que quieres</h3>
+        <p>Lo que sea. Sin límites. Tú marcas el destino.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>treqe cierra el círculo</h3>
+        <p>Nosotros lo encontramos y te notificamos para hacer el intercambio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════ GUIDE ══════ -->
+<section class="guide-section">
+  <div class="section-label">Cómo funciona</div>
+  <h2>Dos formas de conseguir<br><strong>lo que quieres</strong></h2>
+  <p class="guide-sub">Una sola comunidad</p>
+  <div class="guide-grid">
+    <div class="guide-card">
+      <div class="guide-card__tag">Compra directa</div>
+      <h3>Como en cualquier tienda</h3>
+      <p>Ves algo que te gusta, pagas y lo recibes en casa. Rápido, sencillo, sin complicaciones.</p>
+      <ol>
+        <li>Busca en el catálogo</li>
+        <li>Haz clic en "Comprar ahora"</li>
+        <li>El vendedor acepta</li>
+        <li>Pagas y recibes en casa</li>
+      </ol>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card__tag">Intercambio circular</div>
+      <h3>Trueque entre varios</h3>
+      <p>Ofreces algo a cambio y nosotros nos encargamos de que te llegue lo que quieres. No hace falta que sea directo.</p>
+      <ol>
+        <li>Busca en el catálogo</li>
+        <li>Pulsa "Quiero esto"</li>
+        <li>treqe te encuentra el match</li>
+        <li>Solo envías tu artículo</li>
+      </ol>
+    </div>
+    <div class="guide-card" style="grid-column:1/-1;">
+      <div class="guide-card__tag">Modo híbrido</div>
+      <h3>Combina ambas</h3>
+      <p>Si tu artículo vale menos que el que quieres, puedes pagar la diferencia. El intercambio circular también admite dinero para ajustar valores.</p>
+    </div>
+  </div>
+  <div class="guide-link">
+    <a href="../v13-blog/posts/guia-principiantes.html">
+      Guía completa <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i>
+    </a>
+  </div>
+</section>
+
+<!-- ══════ CTA ══════ -->
+<section class="cta-section">
+  <h2>Paga lo que quieras<br>con lo que tengas</h2>
+  <p class="cta-sub">Dale una segunda vida a tus cosas</p>
+  <a href="../v10-registro/" class="cta-btn">
+    Empieza ahora <i class="fas fa-arrow-right" style="font-size:0.6rem;"></i>
+  </a>
+</section>
+
+<!-- ══════ BOTTOM NAV ══════ -->
+<nav class="bottom-nav">
+  <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+  <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+  <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+  <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+  <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+</nav>
+
+<!-- ══════ FOOTER ══════ -->
+<div class="legal-footer">
+  <div class="footer-brand">treqe</div>
+  <div class="legal-footer-links">
+    <a href="../v17-aviso-legal/">Aviso Legal</a>
+    <a href="../v18-privacidad/">Privacidad</a>
+    <a href="../v19-terminos/">Términos</a>
+    <a href="../v20-cookies/">Cookies</a>
+    <a href="../v21-pagos-escrow/">Pagos</a>
+    <a href="../v22-envios-costes/">Envíos</a>
+  </div>
+  <div style="margin-top:12px;">&copy; 2026 treqe</div>
+</div>
+
+<script>
+(function() {
+  var steps = document.querySelectorAll('.step');
+  if (!steps.length) return;
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+    steps.forEach(function(s, i) {
+      s.style.transitionDelay = (i * 0.1) + 's';
+      observer.observe(s);
+    });
+  } else {
+    steps.forEach(function(s) { s.classList.add('visible'); });
+  }
+})();
+
+function toggleSearch() {
+  var icon = document.getElementById('searchIcon');
+  var expand = document.getElementById('searchExpand');
+  var input = document.getElementById('searchInput');
+  if (expand.classList.contains('open')) {
+    expand.classList.remove('open');
+    setTimeout(function() { icon.style.opacity = '1'; }, 200);
+    if (input.value.trim()) {
+      window.location.href = '../v1-catalogo/?search=' + encodeURIComponent(input.value.trim());
+    }
+  } else {
+    icon.style.opacity = '0';
+    expand.classList.add('open');
+    setTimeout(function() { input.focus(); }, 300);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var si = document.getElementById('searchInput');
+  if (si) si.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      window.location.href = '../v1-catalogo/?search=' + encodeURIComponent(this.value.trim());
+    }
+  });
+});
+
+
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
