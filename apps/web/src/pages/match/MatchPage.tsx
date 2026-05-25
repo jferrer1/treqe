@@ -18,7 +18,7 @@ export function MatchPage() {
  
  
  <div className="app-bar">
- <span className="app-bar__logo"><Link to="#" className="treqe-logo-link"><svg className="treqe-logo" viewBox="0 0 76 24" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="19" font-family="Inter, sans-serif" font-weight="700" font-size="22" letter-spacing="-1.5" fill="#1C1915">treqe<text x="60" y="19" fill="#1C1915">.</text></text></svg></Link></span>
+ <span className="app-bar__logo"><Link to="#" className="treqe-logo-link"><svg className="treqe-logo" viewBox="0 0 76 24" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="19" font-family="Inter, sans-serif" font-weight="700" font-size={22} letter-spacing="-1.5" fill="#1C1915">treqe<text x="60" y="19" fill="#1C1915">.</text></text></svg></Link></span>
  <span className="app-bar__spacer"></span>
  <button><i className="fas fa-bell"></i></button>
  <button><i className="fas fa-user"></i></button>

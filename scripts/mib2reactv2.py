@@ -82,7 +82,9 @@ def convert(html: str, name: str, logo_path: str = "/treqe-logo.png") -> str:
     body = re.sub(r"<script[^>]*>.*?</script>", "", body, flags=re.DOTALL)
     body = re.sub(r"<style[^>]*>.*?</style>", "", body, flags=re.DOTALL)
 
-    # 2.5 Convertir atributos HTML → JSX camelCase (maxlength, minlength, etc.)
+    # Convertir valores de atributos numéricos a {number}
+    for num_attr in ["maxLength","minLength","size","rows","cols","width","height","step"]:
+        body = re.sub(f'{num_attr}="(\d+)"', f'{num_attr}={{\\1}}', body)
     ATTR_CAMEL = {"maxlength":"maxLength","minlength":"minLength","tabindex":"tabIndex",
                   "readonly":"readOnly","autocomplete":"autoComplete",
                   "autocorrect":"autoCorrect","spellcheck":"spellCheck",
@@ -90,7 +92,7 @@ def convert(html: str, name: str, logo_path: str = "/treqe-logo.png") -> str:
                   "novalidate":"noValidate","formnovalidate":"formNoValidate",
                   "cellpadding":"cellPadding","cellspacing":"cellSpacing",
                   "colspan":"colSpan","rowspan":"rowSpan","datetime":"dateTime",
-                  "srcdoc":"srcDoc","srclang":"srcLang"}
+                  "srcdoc":"srcDoc","srclang":"srcLang","rows":"rows"}
     for html_attr, jsx_attr in ATTR_CAMEL.items():
         body = re.sub(f' {html_attr}="', f' {jsx_attr}="', body)
         body = re.sub(f' {html_attr}={{', f' {jsx_attr}={{', body)

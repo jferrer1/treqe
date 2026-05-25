@@ -28,6 +28,16 @@ import { ContactPage } from "@/pages/contact/ContactPage";
 import { DeleteAccountPage } from "@/pages/deleteaccount/DeleteAccountPage";
 import { AboutPage } from "@/pages/about/AboutPage";
 
+function Ph({ title, v }: { title: string; v?: string }) {
+  return (
+    <div style={{ fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12,padding:20,textAlign:"center" }}>
+      <div style={{ fontSize:"2rem" }}>🚧</div>
+      <h2 style={{ fontSize:"1rem",fontWeight:600,color:"#1C1915" }}>{title}</h2>
+      {v && <span style={{ fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#C5C0B8" }}>{v}</span>}
+    </div>
+  );
+}
+
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/catalogo", element: <CatalogPage /> },
@@ -51,10 +61,18 @@ export const router = createBrowserRouter([
   { path: "/legal/terminos", element: <TermsPage /> },
   { path: "/legal/cookies", element: <CookiesPage /> },
   { path: "/legal/pagos", element: <PaymentsInfoPage /> },
-  { path: "/pago/:referenceType/:id", element: <PaymentPage /> },
-  { path: "/disputa/:referenceType/:id", element: <DisputePage /> },
+  { path: "/pago/:refType/:id", element: <PaymentPage /> },
+  { path: "/disputa/:refType/:id", element: <DisputePage /> },
+  { path: "/mis-solicitudes", element: <RequestsPage /> },
   { path: "/faq", element: <FaqPage /> },
   { path: "/contactar", element: <ContactPage /> },
   { path: "/sobre", element: <AboutPage /> },
-  { path: "/mis-solicitudes", element: <RequestsPage /> },
+
+  // Placeholders (5 pages con JS complejo — pendientes)
+  { path: "/perfil", element: <Ph title="Perfil" v="v4" /> },
+  { path: "/avisos", element: <Ph title="Avisos" v="v11" /> },
+  { path: "/treqes", element: <Ph title="Mis Treqes" v="v12" /> },
+  { path: "/blog", element: <Ph title="Blog" v="v13" /> },
+  { path: "/blog/:slug", element: <Ph title="Blog Post" v="v13" /> },
+  { path: "/legal/envios", element: <Ph title="Envíos" v="v22" /> },
 ]);

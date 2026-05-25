@@ -163,7 +163,7 @@ export function UploadPage() {
  <label htmlFor="price">Precio <span className="optional">(tú fijas el valor)</span></label>
  <div className="price-wrap" style={{ position: 'relative' }}>
  <span className="currency-symbol">€</span>
- <input type="number" id="price" placeholder="0" min="1" step="1" required />
+ <input type="number" id="price" placeholder="0" min="1" step={1} required />
  </div>
  </div>
 
@@ -187,11 +187,11 @@ export function UploadPage() {
  <div>
  <label style={{ fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.5rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--text-sub)', marginBottom: '4px', display: 'block' }}>Dimensiones</label>
  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
- <input type="number" id="dimL" placeholder="Largo" min="0" step="1" style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
+ <input type="number" id="dimL" placeholder="Largo" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
  <span style={{ color: 'var(--text-dim)', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem' }}>×</span>
- <input type="number" id="dimW" placeholder="Ancho" min="0" step="1" style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
+ <input type="number" id="dimW" placeholder="Ancho" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
  <span style={{ color: 'var(--text-dim)', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem' }}>×</span>
- <input type="number" id="dimH" placeholder="Alto" min="0" step="1" style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
+ <input type="number" id="dimH" placeholder="Alto" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
  <span style={{ fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem', color: 'var(--text-dim)', fontWeight: '500', paddingLeft: '4px' }}>cm</span>
  </div>
  </div>
