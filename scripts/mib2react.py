@@ -3,6 +3,21 @@
 
 import sys, re, os
 
+# Mapa de CSS properties a camelCase
+CSS_CAMEL = {
+    "font-size": "fontSize", "font-weight": "fontWeight", "font-family": "fontFamily",
+    "text-align": "textAlign", "text-transform": "textTransform", "text-decoration": "textDecoration",
+    "margin-top": "marginTop", "margin-bottom": "marginBottom", "margin-left": "marginLeft", "margin-right": "marginRight",
+    "padding-top": "paddingTop", "padding-bottom": "paddingBottom", "padding-left": "paddingLeft", "padding-right": "paddingRight",
+    "border-radius": "borderRadius", "border-color": "borderColor", "border-width": "borderWidth", "border-style": "borderStyle",
+    "background-color": "backgroundColor", "background-image": "backgroundImage",
+    "grid-column": "gridColumn", "grid-row": "gridRow", "grid-template-columns": "gridTemplateColumns",
+    "z-index": "zIndex", "min-height": "minHeight", "max-width": "maxWidth", "max-height": "maxHeight",
+    "white-space": "whiteSpace", "object-fit": "objectFit", "flex-direction": "flexDirection",
+    "align-items": "alignItems", "justify-content": "justifyContent", "justify-self": "justifySelf",
+    "letter-spacing": "letterSpacing", "line-height": "lineHeight",
+}
+
 PAGE_MAP = {
     "../v16-portada/": "/",
     "../v1-catalogo/": "/catalogo",
@@ -41,6 +56,20 @@ PAGE_MAP = {
 }
 
 
+def _convert_inline_style(style_str: str) -> str:
+    """Convierte 'color: red; font-size: 12px' → {{color: 'red', fontSize: '12px'}}"""
+    props = []
+    for part in style_str.split(";"):
+        part = part.strip()
+        if ":" not in part:
+            continue
+        k, v = part.split(":", 1)
+        k, v = k.strip(), v.strip()
+        k = CSS_CAMEL.get(k, k)
+        props.append(f"{k}: '{v}'")
+    return "{{ " + ", ".join(props) + " }}"
+
+
 def convert_html_to_jsx(html_content: str, component_name: str, api_imports: str = "") -> str:
     """Convierte HTML a JSX preservando toda la estructura."""
 
@@ -52,7 +81,11 @@ def convert_html_to_jsx(html_content: str, component_name: str, api_imports: str
         raise ValueError("No <body> found")
     body = body_match.group(1).strip()
 
-    # 0b. Eliminar bloques <script> (React maneja interactividad)
+    # 0b. Convertir estilos inline style="..." → style={{...}}
+    def _replace_style(match):
+        return f' style={_convert_inline_style(match.group(1))}'
+    body = re.sub(r' style="([^"]*)"', _replace_style, body)
+    body = re.sub(r" style='([^']*)'", _replace_style, body)
     body = re.sub(r"<script[^>]*>.*?</script>", "", body, flags=re.DOTALL)
     for tag in ["img", "input", "br", "hr", "meta", "link"]:
         body = re.sub(f"<{tag}([^>]*?)>", f"<{tag}\\1 />", body, flags=re.DOTALL)
