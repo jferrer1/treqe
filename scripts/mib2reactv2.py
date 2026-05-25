@@ -82,7 +82,18 @@ def convert(html: str, name: str, logo_path: str = "/treqe-logo.png") -> str:
     body = re.sub(r"<script[^>]*>.*?</script>", "", body, flags=re.DOTALL)
     body = re.sub(r"<style[^>]*>.*?</style>", "", body, flags=re.DOTALL)
 
-    # 2. Convertir estilos inline antes de manipular comillas
+    # 2.5 Convertir atributos HTML → JSX camelCase (maxlength, minlength, etc.)
+    ATTR_CAMEL = {"maxlength":"maxLength","minlength":"minLength","tabindex":"tabIndex",
+                  "readonly":"readOnly","autocomplete":"autoComplete",
+                  "autocorrect":"autoCorrect","spellcheck":"spellCheck",
+                  "enctype":"encType","allowfullscreen":"allowFullScreen",
+                  "novalidate":"noValidate","formnovalidate":"formNoValidate",
+                  "cellpadding":"cellPadding","cellspacing":"cellSpacing",
+                  "colspan":"colSpan","rowspan":"rowSpan","datetime":"dateTime",
+                  "srcdoc":"srcDoc","srclang":"srcLang"}
+    for html_attr, jsx_attr in ATTR_CAMEL.items():
+        body = re.sub(f' {html_attr}="', f' {jsx_attr}="', body)
+        body = re.sub(f' {html_attr}={{', f' {jsx_attr}={{', body)
     def _style_repl(m):
         return f" style={_camel_style(m.group(1))}"
     body = re.sub(r' style="([^"]*)"', _style_repl, body)
