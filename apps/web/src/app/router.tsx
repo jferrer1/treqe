@@ -27,16 +27,11 @@ import { FaqPage } from "@/pages/faq/FaqPage";
 import { ContactPage } from "@/pages/contact/ContactPage";
 import { DeleteAccountPage } from "@/pages/deleteaccount/DeleteAccountPage";
 import { AboutPage } from "@/pages/about/AboutPage";
-
-function Ph({ title, v }: { title: string; v?: string }) {
-  return (
-    <div style={{ fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12,padding:20,textAlign:"center" }}>
-      <div style={{ fontSize:"2rem" }}>🚧</div>
-      <h2 style={{ fontSize:"1rem",fontWeight:600,color:"#1C1915" }}>{title}</h2>
-      {v && <span style={{ fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#C5C0B8" }}>{v}</span>}
-    </div>
-  );
-}
+import { ProfilePage } from "@/pages/profile/ProfilePage";
+import { MatchesPage } from "@/pages/matches/MatchesPage";
+import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
+import { BlogPage } from "@/pages/blog/BlogPage";
+import { ShippingInfoPage } from "@/pages/shippinginfo/ShippingInfoPage";
 
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -51,28 +46,26 @@ export const router = createBrowserRouter([
   { path: "/seguimiento/:id", element: <TrackingPage /> },
   { path: "/ajustes", element: <SettingsPage /> },
   { path: "/favoritos", element: <FavoritesPage /> },
+  { path: "/perfil", element: <ProfilePage /> },
   { path: "/perfil/editar", element: <EditProfilePage /> },
   { path: "/perfil/verificar", element: <VerifyPage /> },
   { path: "/perfil/direccion", element: <AddressPage /> },
   { path: "/perfil/pagos", element: <PayMethodsPage /> },
   { path: "/perfil/eliminar", element: <DeleteAccountPage /> },
+  { path: "/avisos", element: <NotificationsPage /> },
+  { path: "/treqes", element: <MatchesPage /> },
+  { path: "/blog", element: <BlogPage /> },
+  { path: "/blog/:slug", element: <BlogPage /> },
   { path: "/legal/aviso", element: <LegalNoticePage /> },
   { path: "/legal/privacidad", element: <PrivacyPage /> },
   { path: "/legal/terminos", element: <TermsPage /> },
   { path: "/legal/cookies", element: <CookiesPage /> },
   { path: "/legal/pagos", element: <PaymentsInfoPage /> },
+  { path: "/legal/envios", element: <ShippingInfoPage /> },
   { path: "/pago/:refType/:id", element: <PaymentPage /> },
   { path: "/disputa/:refType/:id", element: <DisputePage /> },
   { path: "/mis-solicitudes", element: <RequestsPage /> },
   { path: "/faq", element: <FaqPage /> },
   { path: "/contactar", element: <ContactPage /> },
   { path: "/sobre", element: <AboutPage /> },
-
-  // Placeholders (5 pages con JS complejo — pendientes)
-  { path: "/perfil", element: <Ph title="Perfil" v="v4" /> },
-  { path: "/avisos", element: <Ph title="Avisos" v="v11" /> },
-  { path: "/treqes", element: <Ph title="Mis Treqes" v="v12" /> },
-  { path: "/blog", element: <Ph title="Blog" v="v13" /> },
-  { path: "/blog/:slug", element: <Ph title="Blog Post" v="v13" /> },
-  { path: "/legal/envios", element: <Ph title="Envíos" v="v22" /> },
 ]);
