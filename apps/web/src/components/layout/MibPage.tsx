@@ -41,22 +41,6 @@ export function MibPage({ page }: Props) {
           b = b.replace(/\s+on\w+="[^"]*"/g, "");
           b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
           ref.current.innerHTML += b;
-          // Bottom nav exacto del MIB (se pierde al quitar scripts)
-          const navEl = document.createElement("nav");
-          navEl.className = "bottom-nav";
-          navEl.innerHTML = '<a href="/catalogo" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>' +
-            '<a href="/treqes" class="nav-item"><i class="fas fa-rotate"></i><span>Treqes</span></a>' +
-            '<a href="/subir" class="nav-item"><div class="nav-add-btn"><i class="fas fa-plus"></i></div><span>Subir</span></a>' +
-            '<a href="/avisos" class="nav-item"><i class="far fa-bell"></i><span>Avisos</span></a>' +
-            '<a href="/perfil" class="nav-item"><i class="far fa-user"></i><span>Perfil</span></a>';
-          ref.current.appendChild(navEl);
-          navEl.querySelectorAll("a").forEach(a => {
-            a.addEventListener("click", (e) => {
-              e.preventDefault();
-              const h = a.getAttribute("href");
-              if (h) navigate(h);
-            });
-          });
         }
         ref.current?.addEventListener("click", (e: Event) => {
           const a = (e.target as HTMLElement).closest("a");
