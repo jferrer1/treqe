@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Disputa</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== treqe DESIGN SYSTEM ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+    input, select, textarea { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+      --warning: #F5A623;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== HEADER ===== */
+    
+    .header .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    
+    .dark-toggle {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      color: var(--text-sub);
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: var(--border); }
+    .dark-toggle i { font-size: 0.85rem; }
+
+    @media (min-width: 600px) {
+      
+    }
+    @media (min-width: 1024px) {
+      
+    }
+
+    /* ===== PAGE-SPECIFIC: Disputa ===== */
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      padding: 4px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .back-link i { font-size: 0.7rem; }
+    .back-link:hover { color: var(--text); }
+
+    .page-title-disputa {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text);
+      padding: 8px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .container {
+      padding: 12px 24px 40px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .order-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      background: var(--surface);
+      margin-bottom: 16px;
+    }
+    .order-info__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .order-info__text { flex: 1; }
+    .order-info__id {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .order-info__name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin: 2px 0;
+    }
+    .order-info__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+    }
+
+    .info-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .info-box i { color: var(--accent); font-size: 0.9rem; margin-top: 2px; }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 16px;
+      background: var(--surface);
+      margin-bottom: 16px;
+    }
+    .card h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group { margin-bottom: 0; }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+    .radio-option:hover { border-color: var(--border-strong); }
+    .radio-option.selected {
+      border-color: var(--accent);
+      background: var(--bg);
+    }
+    .radio-option input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+      background: var(--surface);
+    }
+    .radio-option input[type="radio"]:checked {
+      border-color: var(--accent);
+    }
+    .radio-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--text-dim); }
+
+    .photo-upload {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .photo-slot {
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      transition: all 0.15s;
+      background: var(--surface);
+    }
+    .photo-slot:hover { border-color: var(--border-strong); }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 8px;
+    }
+    .btn--primary {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    .btn--primary:hover { opacity: 0.9; }
+    .btn--secondary {
+      background: var(--surface);
+      color: var(--text-sub);
+      border-color: var(--border);
+    }
+    .btn--secondary:hover { background: var(--border); }
+
+    /* ===== Toast ===== */
+    .toast-overlay {
+      position: sticky;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .toast-overlay.show { display: flex; }
+    .toast {
+      max-width: 380px;
+      width: 90%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 32px 24px;
+      text-align: center;
+      animation: fadeUp 0.3s ease;
+    }
+    .toast__icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+    .toast__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .toast__text {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .toast__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      background: var(--accent);
+      color: #FFF;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .toast__btn:hover { opacity: 0.9; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.toast-overlay.visible, .toast-overlay.open, .toast-overlay.active, .toast-overlay.show { display: flex !important; }
+
+
+/* overlay fix */
+.toast-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.toast-overlay.visible, .toast-overlay.open, .toast-overlay.active { display: flex !important; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+.treqe-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+body.dark .treqe-header{background:#130B00;border-color:#3A3630;}
+.treqe-header__left{display:flex;align-items:center;gap:8px;}
+.treqe-header__back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:.9rem;border-radius:2px;border:1px solid var(--border);background:transparent;cursor:pointer;}
+body.dark .treqe-header__back{color:#B0A9A0;border-color:#3A3630;}
+.treqe-header__title{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;font-weight:600;letter-spacing:-0.3px;color:var(--text);}
+body.dark .treqe-header__title{color:#E8E2D6;}
+.treqe-header__right{display:flex;align-items:center;gap:8px;}
+
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToDiscover()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Disputa</span>
+    </div>
+    <div class="treqe-header__right">
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="order-info">
+      <div class="order-info__icon" style="background:#2D2D2D;"><span style="font-size:1.2rem;">🎸</span></div>
+      <div class="order-info__text">
+        <div class="order-info__id">#TRX-7840 · Intercambio circular</div>
+        <div class="order-info__name">Fender Stratocaster</div>
+        <div class="order-info__price">580€ · Enviado por Ana</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <i class="fas fa-shield-alt"></i>
+      Si el artículo no llega, llega roto o no es lo que pediste, te ayudamos. Revisaremos tu caso en menos de 48h.
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i> ¿Qué ha ocurrido?</h2>
+      <div class="form-group">
+        <div class="radio-group">
+          <label class="radio-option" onclick="selectReason(this)"><input type="radio" name="reason" value="not-arrived"> El artículo no ha llegado</label>
+          <label class="radio-option" onclick="selectReason(this)"><input type="radio" name="reason" value="damaged"> Ha llegado roto o dañado</label>
+          <label class="radio-option" onclick="selectReason(this)"><input type="radio" name="reason" value="wrong"> No corresponde a la descripción</label>
+          <label class="radio-option" onclick="selectReason(this)"><input type="radio" name="reason" value="other"> Otro motivo</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-pen" style="color:#5C6BC0;"></i> Explica con detalle</h2>
+      <div class="form-group">
+        <textarea placeholder="Describe qué ha pasado, desde cuándo esperas el artículo, qué esperabas recibir..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-camera" style="color:var(--accent);"></i> Añade fotos y vídeos</h2>
+      <div class="form-group">
+        <div class="photo-upload">
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+          <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-plus"></i></div>
+        </div>
+        <p style="font-size:.72rem;color:var(--text-sub);margin-top:8px;">Máximo 8 fotos. Sube fotos del artículo dañado o del embalaje.</p>
+        <div style="margin-top:16px;">
+          <label style="font-size:.75rem;font-weight:500;color:var(--text);margin-bottom:8px;display:block;">Vídeos (opcional)</label>
+          <div class="photo-upload">
+            <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-video"></i></div>
+            <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-video"></i></div>
+            <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-video"></i></div>
+            <div class="photo-slot" onclick="addPhoto(this)"><i class="fas fa-video"></i></div>
+          </div>
+          <p style="font-size:.72rem;color:var(--text-sub);margin-top:8px;">Máximo 4 vídeos.</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn--primary" onclick="submitDispute()"><i class="fas fa-paper-plane"></i> Enviar disputa</button>
+    <button class="btn btn--secondary" onclick="window.location.href='../v12-mis-matches/'">Cancelar</button>
+  </div>
+
+  <div class="toast-overlay" id="toastOverlay"></div>
+  <div class="toast" id="toast" style="display:none;">
+    <div class="toast__icon"><i class="fas fa-check"></i></div>
+    <div class="toast__title">Disputa abierta</div>
+    <div class="toast__text">Hemos recibido tu reclamación. Revisaremos el caso y te daremos una respuesta en menos de 48 horas. Puedes ver el estado desde Mis treqes.</div>
+    <button class="toast__btn" onclick="window.location.href='../v12-mis-matches/'">Volver a Mis treqes</button>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+    function selectReason(el) {
+      document.querySelectorAll('.radio-option').forEach(function(r) { r.classList.remove('selected'); });
+      el.classList.add('selected');
+      el.querySelector('input[type=radio]').checked = true;
+    }
+    function addPhoto(slot) {
+      slot.style.background = '#2D2D2D';
+      slot.innerHTML = '<i class="fas fa-check" style="color:rgba(255,255,255,.3);font-size:1.3rem;"></i>';
+    }
+    function submitDispute() {
+      var selected = document.querySelector('input[name=reason]:checked');
+      if (!selected) { alert('Selecciona un motivo'); return; }
+      document.getElementById('toastOverlay').classList.add('show');
+      document.getElementById('toast').style.display = 'block';
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+      var btn = document.querySelector(".dark-toggle i");
+      if (btn) {
+        if (document.body.classList.contains("dark")) {
+          btn.className = "fas fa-sun";
+        } else {
+          btn.className = "fas fa-moon";
+        }
+      }
+    }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

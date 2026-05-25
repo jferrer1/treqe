@@ -1,0 +1,1649 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fender Stratocaster · Intercambio o compra en treqe · Barcelona</title>
+  <meta name="description" content="Fender Stratocaster de segunda mano en Barcelona. Consíguela en treqe mediante intercambio circular o compra directa. Muy buen estado, incluye funda.">
+  <meta property="og:title" content="Fender Stratocaster · treqe">
+  <meta property="og:description" content="Guitarra eléctrica Fender Stratocaster en muy buen estado. Consíguela en treqe mediante intercambio o compra directa.">
+  <meta property="og:image" content="https://jferrer1.github.io/treqe-dev-2026/treqe-app/designs/v2-detalle/og-product.png">
+  <meta property="og:url" content="https://treqe.es/producto/fender-stratocaster">
+  <meta property="og:type" content="product">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://treqe.es/producto/fender-stratocaster">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Fender Stratocaster",
+    "description": "Guitarra eléctrica Fender Stratocaster Made in Mexico, serie Player. Color sunburst, cuerpo de aliso, mástil de arce. Incluye funda original y correa.",
+    "category": "Música > Guitarras",
+    "offers": {
+      "@type": "Offer",
+      "price": "580",
+      "priceCurrency": "EUR",
+      "itemCondition": "https://schema.org/GoodCondition",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== treqe DESIGN SYSTEM ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; -webkit-text-size-adjust: 100%; overflow-y: scroll; }
+    body {
+      touch-action: auto;
+      overflow-y: auto !important;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+    input, select { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+    textarea { font-family: 'IBM Plex Sans', sans-serif; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+      --success: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== DETAIL HEADER ===== */
+    .detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+      background: var(--bg);
+    }
+    .detail-header button {
+      width: 40px; height: 40px;
+      display: flex;
+      align-items: center; justify-content: center;
+      color: var(--text);
+      font-size: 1.1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .detail-header button:hover { background: var(--border); }
+    .detail-header .back-btn i { font-size: 1.1rem; }
+
+    /* ===== GALLERY ===== */
+    .gallery {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #2D2D2D;
+      overflow-y: auto;
+      cursor: grab;
+    }
+    .gallery:active { cursor: grabbing; }
+    .gallery-slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s ease-out;
+    }
+    .gallery-slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery .main-icon {
+      font-size: 5rem;
+      color: rgba(255,255,255,0.15);
+    }
+    .gallery .gallery-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.5);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      letter-spacing: 1px;
+    }
+    .gallery .gallery-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+    }
+    .gallery .gallery-dots span {
+      width: 6px; height: 6px;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.3s;
+    }
+    .gallery .gallery-dots span.active {
+      width: 18px;
+      background: #FFFFFF;
+    }
+
+    .gallery-wish {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 10;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all 0.2s;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .gallery-wish:active { transform: scale(0.9); }
+    .gallery-wish.liked { color: var(--accent); }
+    .gallery-wish.liked i { font-weight: 900; }
+
+    .gallery-trade {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      z-index: 10;
+      width: 40px; height: 40px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.25);
+      color: #FFF;
+      display: flex;
+      align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .gallery-trade.requested { background: var(--accent); color: #FFF; border-color: var(--accent); }
+
+    .gallery-thumbs {
+      display: flex; gap: 6px; padding: 8px 16px 4px;
+      overflow-x: auto; scrollbar-width: none;
+      background: var(--bg);
+    }
+    .gallery-thumbs::-webkit-scrollbar { display: none; }
+    .gallery-thumb {
+      width: 48px; height: 48px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; cursor: pointer;
+      position: relative; font-size: .8rem; color: var(--text-dim);
+      background: var(--surface);
+    }
+    .gallery-thumb:active { opacity: 0.7; }
+    .video-thumb { border-color: var(--accent); }
+    .thumb-play {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .thumb-play i { font-size: .7rem; color: var(--accent); }
+    .thumb-label {
+      position: absolute; bottom: 1px; right: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; color: var(--text-dim); font-weight: 600;
+    }
+
+    .video-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.3);
+    }
+    .video-overlay i { font-size: 3rem; color: rgba(255,255,255,0.8); }
+    .main-icon { font-size: 4rem; color: rgba(255,255,255,0.2); }
+
+    /* ===== ITEM INFO ===== */
+    .item-info {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      margin-top: 0;
+      padding: 24px 24px 0;
+    }
+    .item-breadcrumb {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .item-breadcrumb i { font-size: 0.5rem; }
+    .item-title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    .item-price {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+    .item-price small {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-sub);
+      letter-spacing: 0;
+    }
+
+    /* ===== ITEM DETAILS ROW ===== */
+    .item-details {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .item-detail {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-sub);
+    }
+    .item-detail i {
+      width: 16px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* ===== DESCRIPTION ===== */
+    .item-desc {
+      margin-top: 12px;
+      padding: 12px 0 8px;
+      border-top: 1px solid var(--border);
+    }
+    .item-desc__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .item-desc__text {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* ===== BUY OPTIONS ===== */
+    .buy-options {
+      padding: 24px 0;
+    }
+    .buy-option {
+      width: 100%;
+      padding: 16px 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .buy-option:active { opacity: 0.8; }
+    .buy-option--cash {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .buy-option--cash:hover { background: var(--border); }
+    .buy-option--trade {
+      background: var(--accent);
+      color: var(--surface);
+      border: 1px solid var(--accent);
+    }
+    .buy-option--trade:hover { opacity: 0.9; }
+
+    /* ===== INFO REQUEST ===== */
+    .info-request {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .info-request__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .info-request__title i { color: var(--text-sub); margin-right: 6px; }
+    .info-request__textarea {
+      width: 100%;
+      min-height: 80px;
+      max-height: 200px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      resize: vertical;
+      background: var(--surface);
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .info-request__textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .info-request__btn {
+      width: 100%;
+      padding: 12px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .info-request__btn:hover { background: var(--border); }
+    .info-request__btn i { font-size: 0.8rem; }
+
+    /* ===== MODAL OVERLAY ===== */
+    .modal-overlay {
+      position: sticky;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.visible { display: flex; }
+
+    /* ===== TRADE MODAL ===== */
+    .trade-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .trade-modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .trade-modal__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .trade-modal__close {
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.9rem;
+    }
+    .trade-modal__content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== STEP INDICATOR ===== */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      background: var(--accent);
+      width: 24px;
+    }
+
+    /* ===== STEP 1: SELECT ITEM ===== */
+    .step-1, .step-2 { display: none; }
+    .step-1.visible, .step-2.visible { display: block; }
+
+    .select-item__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .your-items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .your-item-card {
+      background: var(--bg);
+      border: 2px solid transparent;
+      overflow-y: auto;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .your-item-card:active { opacity: 0.8; }
+    .your-item-card.selected {
+      border-color: var(--accent);
+    }
+    .your-item-card__image {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.4);
+      position: relative;
+    }
+    .your-item-card:nth-child(1) .your-item-card__image { background: #1A3A2A; }
+    .your-item-card:nth-child(2) .your-item-card__image { background: #2A1A3A; }
+    .your-item-card:nth-child(3) .your-item-card__image { background: #3A2A1A; }
+    .your-item-card:nth-child(4) .your-item-card__image { background: #1A2A3A; }
+
+    .your-item-card .check-icon {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 24px; height: 24px;
+      background: var(--accent);
+      display: none;
+      align-items: center; justify-content: center;
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+    }
+    .your-item-card.selected .check-icon { display: flex; }
+
+    .your-item-card__info {
+      padding: 12px;
+    }
+    .your-item-card__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow-y: auto;
+      text-overflow: ellipsis;
+    }
+    .your-item-card__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ===== STEP 2: CONFIRM ===== */
+    .trade-confirm__header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .trade-confirm__icon {
+      width: 64px; height: 64px;
+      background: var(--accent);
+      display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.5rem;
+      color: #FFF;
+    }
+    .trade-confirm__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .trade-confirm__subtitle {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .trade-comparison {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .trade-comparison__row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .trade-comparison__item {
+      flex: 1;
+      text-align: center;
+    }
+    .trade-comparison__icon {
+      width: 56px; height: 56px;
+      display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin: 0 auto 8px;
+    }
+    .trade-comparison__icon.get { background: #2D2D2D; color: rgba(255,255,255,0.6); }
+    .trade-comparison__icon.give { background: var(--accent); color: #FFF; }
+    .trade-comparison__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .trade-comparison__name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .trade-comparison__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .trade-comparison__arrow {
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    .trade-difference {
+      background: var(--surface);
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+      border: 1px dashed var(--border);
+    }
+    .trade-difference__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .trade-difference__value {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ===== MODAL FOOTER ===== */
+    .trade-modal__footer {
+      padding: 16px 24px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+    .trade-modal__footer .btn-secondary {
+      flex: 1;
+      padding: 14px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+    .trade-modal__footer .btn-primary {
+      flex: 2;
+      padding: 14px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--accent);
+      color: #FFF;
+      border: 1px solid var(--accent);
+    }
+    .trade-modal__footer .btn-primary:disabled {
+      background: var(--border);
+      color: var(--text-dim);
+      border-color: var(--border);
+      cursor: not-allowed;
+    }
+
+    /* ===== SUCCESS MESSAGE ===== */
+    .success-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      text-align: center;
+      z-index: 300;
+      display: none;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .success-message.visible {
+      display: block;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .success-message__icon {
+      width: 80px; height: 80px;
+      background: var(--accent);
+      display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+      color: #FFF;
+    }
+    .success-message__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .success-message__text {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+    }
+    .success-message__btn {
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--accent);
+      color: #FFF;
+      border: 1px solid var(--accent);
+    }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300;
+      display: none; align-items: center; justify-content: center;
+    }
+    .lightbox-overlay.show { display: flex; }
+    .lightbox-close {
+      position: absolute; top: 16px; right: 16px; z-index: 301;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.15); color: #FFF;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem;
+    }
+    .lightbox-slides {
+      width: 100%; height: 70vh; display: flex; overflow-y: auto;
+    }
+    .lightbox-slide {
+      flex: 0 0 100%; display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-slide i { font-size: 6rem; color: rgba(255,255,255,0.2); }
+    .lightbox-counter {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-family: 'IBM Plex Mono', monospace;
+      color: rgba(255,255,255,0.7); font-size: 0.8rem; font-weight: 500;
+    }
+    .lightbox-prev, .lightbox-next {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 301;
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.15); color: #FFF;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem;
+    }
+    .lightbox-prev { left: 12px; }
+    .lightbox-next { right: 12px; }
+
+    /* ===== INFO HELP MODAL ===== */
+    .info-help-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400;
+      display: none; align-items: flex-end; justify-content: center;
+    }
+    .info-help-overlay.visible { display: flex; }
+    .info-.help-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      width: 100%;
+      max-width: 500px;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    .info-.help-modal__header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-help-modal__header button {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .info-.help-modal__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .info-.help-modal__body {
+      touch-action: auto;
+      padding: 24px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.7;}
+    .info-help-modal__body p { margin-bottom: 12px; }
+    .info-help-modal__body strong { color: var(--text); }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 600px) {
+      .gallery { aspect-ratio: 16 / 9; max-height: 400px; }
+      .item-info { max-width: 600px; margin: 0 auto; }
+      .buy-options { max-width: 400px; margin: 0 auto; }
+      .your-items-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      body {
+      touch-action: auto;}
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 1000px;
+        margin: 12px auto 0;
+        gap: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        
+      }
+      .gallery {
+        aspect-ratio: 1;
+        max-height: none;
+      }
+      .item-info {
+        border: none;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .buy-options { max-width: 100%; }
+      .detail-header { display: none; }
+      .gallery-thumbs { background: var(--surface); }
+      .trade-modal { max-width: 500px; margin: 0 auto; max-height: 90vh; border: 1px solid var(--border); border-radius: 0; }
+    }
+
+    @media (max-width: 380px) {
+      .item-info { padding: 16px 16px 0; }
+      .item-title { font-size: 1.1rem; }
+      .item-price { font-size: 1.6rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow-y: auto;
+  overflow-y: auto;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.info-help-overlay.visible, .info-help-overlay.open, .info-help-overlay.active { display: flex !important; }
+.lightbox-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.lightbox-overlay.visible, .lightbox-overlay.open, .lightbox-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+
+
+/* overlay fix */
+.info-help-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.info-help-overlay.visible, .info-help-overlay.open, .info-help-overlay.active { display: flex !important; }
+.lightbox-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.lightbox-overlay.visible, .lightbox-overlay.open, .lightbox-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+body.dark .like-btn { color: #5A5650; }
+body.dark .like-btn.liked { color: #C0392B; }
+</style>
+</head>
+<body>
+
+  <!-- ===== DETAIL HEADER ===== -->
+  <div class="detail-header"><button class="back-btn" onclick="history.back()" aria-label="Atrás"><i class="fas fa-chevron-left"></i></button>
+  </div>
+
+  <!-- ===== DESKTOP LAYOUT WRAPPER ===== -->
+  <div class="detail-layout">
+
+    <!-- ===== GALLERY ===== -->
+    <div class="gallery" id="gallery">
+      <div class="gallery-slides" id="gallerySlides">
+        <div class="gallery-slide active" style="background: linear-gradient(135deg, #2D2D2D 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #3A2A1A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #1A2A3A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #2A1A2A 0%, #111 100%);">
+          <i class="fas fa-music main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #1A3A2A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #3A3A1A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #2A2A3A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #3A2A3A 0%, #111 100%);">
+          <i class="fas fa-guitar main-icon"></i>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #1A2A3A 0%, #111 100%);">
+          <i class="fas fa-play-circle main-icon"></i>
+          <div class="video-overlay"><i class="fas fa-play"></i></div>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #2A1A2A 0%, #111 100%);">
+          <i class="fas fa-play-circle main-icon"></i>
+          <div class="video-overlay"><i class="fas fa-play"></i></div>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #3A2A1A 0%, #111 100%);">
+          <i class="fas fa-play-circle main-icon"></i>
+          <div class="video-overlay"><i class="fas fa-play"></i></div>
+        </div>
+        <div class="gallery-slide" style="background: linear-gradient(135deg, #2A3A2A 0%, #111 100%);">
+          <i class="fas fa-play-circle main-icon"></i>
+          <div class="video-overlay"><i class="fas fa-play"></i></div>
+        </div>
+      </div>
+      <span class="gallery-badge"><i class="fas fa-camera"></i> <span id="galleryCounter">1</span>/12</span>
+      <div class="gallery-dots" id="galleryDots">
+        <span class="active" onclick="goToSlide(0)"></span>
+        <span onclick="goToSlide(1)"></span>
+        <span onclick="goToSlide(2)"></span>
+        <span onclick="goToSlide(3)"></span>
+        <span onclick="goToSlide(4)"></span>
+        <span onclick="goToSlide(5)"></span>
+        <span onclick="goToSlide(6)"></span>
+        <span onclick="goToSlide(7)"></span>
+        <span onclick="goToSlide(8)"></span>
+        <span onclick="goToSlide(9)"></span>
+        <span onclick="goToSlide(10)"></span>
+        <span onclick="goToSlide(11)"></span>
+      </div>
+      <div class="gallery-thumbs">
+        <div class="gallery-thumb" onclick="goToSlide(0)"><i class="fas fa-guitar"></i><span class="thumb-label">1</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(1)"><i class="fas fa-guitar"></i><span class="thumb-label">2</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(2)"><i class="fas fa-guitar"></i><span class="thumb-label">3</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(3)"><i class="fas fa-guitar"></i><span class="thumb-label">4</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(4)"><i class="fas fa-guitar"></i><span class="thumb-label">5</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(5)"><i class="fas fa-guitar"></i><span class="thumb-label">6</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(6)"><i class="fas fa-guitar"></i><span class="thumb-label">7</span></div>
+        <div class="gallery-thumb" onclick="goToSlide(7)"><i class="fas fa-guitar"></i><span class="thumb-label">8</span></div>
+        <div class="gallery-thumb video-thumb" onclick="goToSlide(8)"><span class="thumb-play"><i class="fas fa-play"></i></span><span class="thumb-label">9</span></div>
+        <div class="gallery-thumb video-thumb" onclick="goToSlide(9)"><span class="thumb-play"><i class="fas fa-play"></i></span><span class="thumb-label">10</span></div>
+        <div class="gallery-thumb video-thumb" onclick="goToSlide(10)"><span class="thumb-play"><i class="fas fa-play"></i></span><span class="thumb-label">11</span></div>
+        <div class="gallery-thumb video-thumb" onclick="goToSlide(11)"><span class="thumb-play"><i class="fas fa-play"></i></span><span class="thumb-label">12</span></div>
+      </div>
+      <button class="gallery-wish" id="wishBtn" onclick="event.stopPropagation();toggleWish()" aria-label="Guardar"><i class="far fa-heart" id="wishIcon"></i></button>
+      <button class="gallery-trade" id="tradeBtn" onclick="event.stopPropagation();toggleTradeReq()" aria-label="Solicitar trueque"><i class="fas fa-exchange-alt" id="tradeIcon"></i></button>
+    </div>
+
+    <!-- ===== RIGHT PANEL ===== -->
+    <div class="item-info">
+      <div>
+        <div class="item-breadcrumb">
+          Música <i class="fas fa-chevron-right"></i> Guitarras
+        </div>
+        <h1 class="item-title">Fender Stratocaster · Muy buen estado</h1>
+        <div class="item-price">€580</div>
+        <div class="item-details">
+          <span class="item-detail"><i class="fas fa-check-circle"></i> Buen estado</span>
+          <span class="item-detail"><i class="fas fa-calendar"></i> 2021</span>
+        </div>
+        <div class="item-desc">
+          <div class="item-desc__title">Descripción</div>
+          <div class="item-desc__text">
+            Fender Stratocaster Made in Mexico, serie Player. Color sunburst, cuerpo de aliso, mástil de arce. Incluye funda original y correa. Pequeña marca en la cejilla, por lo demás impecable.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="buy-options">
+          <button class="buy-option buy-option--cash" onclick="window.location.href='../v12-mis-matches/'">
+            <i class="fas fa-credit-card"></i> Comprar
+          </button>
+          <button class="buy-option buy-option--trade" onclick="openTradeModal()">
+            <i class="fas fa-exchange-alt"></i> Solicitar con trueque
+          </button>
+        </div>
+        <div class="info-request">
+          <div class="info-request__title"><i class="fas fa-question-circle" onclick="event.stopPropagation();openInfoHelp()" style="cursor:pointer;" title="¿Cómo funciona?"></i> Solicitar información</div>
+          <textarea class="info-request__textarea" placeholder="Ej: ¿Podrías añadir más fotos del producto? ¿Mejorarías la descripción con más detalles?..." rows="2"></textarea>
+          <button class="info-request__btn" onclick="sendInfoRequest()">
+            <i class="fas fa-paper-plane"></i> Enviar consulta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TRADE MODAL ===== -->
+  <div class="modal-overlay" id="tradeModal" onclick="closeTradeModal(event)">
+    <div class="trade-modal" onclick="event.stopPropagation()">
+      <div class="trade-modal__header">
+        <span class="trade-modal__title">Solicitar trueque</span>
+        <button class="trade-modal__close" onclick="closeTradeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="trade-modal__content">
+        <div class="step-indicator">
+          <div class="step-dot active" id="step1Dot"></div>
+          <div class="step-dot" id="step2Dot"></div>
+        </div>
+        <div class="step-1 visible" id="step1">
+          <div class="select-item__title">Selecciona qué artículo quieres treqear</div>
+          <div class="your-items-grid">
+            <div class="your-item-card" onclick="selectItem(this, 'Trek Marlin 7', 420, 'fa-bicycle')" data-name="Trek Marlin 7" data-price="420">
+              <div class="your-item-card__image">
+                <i class="fas fa-bicycle"></i>
+                <span class="check-icon"><i class="fas fa-check"></i></span>
+              </div>
+              <div class="your-item-card__info">
+                <div class="your-item-card__title">Trek Marlin 7</div>
+                <div class="your-item-card__price">420 €</div>
+              </div>
+            </div>
+            <div class="your-item-card" onclick="selectItem(this, 'AirPods Max', 380, 'fa-headphones')" data-name="AirPods Max" data-price="380">
+              <div class="your-item-card__image">
+                <i class="fas fa-headphones"></i>
+                <span class="check-icon"><i class="fas fa-check"></i></span>
+              </div>
+              <div class="your-item-card__info">
+                <div class="your-item-card__title">AirPods Max</div>
+                <div class="your-item-card__price">380 €</div>
+              </div>
+            </div>
+            <div class="your-item-card" onclick="selectItem(this, 'G-SHOCK Mudmaster', 250, 'fa-clock')" data-name="G-SHOCK Mudmaster" data-price="250">
+              <div class="your-item-card__image">
+                <i class="fas fa-clock"></i>
+                <span class="check-icon"><i class="fas fa-check"></i></span>
+              </div>
+              <div class="your-item-card__info">
+                <div class="your-item-card__title">G-SHOCK Mudmaster</div>
+                <div class="your-item-card__price">250 €</div>
+              </div>
+            </div>
+            <div class="your-item-card" onclick="selectItem(this, 'Nintendo Switch', 280, 'fa-gamepad')" data-name="Nintendo Switch" data-price="280">
+              <div class="your-item-card__image">
+                <i class="fas fa-gamepad"></i>
+                <span class="check-icon"><i class="fas fa-check"></i></span>
+              </div>
+              <div class="your-item-card__info">
+                <div class="your-item-card__title">Nintendo Switch</div>
+                <div class="your-item-card__price">€280</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-2" id="step2">
+          <div class="trade-confirm__header">
+            <div class="trade-confirm__icon"><i class="fas fa-handshake"></i></div>
+            <div class="trade-confirm__title">Confirma tu trueque</div>
+            <div class="trade-confirm__subtitle">Revisa los detalles antes de enviar</div>
+          </div>
+          <div class="trade-comparison">
+            <div class="trade-comparison__row">
+              <div class="trade-comparison__item">
+                <div class="trade-comparison__icon get"><i class="fas" id="receiveIcon"></i></div>
+                <div class="trade-comparison__label">Recibes</div>
+                <div class="trade-comparison__name" id="receiveName">Fender Stratocaster</div>
+                <div class="trade-comparison__price" id="receivePrice">€580</div>
+              </div>
+              <div class="trade-comparison__arrow"><i class="fas fa-exchange-alt"></i></div>
+              <div class="trade-comparison__item">
+                <div class="trade-comparison__icon give"><i class="fas" id="confirmIcon"></i></div>
+                <div class="trade-comparison__label">Das</div>
+                <div class="trade-comparison__name" id="confirmName">-</div>
+                <div class="trade-comparison__price" id="confirmPrice">-</div>
+              </div>
+            </div>
+            <div class="trade-difference">
+              <div class="trade-difference__label" id="diffLabel">Diferencia a pagar</div>
+              <div class="trade-difference__value" id="diffValue">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="trade-modal__footer">
+        <button class="btn-secondary" id="backBtn" onclick="goToStep(1)" style="display:none;">Atrás</button>
+        <button class="btn-primary" id="nextBtn" onclick="goToStep(2)" disabled>Continuar</button>
+        <button class="btn-primary" id="sendBtn" onclick="sendTradeRequest()" style="display:none;">Enviar solicitud</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUCCESS MESSAGE ===== -->
+  <div class="success-message" id="successMessage">
+    <div class="success-message__icon"><i class="fas fa-check"></i></div>
+    <div class="success-message__title">¡Solicitud enviada!</div>
+    <div class="success-message__text">Te notificaremos cuando sea posible hacer el intercambio</div>
+    <button class="success-message__btn" onclick="closeSuccess()">Entendido</button>
+  </div>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+    <div class="lightbox-slides" id="lightboxSlides"></div>
+    <span class="lightbox-counter" id="lightboxCounter">1/12</span>
+    <button class="lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
+    <button class="lightbox-next" onclick="event.stopPropagation();lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <!-- ===== INFO HELP MODAL ===== -->
+  <div class="info-help-overlay" id="infoHelpModal" onclick="closeInfoHelp()">
+    <div class="info-help-modal" onclick="event.stopPropagation()">
+      <div class="info-help-modal__header">
+        <span class="info-help-modal__title">Solicitar información</span>
+        <button onclick="closeInfoHelp()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="info-help-modal__body">
+        <p>Esta <strong>no es una comunicación directa</strong> con la persona que publicó el artículo.</p>
+        <p>Tu mensaje se envía <strong>a través de treqe</strong> para solicitar que el vendedor mejore la información publicada: más fotos, detalles del estado, medidas, especificaciones técnicas o cualquier dato que ayude a tomar una decisión.</p>
+        <p>El vendedor recibirá la solicitud y podrá actualizar la publicación con la información que necesitas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    var TREQE_PRODUCTS = [
+      { id:1, name:"Fender Stratocaster", condition:"Muy buen estado", price:"580", fa:"fa-guitar", cat:"musica", subcat:"guitarras" },
+      { id:2, name:"G-SHOCK Mudmaster", condition:"Edición limitada", price:"250", fa:"fa-clock", cat:"moda", subcat:"relojes" },
+      { id:3, name:"iPhone 15 Pro", condition:"256GB", price:"890", fa:"fa-mobile-alt", cat:"electronica", subcat:"moviles" },
+      { id:4, name:"PlayStation 5", condition:"Edición digital", price:"480", fa:"fa-gamepad", cat:"electronica", subcat:"consolas" },
+      { id:5, name:"Canon EOS R", condition:"Objetivo 24-70mm", price:"650", fa:"fa-camera", cat:"electronica", subcat:"camaras" },
+      { id:6, name:"MacBook Air M3", condition:"16GB", price:"920", fa:"fa-laptop", cat:"electronica", subcat:"portatiles" },
+      { id:7, name:"Casco Shoei NXR2", condition:"Talla M", price:"320", fa:"fa-motorcycle", cat:"deporte", subcat:"fitness" },
+      { id:8, name:"Trek Marlin 7", condition:"Mtb", price:"420", fa:"fa-bicycle", cat:"deporte", subcat:"bicicletas" },
+      { id:9, name:"AirPods Max", condition:"Azul cielo", price:"380", fa:"fa-headphones", cat:"electronica", subcat:"audio" },
+      { id:10, name:"Bajo Fender Jazz Bass", condition:"Sunrise", price:"620", fa:"fa-guitar", cat:"musica", subcat:"guitarras" },
+      { id:11, name:"Samsung Galaxy S25 Ultra", condition:"512GB", price:"720", fa:"fa-mobile-alt", cat:"electronica", subcat:"moviles" },
+      { id:12, name:"Apple Watch Ultra 2", condition:"Naranja", price:"550", fa:"fa-box", cat:"electronica", subcat:"accesorios" },
+      { id:13, name:"Sofá IKEA Kivik", condition:"3 plazas", price:"180", fa:"fa-couch", cat:"hogar", subcat:"muebles" },
+      { id:14, name:"Nespresso Vertuo Next", condition:"Plata", price:"85", fa:"fa-box", cat:"hogar", subcat:"electrodomesticos" },
+      { id:15, name:"Lámpara de pie IKEA", condition:"Nordviken", price:"45", fa:"fa-box", cat:"hogar", subcat:"lamparas" },
+      { id:16, name:"Kindle Paperwhite", condition:"11a gen", price:"95", fa:"fa-tablet-alt", cat:"electronica", subcat:"tablets" },
+      { id:17, name:"Mochila The North Face", condition:"Borealis", price:"55", fa:"fa-box", cat:"moda", subcat:"bolsos" },
+      { id:18, name:"Nike Air Max 90", condition:"Talla 42", price:"75", fa:"fa-running", cat:"moda", subcat:"zapatos" },
+      { id:19, name:"Palas Bullpadel", condition:"Pack 2 uds.", price:"120", fa:"fa-box", cat:"deporte", subcat:"padel" },
+      { id:20, name:"Set pesas 20kg", condition:"Con mancuernas", price:"65", fa:"fa-dumbbell", cat:"deporte", subcat:"fitness" },
+      { id:21, name:"Guitarra acústica Yamaha F310", condition:"Clásica", price:"210", fa:"fa-guitar", cat:"musica", subcat:"guitarras" },
+      { id:22, name:"Vinilos Beatles", condition:"Colección 5 LP", price:"120", fa:"fa-compact-disc", cat:"musica", subcat:"vinilos" },
+      { id:23, name:"Batería electrónica Roland TD-1DMK", condition:"Completa", price:"650", fa:"fa-box", cat:"musica", subcat:"baterias" },
+      { id:24, name:"Cien años de soledad", condition:"Gabriel García Márquez", price:"12", fa:"fa-book", cat:"libros", subcat:"novelas" },
+      { id:25, name:"Harry Potter", condition:"7 libros", price:"45", fa:"fa-box", cat:"libros", subcat:"novelas" },
+      { id:26, name:"Nintendo Switch OLED", condition:"Blanco", price:"280", fa:"fa-gamepad", cat:"electronica", subcat:"consolas" },
+      { id:27, name:"Logitech MX Mechanical", condition:"Inalámbrico", price:"85", fa:"fa-keyboard", cat:"electronica", subcat:"accesorios" },
+      { id:28, name:"Vestido Zara", condition:"Talla S", price:"35", fa:"fa-box", cat:"moda", subcat:"ropa-mujer" },
+      { id:29, name:"Patines en línea", condition:"Talla 42", price:"55", fa:"fa-box", cat:"deporte", subcat:"fitness" },
+      { id:30, name:"Silla oficina IKEA Markus", condition:"Negro", price:"150", fa:"fa-chair", cat:"hogar", subcat:"muebles" },
+      { id:31, name:"Enciclopedia Salvat", condition:"12 tomos", price:"120", fa:"fa-book", cat:"libros", subcat:"academicos" },
+      { id:32, name:"Batman Year One", condition:"Frank Miller", price:"25", fa:"fa-box", cat:"libros", subcat:"comics" },
+      { id:33, name:"Bicicleta electrica Xiaomi", condition:"25km/h", price:"890", fa:"fa-bicycle", cat:"bicicletas", subcat:"bicis-electricas" },
+      { id:34, name:"Casco Specialized Align II", condition:"Talla M", price:"55", fa:"fa-box", cat:"bicicletas", subcat:"cascos" },
+      { id:35, name:"Auriculares Sony WH-1000XM5", condition:"Cancelacion ruido", price:"220", fa:"fa-headphones", cat:"electronica", subcat:"audio" },
+      { id:36, name:"iPad Air M2", condition:"11\"", price:"520", fa:"fa-tablet-alt", cat:"electronica", subcat:"tablets" },
+      { id:37, name:"Monitor LG Ultrawide 29\"", condition:"2560x1080", price:"180", fa:"fa-desktop", cat:"electronica", subcat:"perifericos" },
+      { id:38, name:"Teclado mecanico Keychron Q1", condition:"Hot-swap", price:"95", fa:"fa-keyboard", cat:"electronica", subcat:"perifericos" },
+      { id:39, name:"Raton Logitech G Pro X Superlight", condition:"Blanco", price:"65", fa:"fa-box", cat:"electronica", subcat:"perifericos" },
+      { id:40, name:"Camara Sony A7 III", condition:"24MP", price:"1200", fa:"fa-camera", cat:"electronica", subcat:"camaras" },
+      { id:41, name:"DJI Mini 4 Pro", condition:"Drone con 4K", price:"850", fa:"fa-box", cat:"electronica", subcat:"camaras" },
+      { id:42, name:"Proyector Xiaomi Mi Smart", condition:"1080p", price:"320", fa:"fa-box", cat:"electronica", subcat:"accesorios" },
+      { id:43, name:"Samsung QLED 55\"", condition:"4K", price:"550", fa:"fa-tv", cat:"electronica", subcat:"accesorios" },
+      { id:44, name:"Xbox Series X", condition:"1TB", price:"380", fa:"fa-gamepad", cat:"electronica", subcat:"consolas" },
+      { id:45, name:"Nintendo Switch Lite", condition:"Turquesa", price:"150", fa:"fa-gamepad", cat:"electronica", subcat:"consolas" },
+      { id:46, name:"MacBook Pro 14\" M3 Pro", condition:"18GB", price:"1450", fa:"fa-laptop", cat:"electronica", subcat:"portatiles" },
+      { id:47, name:"Samsung Galaxy Watch 6 Classic", condition:"47mm", price:"180", fa:"fa-clock", cat:"electronica", subcat:"smartwatches" },
+      { id:48, name:"Zapatillas Nike Air Force 1", condition:"Talla 42", price:"60", fa:"fa-running", cat:"moda", subcat:"zapatos" },
+      { id:49, name:"Chaqueta The North Face", condition:"Talla M", price:"85", fa:"fa-box", cat:"moda", subcat:"ropa-hombre" },
+      { id:50, name:"Bolso Michael Kors", condition:"Piel", price:"120", fa:"fa-box", cat:"moda", subcat:"bolsos" },
+      { id:51, name:"Perfume Chanel Bleu", condition:"100ml", price:"70", fa:"fa-box", cat:"moda", subcat:"belleza" },
+      { id:52, name:"Vestido Mango", condition:"Talla S", price:"25", fa:"fa-box", cat:"moda", subcat:"ropa-mujer" },
+      { id:53, name:"Sofa cama IKEA Friheten", condition:"Esquinero", price:"250", fa:"fa-couch", cat:"hogar", subcat:"muebles" },
+      { id:54, name:"Mesa comedor redonda", condition:"120cm", price:"140", fa:"fa-box", cat:"hogar", subcat:"muebles" },
+      { id:55, name:"Robot aspirador Roomba j7+", condition:"Base autovaciado", price:"350", fa:"fa-box", cat:"electrodomesticos", subcat:"aspiradoras" },
+      { id:56, name:"Lavadora Bosch Serie 4", condition:"8kg", price:"280", fa:"fa-box", cat:"electrodomesticos", subcat:"lavanderia" },
+      { id:57, name:"Secadora Balay", condition:"7kg", price:"320", fa:"fa-box", cat:"electrodomesticos", subcat:"lavanderia" },
+      { id:58, name:"Nevera Samsung", condition:"Side by Side", price:"450", fa:"fa-snowflake", cat:"electrodomesticos", subcat:"cocina" },
+      { id:59, name:"Cochecito BabyTribe PRO", condition:"Plegable", price:"180", fa:"fa-baby-carriage", cat:"bebes", subcat:"carritos" },
+      { id:60, name:"Silla de coche Maxi-Cosi", condition:"Grupo 0-1", price:"95", fa:"fa-box", cat:"bebes", subcat:"sillas-coche" },
+      { id:61, name:"Cuna colecho", condition:"Madera", price:"75", fa:"fa-box", cat:"bebes", subcat:"cunas" },
+      { id:62, name:"Set de pesas 30kg", condition:"Mancuernas", price:"80", fa:"fa-dumbbell", cat:"deporte", subcat:"pesas" },
+      { id:63, name:"Raqueta Wilson Blade 98", condition:"2023", price:"95", fa:"fa-box", cat:"deporte", subcat:"padel" },
+      { id:64, name:"Cinta de correr NordicTrack", condition:"Inclinacion motorizada", price:"500", fa:"fa-box", cat:"deporte", subcat:"fitness" },
+      { id:65, name:"Bicicleta montana Orbea", condition:"29\"", price:"350", fa:"fa-bicycle", cat:"bicicletas", subcat:"bicis-montana" },
+      { id:66, name:"Garmin Edge 530", condition:"GPS ciclismo", price:"120", fa:"fa-box", cat:"bicicletas", subcat:"accesorios" },
+      { id:67, name:"Patines en linea", condition:"Talla 42", price:"45", fa:"fa-box", cat:"deporte", subcat:"patines" },
+      { id:68, name:"Manta electrica", condition:"180x200cm", price:"40", fa:"fa-fire", cat:"hogar", subcat:"calefaccion" },
+      { id:69, name:"Lampara de techo LED", condition:"60cm", price:"35", fa:"fa-box", cat:"hogar", subcat:"lamparas" },
+      { id:70, name:"Balon futbol Adidas Champions", condition:"Talla 5", price:"35", fa:"fa-futbol", cat:"deporte", subcat:"futbol" }
+    ];
+
+    // Selected item state
+    let selectedItem = null;
+    let targetPrice = 0;
+    function getTargetPrice() {
+      if (targetPrice === 0 && window.TREQE_PRODUCTS) {
+        var p = new URLSearchParams(window.location.search);
+        var id = p.get('id');
+        var prod = TREQE_PRODUCTS.find(function(x){ return x.id == id; });
+        if (prod) targetPrice = Number(prod.price);
+      }
+      return targetPrice;
+    }
+
+    function toggleTradeReq() {
+      goToStep(1);
+      openTradeModal();
+    }
+
+    (function(){ var p=new URLSearchParams(window.location.search); var id=p.get("id"); if(id){ var req=JSON.parse(localStorage.getItem("treqe_trade_requests")||"[]"); if(req.indexOf(id)!==-1){ document.getElementById("tradeBtn").classList.add("requested"); } } })();
+
+    function toggleWish() {
+      const btn = document.getElementById('wishBtn');
+      const icon = document.getElementById('wishIcon');
+      btn.classList.toggle('liked');
+      icon.className = btn.classList.contains('liked') ? 'fas fa-heart' : 'far fa-heart';
+    }
+
+    function openTradeModal() {
+      document.getElementById('tradeModal').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+      goToStep(1);
+    }
+    function closeTradeModal(e) {
+      if (!e || e.target === document.getElementById('tradeModal')) {
+        document.getElementById('tradeModal').classList.remove('visible');
+        document.body.style.overflow = '';
+        selectedItem = null;
+        document.querySelectorAll('.your-item-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('nextBtn').disabled = true;
+      }
+    }
+
+    function sendInfoRequest() {
+      const textarea = document.querySelector('.info-request__textarea');
+      const msg = textarea.value.trim();
+      if (!msg) {
+        textarea.style.borderColor = '#E74C3C';
+        textarea.focus();
+        return;
+      }
+      textarea.style.borderColor = '';
+      const btn = document.querySelector('.info-request__btn');
+      btn.innerHTML = '<i class="fas fa-check"></i> Consulta enviada';
+      btn.style.background = 'var(--accent)';
+      btn.style.color = '#FFF';
+      btn.style.borderColor = 'var(--accent)';
+      btn.disabled = true;
+      textarea.disabled = true;
+      console.log('Enquiry sent to seller:', msg);
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar consulta';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+        btn.disabled = false;
+        textarea.disabled = false;
+        textarea.value = '';
+      }, 3000);
+    }
+
+    function goToStep(step) {
+      document.getElementById('step1').classList.toggle('visible', step === 1);
+      document.getElementById('step2').classList.toggle('visible', step === 2);
+      document.getElementById('step1Dot').classList.toggle('active', step === 1);
+      document.getElementById('step2Dot').classList.toggle('active', step === 2);
+      document.getElementById('backBtn').style.display = step === 1 ? 'none' : 'block';
+      document.getElementById('nextBtn').style.display = step === 1 ? 'block' : 'none';
+      document.getElementById('sendBtn').style.display = step === 2 ? 'block' : 'none';
+      if (step === 2 && selectedItem) updateConfirmView();
+    }
+
+    function selectItem(el, name, price, icon) {
+      document.querySelectorAll('.your-item-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedItem = { name, price, icon };
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function updateConfirmView() {
+      if (!selectedItem) return;
+      document.getElementById('confirmIcon').className = 'fas fa-' + selectedItem.icon;
+      document.getElementById('confirmName').textContent = selectedItem.name;
+      document.getElementById('confirmPrice').textContent = selectedItem.price + ' €';
+      const diff = getTargetPrice() - selectedItem.price;
+      const diffEl = document.getElementById('diffValue');
+      const diffLabel = document.getElementById('diffLabel');
+      if (diff > 0) {
+        diffLabel.textContent = 'Diferencia a pagar';
+        diffEl.textContent = diff + ' €';
+      } else if (diff < 0) {
+        diffLabel.textContent = 'Diferencia a recibir';
+        diffEl.textContent = Math.abs(diff) + ' €';
+      } else {
+        diffEl.textContent = '€0 (intercambio exacto)';
+      }
+    }
+
+    function sendTradeRequest() {
+      closeTradeModal();
+      document.getElementById('successMessage').classList.add('visible');
+      var tradeBtn = document.getElementById('tradeBtn');
+      if (tradeBtn) tradeBtn.classList.add('requested');
+      var params = new URLSearchParams(window.location.search);
+      var itemId = params.get('id') || '0';
+      var req = JSON.parse(localStorage.getItem('treqe_trade_requests') || '[]');
+      if (req.indexOf(itemId) === -1) req.push(itemId);
+      localStorage.setItem('treqe_trade_requests', JSON.stringify(req));
+      var notifs = JSON.parse(localStorage.getItem('treqe_notifications') || '[]');
+      var receiveName = document.getElementById('receiveName').textContent;
+      notifs.unshift({
+        text: 'Has solicitado un trueque por ' + receiveName,
+        time: new Date().toLocaleString('es-ES', {hour:'2-digit',minute:'2-digit'}),
+        type: 'trade',
+        productId: itemId,
+        date: new Date().toISOString().split('T')[0]
+      });
+      localStorage.setItem('treqe_notifications', JSON.stringify(notifs));
+    }
+
+    function closeSuccess() {
+      document.getElementById('successMessage').classList.remove('visible');
+      window.parent.location.href = '../v1-catalogo/';
+    }
+
+    // ===== GALLERY =====
+    let currentSlide = 0;
+    const totalSlides = 12;
+    const slides = document.getElementById('gallerySlides');
+    var tStartX = 0;
+    var tEndX = 0;
+
+    slides.addEventListener('touchstart', function(e) { tStartX = e.changedTouches[0].screenX; });
+    slides.addEventListener('touchend', function(e) {
+      tEndX = e.changedTouches[0].screenX;
+      var diff = tStartX - tEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) goToSlide(currentSlide + 1);
+        else goToSlide(currentSlide - 1);
+      }
+    });
+
+    function goToSlide(index) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentSlide = index;
+      slides.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      document.querySelectorAll('#galleryDots span').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+      document.getElementById('galleryCounter').textContent = currentSlide + 1;
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    const gallery = document.getElementById('gallery');
+    gallery.addEventListener('touchstart', (e) => { tStartX = e.changedTouches[0].screenX; }, { passive: true });
+    gallery.addEventListener('touchend', (e) => { tEndX = e.changedTouches[0].screenX; }, { passive: true });
+
+    let mouseDown = false;
+    let mouseStartX = 0;
+        // Touch events for mobile swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    gallery.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    gallery.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+
+    gallery.addEventListener('mousedown', (e) => { mouseDown = true; mouseStartX = e.screenX; });
+    gallery.addEventListener('mouseup', (e) => {
+      if (!mouseDown) return;
+      mouseDown = false;
+      const diff = mouseStartX - e.screenX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    let autoRotate = setInterval(nextSlide, 5000);
+    gallery.addEventListener('mouseenter', () => clearInterval(autoRotate));
+    gallery.addEventListener('mouseleave', () => { autoRotate = setInterval(nextSlide, 5000); });
+
+    // ===== NAVIGATION =====
+    function goToHome() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToSearch() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToMatches() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToTracking() { window.parent.location.href = "../v7-seguimiento/"; }
+    function goToDetail(id) { window.parent.location.href = '../v2-detalle/?id=' + id; }
+
+    console.log('🎸 treqe v2 — Detalle artículo');
+
+    // ===== LIGHTBOX =====
+    function openLightbox() {
+      var lb = document.getElementById('lightbox');
+      var ls = document.getElementById('lightboxSlides');
+      var gallerySlides = document.querySelectorAll('.gallery-slide');
+      ls.innerHTML = '';
+      for (var i = 0; i < gallerySlides.length; i++) {
+        var clone = gallerySlides[i].cloneNode(true);
+        clone.className = 'lightbox-slide';
+        ls.appendChild(clone);
+      }
+      ls.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      document.getElementById('lightboxCounter').textContent = (currentSlide + 1) + '/12';
+      lb.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    function lightboxNav(dir) {
+      currentSlide += dir;
+      if (currentSlide < 0) currentSlide = 11;
+      if (currentSlide > 11) currentSlide = 0;
+      document.getElementById('lightboxSlides').style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+      document.getElementById('lightboxCounter').textContent = (currentSlide + 1) + '/12';
+    }
+    document.getElementById('gallery').addEventListener('click', function(e) {
+      if (!e.target.closest('.gallery-thumb')) openLightbox();
+    });
+
+    function openInfoHelp() { document.getElementById('infoHelpModal').classList.add('visible'); }
+    function closeInfoHelp() { document.getElementById('infoHelpModal').classList.remove('visible'); }
+
+    // ===== DYNAMIC PRODUCT LOADING =====
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id');
+      if (!id) return;
+      var product = TREQE_PRODUCTS.find(function(p){ return p.id == id; });
+      if (!product) return;
+      var titleEl = document.querySelector('.item-title');
+      if (titleEl) titleEl.textContent = product.name + ' \u00b7 ' + product.condition;
+      var priceEl = document.querySelector('.item-price');
+      if (priceEl) priceEl.textContent = '\u20AC' + product.price;
+      var condEl = document.querySelector('.item-detail:first-child');
+      if (condEl) condEl.innerHTML = '<i class="fas fa-check-circle"></i> ' + product.condition;
+      var iconEl = document.querySelector('.gallery-slide .main-icon');
+      if (iconEl) iconEl.className = product.fa + ' main-icon';
+      document.title = 'treqe \u2014 ' + product.name;
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', product.name + ' \u00b7 treqe');
+      var ogDesc = document.querySelector('meta[name="description"]');
+      if (ogDesc) ogDesc.setAttribute('content', product.name + ' - ' + product.condition + '. Consigue en treqe mediante intercambio circular.');
+      var receiveIcon = document.getElementById('receiveIcon');
+      var receiveName = document.getElementById('receiveName');
+      var receivePrice = document.getElementById('receivePrice');
+      if (receiveIcon) receiveIcon.className = product.fa;
+      if (receiveName) receiveName.textContent = product.name;
+      if (receivePrice) receivePrice.textContent = '€' + product.price;
+    })();
+
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id');
+      if (!id) return;
+      var product = TREQE_PRODUCTS.find(function(p){ return p.id == id; });
+      if (!product) return;
+      var thumbs = document.querySelectorAll('.gallery-thumbs .thumb-label');
+      var similar = TREQE_PRODUCTS.filter(function(p){ return p.cat == product.cat; });
+      for (var t = 0; t < thumbs.length && t < similar.length; t++) {
+        if (similar[t].id == product.id) continue;
+        thumbs[t].innerHTML = '<i class="' + similar[t].fa + '"></i>';
+      }
+    })();
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

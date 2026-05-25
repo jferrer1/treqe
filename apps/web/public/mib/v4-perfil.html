@@ -1,0 +1,920 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Mi perfil</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+  :root {
+    --bg:        #F9F7F2;
+    --surface:   #FFFFFF;
+    --text:      #1C1915;
+    --text-sub:  #6B6560;
+    --text-dim:  #A09A94;
+    --border:    #E5E0D8;
+    --border-strong: #C5C0B8;
+    --accent:    #1C1915;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --font-sans: 'IBM Plex Sans', 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  body.dark {
+    background: #130B00;
+    color: #E8E2D6;
+
+    --bg:        #130B00;
+    --surface:   #1A1206;
+    --text:      #E8E2D6;
+    --text-sub:  #A0998F;
+    --text-dim:  #6B6560;
+    --border:    #3A3630;
+    --border-strong: #5A5650;
+    --accent:    #E8E2D6;
+  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; -webkit-text-size-adjust: 100%; overflow-y: scroll; }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background .3s, color .3s;
+    
+  overscroll-behavior: none;}
+    body.dark {
+    background: #130B00;
+    color: #E8E2D6;
+ background: #130B00; color: #E8E2D6; }
+    button { font-family: 'IBM Plex Mono', monospace; cursor: pointer; border: none; background: none; }
+    a { text-decoration: none; color: inherit; }
+    input { font-family: inherit; font-size: inherit; }
+
+    body.dark ::-webkit-scrollbar-track { background: #1A1206; }
+    body.dark ::-webkit-scrollbar-thumb { background: #3A3630; }
+
+    /* ===== treqe HEADER ===== */
+    .treqe-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #F9F7F2;
+      border-bottom: 1px solid #E5E0D8;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      transition: background .3s, border-color .3s;
+    }
+    body.dark .treqe-header { background: #130B00; border-color: #3A3630; }
+    .treqe-header__left { display: flex; align-items: center; gap: 8px; }
+    .treqe-header__back {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .9rem;
+      border-radius: 2px; border: 1px solid #E5E0D8;
+      transition: background .2s;
+    }
+    body.dark .treqe-header__back { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-header__back:active { background: #E5E0D8; }
+    body.dark .treqe-header__back:active { background: #3A3630; }
+    .treqe-header__logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .85rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #1C1915;
+    }
+    body.dark .treqe-header__logo { color: #E8E2D6; }
+    .treqe-header__right { display: flex; align-items: center; gap: 8px; }
+    .treqe-header__toggle {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; color: #55504B;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+      transition: background .2s;
+    }
+    body.dark .treqe-header__toggle { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-header__toggle:active { background: #E5E0D8; }
+    body.dark .treqe-header__toggle:active { background: #3A3630; }
+    .treqe-pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+      transition: all .2s;
+    }
+    body.dark .treqe-pill { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-pill:active { background: #E5E0D8; color: #1C1915; }
+    body.dark .treqe-pill:active { background: #3A3630; color: #E8E2D6; }
+
+    /* ===== PROFILE WRAP ===== */
+    .profile-wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+
+    /* ===== SCORING CARD ===== */
+    .scoring-card {
+      margin: 16px 0;
+      padding: 20px;
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+    }
+    body.dark .scoring-card { background: #1A1206; border-color: #3A3630; }
+    .scoring-card__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .scoring-card__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #8A8580;
+    }
+    body.dark .scoring-card__label { color: #55504B; }
+    .scoring-card__score {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.6rem; font-weight: 400;
+      color: #1C1915;
+      letter-spacing: -1px;
+    }
+    body.dark .scoring-card__score { color: #E8E2D6; }
+    .scoring-card__score small { font-size: .8rem; font-weight: 300; color: #8A8580; }
+    body.dark .scoring-card__score small { color: #55504B; }
+    .scoring-card__bar {
+      width: 100%; height: 4px;
+      background: #E5E0D8;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    body.dark .scoring-card__bar { background: #3A3630; }
+    .scoring-card__bar-fill {
+      height: 100%; width: 82%;
+      background: #1C1915;
+      border-radius: 2px;
+      transition: width .6s ease;
+    }
+    body.dark .scoring-card__bar-fill { background: #E8E2D6; }
+    .scoring-card__info {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 400;
+      color: #55504B;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    body.dark .scoring-card__info { color: #B0A9A0; }
+    .scoring-card__info .next-level { color: #1C1915; font-weight: 500; }
+    body.dark .scoring-card__info .next-level { color: #E8E2D6; }
+    .scoring-card__info button {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      color: #55504B;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 0;
+    }
+    body.dark .scoring-card__info button { color: #B0A9A0; }
+
+    /* ===== PROFILE ACTIONS ===== */
+    .profile-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .profile-action {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      transition: all .2s;
+    }
+    body.dark .profile-action { background: #1A1206; border-color: #3A3630; }
+    .profile-action:active { background: #E5E0D8; }
+    body.dark .profile-action:active { background: #3A3630; }
+    .profile-action__icon {
+      width: 36px; height: 36px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      color: #1C1915; font-size: .9rem;
+    }
+    body.dark .profile-action__icon { border-color: #3A3630; color: #E8E2D6; }
+    .profile-action__icon.verified { border-color: #5A5650; }
+    body.dark .profile-action__icon.verified { border-color: #C5C0B8; }
+    .profile-action__text { flex: 1; text-align: left; }
+    .profile-action__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .85rem; font-weight: 500;
+      color: #1C1915;
+    }
+    body.dark .profile-action__title { color: #E8E2D6; }
+    .profile-action__sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 400;
+      color: #8A8580;
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-top: 3px;
+    }
+    body.dark .profile-action__sub { color: #55504B; }
+    .profile-action > .fa-chevron-right { color: #8A8580; font-size: .75rem; }
+    body.dark .profile-action > .fa-chevron-right { color: #55504B; }
+
+    /* ===== SECTION ===== */
+    .section { margin-bottom: 20px; }
+    .section__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+    }
+    body.dark .section__title { color: #B0A9A0; }
+    .section__action {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: #55504B;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .section__action { color: #B0A9A0; border-color: #3A3630; }
+    .section__action:active { background: #E5E0D8; }
+    body.dark .section__action:active { background: #3A3630; }
+
+    /* ===== STATS ROW ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .stat-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    body.dark .stat-card { background: #1A1206; border-color: #3A3630; }
+    .stat-card__number {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.3rem; font-weight: 700;
+      font-style: italic;
+      color: #1C1915;
+      letter-spacing: -.5px;
+    }
+    body.dark .stat-card__number { color: #E8E2D6; }
+    .stat-card__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 400;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: #8A8580;
+      margin-top: 3px;
+    }
+    body.dark .stat-card__label { color: #55504B; }
+
+    /* ===== ITEMS GRID ===== */
+    .my-items {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .my-item {
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+    body.dark .my-item { background: #1A1206; border-color: #3A3630; }
+    .my-item:active { opacity: .7; }
+    .my-item__image {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+    .my-item:nth-child(1) .my-item__image { background: #1A3A2A; }
+    .my-item:nth-child(2) .my-item__image { background: #2D2D2D; }
+    .my-item:nth-child(3) .my-item__image { background: #3A2A1A; }
+    .my-item:nth-child(4) .my-item__image { background: #1A2A3A; }
+    .my-item:nth-child(5) .my-item__image { background: #2A1A2A; }
+    .my-item:nth-child(6) .my-item__image { background: #3A3A1A; }
+    .my-item .my-item__image i { color: rgba(255,255,255,0.3); }
+    .my-item__info {
+      padding: 8px 10px 10px;
+    }
+    .my-item__title {
+      font-size: .72rem; font-weight: 500;
+      color: #1C1915;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    body.dark .my-item__title { color: #E8E2D6; }
+    .my-item__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem; font-weight: 500;
+      color: #55504B;
+      margin-top: 2px;
+    }
+    body.dark .my-item__price { color: #B0A9A0; }
+    .my-item__status {
+      position: absolute;
+      top: 6px; right: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .45rem; font-weight: 500;
+      padding: 2px 7px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    body.dark .my-item__status { border-color: #3A3630; }
+    .my-item__status.active {
+      background: #1C1915; color: #F9F7F2; border-color: #1C1915;
+    }
+    body.dark .my-item__status.active { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .my-item__status.pending {
+      background: #F9F7F2; color: #55504B; border-color: #C5C0B8;
+    }
+    body.dark .my-item__status.pending { background: #1A1206; color: #B0A9A0; border-color: #5A5650; }
+    .my-item__status.accepted { background: #1C1915; color: #F9F7F2; border-color: #1C1915; }
+    body.dark .my-item__status.accepted { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .my-item__status.rejected {
+      background: #F9F7F2; color: #8A8580; border-color: #E5E0D8;
+    }
+    body.dark .my-item__status.rejected { background: #1A1206; color: #55504B; border-color: #3A3630; }
+
+    /* ===== LIKED ITEM ===== */
+    .my-item__image--liked {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+    .my-item__emoji {
+      font-size: 2.5rem;
+      line-height: 1;
+      z-index: 1;
+    }
+    .my-item__overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 6px 8px;
+      background: linear-gradient(transparent, rgba(0,0,0,.7));
+      color: #fff;
+      font-size: .6rem;
+      font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      text-align: left;
+      z-index: 2;
+    }
+
+    
+    
+    /* ===== SCORING MODAL ===== */
+    .scoring-modal-overlay {
+      position: sticky; inset: 0;
+      background: rgba(0,0,0,.4); z-index: 200;
+      display: none; align-items: flex-end; justify-content: center;
+    }
+    .scoring-modal-overlay.visible { display: flex; }
+    .scoring-modal {
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px 2px 0 0;
+      width: 100%; max-height: 70vh;
+      overflow: hidden;
+    }
+    body.dark .scoring-modal { background: #1A1206; border-color: #3A3630; }
+    .scoring-modal__header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #E5E0D8;
+    }
+    body.dark .scoring-modal__header { border-color: #3A3630; }
+    .scoring-modal__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #1C1915;
+    }
+    body.dark .scoring-modal__title { color: #E8E2D6; }
+    .scoring-modal__close {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .8rem;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .scoring-modal__close { color: #B0A9A0; border-color: #3A3630; }
+    .scoring-modal__close:active { background: #E5E0D8; }
+    body.dark .scoring-modal__close:active { background: #3A3630; }
+    .scoring-modal__body { padding: 16px 20px 20px; max-height: 55vh; overflow-y: auto;}
+    .score-item { display: flex; gap: 12px; margin-bottom: 14px; }
+    .score-item__icon {
+      width: 36px; height: 36px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; flex-shrink: 0; color: #1C1915;
+    }
+    body.dark .score-item__icon { border-color: #3A3630; color: #E8E2D6; }
+    .score-item__text { flex: 1; }
+    .score-item__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .82rem; font-weight: 500; color: #1C1915;
+      margin-bottom: 2px;
+    }
+    body.dark .score-item__title { color: #E8E2D6; }
+    .score-item__desc {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .72rem; color: #55504B; line-height: 1.4;
+    }
+    body.dark .score-item__desc { color: #B0A9A0; }
+    .score-item__points {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem; font-weight: 500;
+      color: #1C1915; white-space: nowrap;
+    }
+    body.dark .score-item__points { color: #E8E2D6; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 600px) {
+      .profile-wrap { max-width: 640px; margin: 0 auto; }
+      .my-items { grid-template-columns: repeat(4, 1fr); }
+      .stats-row { max-width: 400px; }
+    }
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.scoring-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  background: rgba(0,0,0,0.5) !important;
+  z-index: 9999 !important;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.scoring-modal-overlay.visible {
+  display: flex !important;
+}
+
+.scoring-modal-overlay.visible, .scoring-modal-overlay.open, .scoring-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+
+
+/* overlay fix */
+.scoring-modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.scoring-modal-overlay.visible, .scoring-modal-overlay.open, .scoring-modal-overlay.active { display: flex !important; }
+.modal-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.modal-overlay.visible, .modal-overlay.open, .modal-overlay.active { display: flex !important; }
+
+body.dark .treqe-header__title { color: #E8E2D6; }
+  .dm-toggle { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-sub); background: transparent; cursor: pointer; transition: all 0.15s; }
+  .dm-toggle:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+  body.dark .dm-toggle { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .dm-toggle:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+
+  <!-- ===== treqe HEADER ===== -->
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToDiscover()" aria-label="Atrás"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Perfil</span>
+    </div>
+    <div class="treqe-header__right">
+      <a href="../v8-ajustes/" class="treqe-header__back" style="text-decoration:none;margin-right:4px;" title="Ajustes"><i class="fas fa-cog"></i></a>
+      <button class="dm-toggle" onclick="toggleDark()">Dark</button>
+    </div>
+  </div>
+
+  <div class="profile-wrap">
+
+    <!-- ===== SCORING CARD ===== -->
+    <div class="scoring-card">
+      <div class="scoring-card__top">
+        <span class="scoring-card__label">Scoring <i class="fas fa-info-circle" onclick="openScoringInfo()" style="font-size:.65rem;color:var(--text-dim);cursor:pointer;margin-left:3px;"></i></span>
+        <span class="scoring-card__score">82 <small>/ 100</small></span>
+      </div>
+      <div class="scoring-card__bar">
+        <div class="scoring-card__bar-fill" id="scoreFill" style="width:82%"></div>
+      </div>
+      <div class="scoring-card__info">
+        <button onclick="openScoringInfo()" style="background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.55rem;font-weight:500;color:var(--text-dim);text-decoration:underline;text-underline-offset:2px;padding:0;text-transform:uppercase;letter-spacing:.08em;">¿Cómo aumentar?</button>
+        <span class="next-level">95 para nivel Avanzado</span>
+      </div>
+    </div>
+
+    <!-- ===== PROFILE ACTIONS ===== -->
+    <div class="profile-actions">
+      <button class="profile-action" onclick="goToEditProfile()">
+        <div class="profile-action__icon"><i class="fas fa-user-edit"></i></div>
+        <div class="profile-action__text">
+          <div class="profile-action__title">Editar perfil</div>
+          <div class="profile-action__sub">Nombre, foto, bio</div>
+        </div>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <button class="profile-action" onclick="goToVerify()">
+        <div class="profile-action__icon verified"><i class="fas fa-shield-alt"></i></div>
+        <div class="profile-action__text">
+          <div class="profile-action__title">Verificar identidad</div>
+          <div class="profile-action__sub">Más confianza en intercambios</div>
+        </div>
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- ===== STATS ROW ===== -->
+    <div class="section">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card__number">12</div>
+          <div class="stat-card__label">intercambios</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__number">6</div>
+          <div class="stat-card__label">artículos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__number">1</div>
+          <div class="stat-card__label">mes en treqe</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LIKED ITEMS ===== -->
+    <div class="section">
+      <div class="section__header">
+        <span class="section__title"><i class="fas fa-heart" style="margin-right:5px;"></i>Me gustan</span>
+        <button class="section__action" onclick="goToFavorites()">Ver todo</button>
+      </div>
+      <div class="my-items">
+        <div class="my-item" onclick="alert('🎸 Fender Stratocaster')">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#1A3A2A,#2A5A3A)!important;">
+            <span class="my-item__emoji">🎸</span>
+            <div class="my-item__overlay">Fender Stratocaster</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">Fender Stratocaster</div>
+            <div class="my-item__price">€580</div>
+          </div>
+        </div>
+        <div class="my-item" onclick="alert('📷 Canon EOS R')">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#1A2A3A,#2A3A5A)!important;">
+            <span class="my-item__emoji">📷</span>
+            <div class="my-item__overlay">Canon EOS R</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">Canon EOS R</div>
+            <div class="my-item__price">€1.200</div>
+          </div>
+        </div>
+        <div class="my-item" onclick="alert('🎮 PlayStation 5')">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#2A1A3A,#4A2A5A)!important;">
+            <span class="my-item__emoji">🎮</span>
+            <div class="my-item__overlay">PlayStation 5</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">PlayStation 5</div>
+            <div class="my-item__price">€450</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MY ITEMS ===== -->
+    <div class="section">
+      <div class="section__header">
+        <span class="section__title">Mis artículos</span>
+        <button class="section__action" onclick="goToUpload()"><i class="fas fa-plus"></i> Añadir</button>
+      </div>
+      <div class="my-items">
+        <div class="my-item" onclick="alert('🚲 Trek Marlin 7')">
+          <div class="my-item__image"><i class="fas fa-bicycle"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">Trek Marlin 7</div>
+            <div class="my-item__price">€420</div>
+          </div>
+          <span class="my-item__status active">Activo</span>
+        </div>
+        <div class="my-item" onclick="alert('🎧 AirPods Max')">
+          <div class="my-item__image"><i class="fas fa-headphones"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">AirPods Max</div>
+            <div class="my-item__price">€380</div>
+          </div>
+          <span class="my-item__status active">Activo</span>
+        </div>
+        <div class="my-item" onclick="alert('⌚ G-SHOCK Mudmaster')">
+          <div class="my-item__image"><i class="fas fa-clock"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">G-SHOCK Mudmaster</div>
+            <div class="my-item__price">€250</div>
+          </div>
+          <span class="my-item__status active">Activo</span>
+        </div>
+        <div class="my-item" onclick="alert('🔌 Cargador USB-C')">
+          <div class="my-item__image"><i class="fas fa-plug"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">Cargador USB-C 65W</div>
+            <div class="my-item__price">€25</div>
+          </div>
+          <span class="my-item__status pending">Cambio</span>
+        </div>
+        <div class="my-item" onclick="alert('📱 iPhone 12')">
+          <div class="my-item__image"><i class="fas fa-mobile-alt"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">iPhone 12 128GB</div>
+            <div class="my-item__price">350€</div>
+          </div>
+          <span class="my-item__status pending">Cambio</span>
+        </div>
+        <div class="my-item" onclick="alert('🎸 Bajo Ibanez')">
+          <div class="my-item__image"><i class="fas fa-guitar"></i></div>
+          <div class="my-item__info">
+            <div class="my-item__title">Bajo Ibanez GSR200</div>
+            <div class="my-item__price">180€</div>
+          </div>
+          <span class="my-item__status active">Activo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SOLICITUDES DE INTERCAMBIO ===== -->
+    <div class="section">
+      <div class="section__header">
+        <span class="section__title"><i class="fas fa-exchange-alt" style="margin-right:5px;"></i>Solicitudes de intercambio</span>
+        <button class="section__action" onclick="window.parent.location.href='../v17-mis-solicitudes/'">Ver todas</button>
+      </div>
+      <div class="my-items">
+        <div class="my-item" onclick="goToDetail(26)">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#1A2A3A,#2A3A5A)!important;">
+            <span class="my-item__emoji">🎮</span>
+            <div class="my-item__overlay">Nintendo Switch OLED</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">Nintendo Switch OLED</div>
+            <div class="my-item__price">€280</div>
+          </div>
+          <span class="my-item__status pending">Pendiente</span>
+        </div>
+        <div class="my-item" onclick="goToDetail(3)">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#2A1A3A,#4A2A5A)!important;">
+            <span class="my-item__emoji">📱</span>
+            <div class="my-item__overlay">iPhone 15 Pro</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">iPhone 15 Pro</div>
+            <div class="my-item__price">€890</div>
+          </div>
+          <span class="my-item__status accepted">Aceptado</span>
+        </div>
+        <div class="my-item" onclick="goToDetail(21)">
+          <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,#1A3A2A,#2A5A3A)!important;">
+            <span class="my-item__emoji">🎸</span>
+            <div class="my-item__overlay">Yamaha F310</div>
+          </div>
+          <div class="my-item__info">
+            <div class="my-item__title">Yamaha F310</div>
+            <div class="my-item__price">€210</div>
+          </div>
+          <span class="my-item__status rejected">Rechazado</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item active"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <!-- ===== SCORING INFO MODAL ===== -->
+  <div class="scoring-modal-overlay" id="scoringModal" onclick="if(event.target===this)closeScoringInfo()">
+    <div class="scoring-modal">
+      <div class="scoring-modal__header">
+        <span class="scoring-modal__title"><i class="fas fa-chart-line" style="margin-right:8px;"></i> Cómo funciona el Scoring</span>
+        <button class="scoring-modal__close" onclick="closeScoringInfo()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="scoring-modal__body">
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-exchange-alt"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Intercambios completados</div>
+            <div class="score-item__desc">Cada intercambio completado con éxito suma puntos. Cuantos más completas, más sube tu scoring.</div>
+          </div>
+          <div class="score-item__points">+5 c/u</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-clock"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Tiempo de respuesta</div>
+            <div class="score-item__desc">Responder rápido a las consultas y propuestas de intercambio mejora tu puntuación. Menos de 1h suma el máximo.</div>
+          </div>
+          <div class="score-item__points">+1 a +3</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-star"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Valoraciones recibidas</div>
+            <div class="score-item__desc">Las valoraciones positivas de otros usuarios aumentan tu reputación. Cada estrella cuenta.</div>
+          </div>
+          <div class="score-item__points">+1 a +5</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Verificación de identidad</div>
+            <div class="score-item__desc">Verificar tu identidad con DNI y selfie sube tu scoring considerablemente y genera más confianza.</div>
+          </div>
+          <div class="score-item__points">+15</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-calendar-check"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Antigüedad en treqe</div>
+            <div class="score-item__desc">Los usuarios con más tiempo en la plataforma obtienen una bonificación por permanencia.</div>
+          </div>
+          <div class="score-item__points">+1/mes</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item__icon"><i class="fas fa-box-open"></i></div>
+          <div class="score-item__text">
+            <div class="score-item__title">Artículos publicados</div>
+            <div class="score-item__desc">Tener artículos activos y bien descritos contribuye positivamente a tu perfil.</div>
+          </div>
+          <div class="score-item__points">+2 c/u</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('treqe-darkmode', document.body.classList.contains('dark'));
+}
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+    const scoreFill = document.getElementById('scoreFill');
+    let score = 82;
+
+    document.querySelector('.scoring-card').addEventListener('click', function(e) {
+      if (e.target.tagName === 'BUTTON') return;
+      score = Math.min(100, score + 1);
+      scoreFill.style.width = score + '%';
+      this.querySelector('.scoring-card__score').innerHTML = score + ' <small>/ 100</small>';
+      this.querySelector('.scoring-card__info').innerHTML = '<span>Has ganado <strong>+1</strong> por actividad</span><span class="next-level">' + (100 - score) + ' para nivel Avanzado</span>';
+    });
+
+    function goToMatches() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToMatchDetail() { window.parent.location.href = '../v6-match-notification/'; }
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToHome() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToSearch() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToSettings() { window.parent.location.href = '../v8-ajustes/'; }
+    function goToVerify() { window.parent.location.href = '../v15-verificar-identidad/'; }
+    function goToEditProfile() { window.parent.location.href = '../v14-editar-perfil/'; }
+    function goToFavorites() { window.parent.location.href = '../v13-favoritos/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+    function goToDetail(id) { window.parent.location.href = '../v2-detalle/?id=' + id; }
+
+    function openScoringInfo() {
+      document.getElementById('scoringModal').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeScoringInfo() {
+      document.getElementById('scoringModal').classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+</script>
+
+</body>
+</html>

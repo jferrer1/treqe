@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Avisos</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===== treqe Design System (catalog base) ===== */
+/* ===== treqe DESIGN SYSTEM ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+    input, select { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+
+/* ── Header ── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: var(--bg); width: 100%;
+  position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border);
+}
+body.dark .header { background: var(--bg); border-color: var(--border); }
+/* ── Notification list ── */
+.notif-header { padding: 10px 16px 14px; display: flex; align-items: center; gap: 8px; }
+.notif-header__badge {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.52rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px;
+  border: 1px solid var(--text); border-radius: 2px; color: var(--text);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.notif-header__badge i { font-size: 0.35rem; }
+.notif-header__date {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
+  color: var(--text-dim); letter-spacing: 0.06em;
+}
+.notif-list { padding: 0; }
+.notif-item {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px;
+  border-bottom: 1px solid var(--border); transition: background 0.1s;
+}
+.notif-item:hover { background: rgba(0,0,0,0.01); }
+.notif-item--highlight { border-left: 2px solid var(--text); padding-left: 14px; }
+.notif-item__icon {
+  width: 40px; height: 40px; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0;
+}
+.notif-item__body { flex: 1; min-width: 0;}
+.notif-item__title { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; letter-spacing: -0.2px; }
+.notif-item__text { font-size: 0.78rem; color: var(--text-sub); line-height: 1.5; }
+.notif-item__meta {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.06em;
+  color: var(--text-dim); margin-top: 6px; display: flex; align-items: center; gap: 6px;
+}
+.notif-item__meta .status { font-weight: 600; }
+.notif-item__meta .status--pending { color: var(--text); }
+.notif-item__meta .status--done { color: var(--text-sub); }
+.notif-item__btn {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px;
+  border: 1px solid var(--border-strong); border-radius: 2px; color: var(--text-sub);
+  cursor: pointer; background: transparent; white-space: nowrap; transition: all 0.15s; margin-top: 2px;
+}
+.notif-item__btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.footer { padding: 24px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); text-align: center; border-top: 1px solid var(--border); margin-top: 16px; }
+body.dark .footer { border-color: var(--border); }
+/* â•â•â•â•â•â• BOTTOM NAV (standardized across all treqe pages) â•â•â•â•â•â• */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+
+  .treqe-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 50;
+  }
+  body.dark .treqe-header { background: #130B00; border-color: #3A3630; }
+  .treqe-header__left { display: flex; align-items: center; gap: 8px; }
+  .treqe-header__back {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-sub); font-size: .9rem;
+    border-radius: 2px; border: 1px solid var(--border);
+    background: transparent; cursor: pointer;
+  }
+  body.dark .treqe-header__back { color: #B0A9A0; border-color: #3A3630; }
+  body.dark .treqe-header__right { display: flex; align-items: center; gap: 8px; }
+
+body.dark body.dark .treqe-header__title { color: #E8E2D6; }
+  .dm-toggle { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-sub); background: transparent; cursor: pointer; transition: all 0.15s; }
+  .dm-toggle:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+  body.dark .dm-toggle { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .dm-toggle:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+
+<!-- ══════ HEADER ══════ -->
+<div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToDiscover()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Avisos</span>
+    </div>
+    <div class="treqe-header__right">
+      
+    </div>
+  </div>
+
+<!-- ══════ NOTIFICATIONS ══════ -->
+<div class="notif-list">
+
+  <div class="notif-header">
+    <span class="notif-header__badge"><i class="fas fa-circle"></i> 9 avisos</span>
+    <span class="notif-header__date">hoy</span>
+  </div>
+
+  <!-- 0. Solicitud de trueque -->
+  <div class="notif-item notif-item--highlight">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Solicitud de trueque enviada</div>
+      <div class="notif-item__text">Has solicitado un trueque por iPhone 15 Pro. Te notificaremos cuando sea posible hacer el intercambio.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Ahora · <span class="status status--pending">Pendiente</span></div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail(3)">Ver</button>
+  </div>
+
+  <!-- 1. Alguien quiere tu artículo -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Carlos quiere tu Fender Stratocaster</div>
+      <div class="notif-item__text">Ha ofrecido su MacBook Air M3 + 300€. El algoritmo busca completar el círculo. Te avisaremos cuando haya match.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 10 min · <span class="status">En espera</span></div>
+    </div>
+  </div>
+
+  <!-- 2. Bajada de precio -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">El iPhone 15 Pro que guardaste bajó de precio</div>
+      <div class="notif-item__text">Ahora cuesta 820€ (antes 890€). Sigue disponible para compra directa o intercambio.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 2 h</div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('iphone')">Ver</button>
+  </div>
+
+  <!-- 3. Match cancelado -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Match #TRX-7841 cancelado</div>
+      <div class="notif-item__text">Bruno rechazó el intercambio. Tu Casco Shoei NXR2 vuelve a estar disponible para nuevos matches.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 1 h · <span class="status status--done">Artículo liberado</span></div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('casco')">Ver</button>
+  </div>
+
+  <!-- 4. Nuevo artículo matching -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Nuevo artículo: Nintendo Switch OLED</div>
+      <div class="notif-item__text">Coincide con tu búsqueda guardada "consolas". Ya puedes pedirlo por 280€ o solicitar trueque.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 3 h</div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('switch')">Ver</button>
+  </div>
+
+  <!-- 5. Match encontrado -->
+  <div class="notif-item notif-item--highlight">
+    <div class="notif-item__body">
+      <div class="notif-item__title">¡Match encontrado! #TRX-7892</div>
+      <div class="notif-item__text">Círculo de 3 personas listo. Tu G-SHOCK Mudmaster → AirPods Max. Tienes 24h para aceptar.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 5 h · <span class="status status--pending">Quedan 19h 23min</span></div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('match')">Aceptar</button>
+  </div>
+
+  <!-- 6. Recordatorio envío -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Recuerda enviar tu artículo</div>
+      <div class="notif-item__text">Match #TRX-7845 activo. Tienes 48h para enviar tu Trek Marlin 7. El comprador ya ha pagado.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 6 h · <span class="status status--pending">Quedan 42h</span></div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('envio')">Enviar</button>
+  </div>
+
+  <!-- 7. Valoración pendiente -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Valora tu experiencia</div>
+      <div class="notif-item__text">Has recibido la PlayStation 5 de María. Ayuda a la comunidad valorando el intercambio.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Hace 8 h</div>
+    </div>
+    <button class="notif-item__btn" onclick="goToDetail('valorar')">Valorar</button>
+  </div>
+
+  <!-- 8. Sistema -->
+  <div class="notif-item">
+    <div class="notif-item__body">
+      <div class="notif-item__title">Bienvenido a treqe</div>
+      <div class="notif-item__text">Tu perfil está verificado. Ya puedes publicar artículos y empezar a intercambiar con la comunidad.</div>
+      <div class="notif-item__meta"><i class="far fa-clock"></i> Ayer</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════ FOOTER ══════ -->
+<div class="footer">&copy; 2026 treqe</div>
+
+<!-- ══════ BOTTOM NAV ══════ -->
+<nav class="bottom-nav">
+  <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+  <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+  <a href="../v3-subir/" class="nav-item"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+  <a href="../v11-notificaciones/" class="nav-item active"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+  <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+</nav>
+
+<script>
+function goToDiscover() { window.location.href = '../v1-catalogo/'; }
+function goToDetail(id) { window.location.href = '../v2-detalle/?id=' + id; }
+
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+
+
+</html>
+
+</body>
+</html>

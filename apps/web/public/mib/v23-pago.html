@@ -1,0 +1,758 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Pago</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===== treqe DESIGN SYSTEM ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-size: 17px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100dvh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    
+  overscroll-behavior: none;}
+    body.dark {
+      background: #130B00;
+      color: #E8E2D6;
+    }
+    img { max-width: 100%; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: 'IBM Plex Mono', monospace; }
+    a { text-decoration: none; color: inherit; }
+    input, select { font-family: 'IBM Plex Sans', sans-serif; font-size: inherit; }
+
+    :root {
+      --bg: #F9F7F2;
+      --surface: #FFF;
+      --text: #1C1915;
+      --text-sub: #55504B;
+      --text-dim: #8A8580;
+      --border: #E5E0D8;
+      --border-strong: #C5C0B8;
+      --accent: #1C1915;
+    }
+    body.dark {
+      --bg: #130B00;
+      --text: #E8E2D6;
+      --border: #3A3630;
+    }
+
+    /* ===== HEADER ===== */
+    
+    .header .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    
+    .dark-toggle {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      color: var(--text-sub);
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+    .dark-toggle:hover { background: var(--border); }
+    .dark-toggle i { font-size: 0.85rem; }
+
+    @media (min-width: 600px) {
+      
+    }
+    @media (min-width: 1024px) {
+      
+    }
+
+    /* ===== PAGE-SPECIFIC: Pago ===== */
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      padding: 12px 24px 0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .back-link i { font-size: 0.7rem; }
+    .back-link:hover { color: var(--text); }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 16px 24px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      color: #FFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      border-radius: 2px;
+    }
+
+    .address-card {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 16px;
+      background: var(--surface);
+    }
+    .address-card__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .address-card__name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .address-card__dir {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .address-card__edit {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .address-card__edit:hover { color: var(--text); }
+
+    .payment-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .payment-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      background: var(--surface);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .payment-tab:hover { border-color: var(--border-strong); }
+    .payment-tab.active {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    .payment-tab i { font-size: 0.85rem; }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus { border-color: var(--accent); }
+    .form-group input::placeholder { color: var(--text-dim); }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .card-input {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .card-input .card-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .card-input input {
+      padding-left: 36px;
+      padding-right: 70px;
+    }
+    .card-icons {
+      position: absolute;
+      right: 12px;
+      display: flex;
+      gap: 4px;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+    }
+
+    .submit-wrap {
+      margin-top: 16px;
+    }
+    .btn-pagar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: #FFF;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-pagar:hover { opacity: 0.9; }
+    .secure-note {
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 16px;
+      background: var(--surface);
+    }
+    .summary-card h3 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-item:last-of-type { border-bottom: none; }
+    .summary-item__img {
+      width: 44px;
+      height: 44px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .summary-item__info { flex: 1; }
+    .summary-item__name {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .summary-item__meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .summary-item__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+    .summary-row span:last-child { font-family: 'IBM Plex Mono', monospace; }
+    .summary-row.total {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.95rem;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    /* ===== Toast ===== */
+    .toast-overlay {
+      position: sticky;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .toast-overlay.show { display: flex; }
+    .toast {
+      max-width: 380px;
+      width: 90%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 32px 24px;
+      text-align: center;
+      animation: fadeUp 0.3s ease;
+    }
+    .toast__icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--success);
+      border-radius: 50%;
+      color: var(--success);
+      font-size: 1.2rem;
+    }
+    .toast__icon.success { border-color: var(--success); color: var(--success); }
+    .toast__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .toast__text {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .toast__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      background: var(--accent);
+      color: #FFF;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .toast__btn:hover { opacity: 0.9; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    :root {
+      --success: #00B8B8;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+      .form-section { flex: 1.4; }
+      .summary-section { flex: 1; }
+      .back-link { padding: 12px 24px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.toast-overlay.visible, .toast-overlay.open, .toast-overlay.active, .toast-overlay.show { display: flex !important; }
+
+
+/* overlay fix */
+.toast-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.toast-overlay.visible, .toast-overlay.open, .toast-overlay.active { display: flex !important; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+.treqe-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+body.dark .treqe-header{background:#130B00;border-color:#3A3630;}
+.treqe-header__left{display:flex;align-items:center;gap:8px;}
+.treqe-header__back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:.9rem;border-radius:2px;border:1px solid var(--border);background:transparent;cursor:pointer;}
+body.dark .treqe-header__back{color:#B0A9A0;border-color:#3A3630;}
+.treqe-header__title{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;font-weight:600;letter-spacing:-0.3px;color:var(--text);}
+body.dark .treqe-header__title{color:#E8E2D6;}
+.treqe-header__right{display:flex;align-items:center;gap:8px;}
+
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToDiscover()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Pago</span>
+    </div>
+    <div class="treqe-header__right">
+    </div>
+  </div>
+
+  <a class="back-link" href="../v12-mis-matches/"><i class="fas fa-chevron-left"></i> Volver a mis treqes</a>
+
+  <div class="container">
+    <div class="form-section">
+      <h2 style="margin-top:0;"><span class="step-num">1</span> Recibirás de</h2>
+      <div class="address-card">
+        <div class="address-card__label"><i class="fas fa-location-dot" style="margin-right:4px;"></i> Recibirás de Ana</div>
+        <div class="address-card__name">Ana García López</div>
+        <div class="address-card__dir">Avda. Diagonal 345, 3º 2ª<br>08037 Barcelona</div>
+        <a class="address-card__edit"><i class="fas fa-pen"></i> Cambiar dirección</a>
+      </div>
+
+      <h2 style="margin-top:24px;"><span class="step-num">2</span> Método de pago</h2>
+      <div class="payment-tabs">
+        <div class="payment-tab active" onclick="selectPayTab(this)">
+          <i class="fas fa-credit-card"></i>
+          <span>Tarjeta</span>
+        </div>
+        <div class="payment-tab" onclick="selectPayTab(this)">
+          <i class="fab fa-paypal"></i>
+          <span>PayPal</span>
+        </div>
+        <div class="payment-tab" onclick="selectPayTab(this)">
+          <i class="fas fa-mobile-alt"></i>
+          <span>Bizum</span>
+        </div>
+      </div>
+
+      <div id="cardForm">
+        <div class="form-group">
+          <label>Número de tarjeta</label>
+          <div class="card-input">
+            <i class="far fa-credit-card card-icon"></i>
+            <input type="text" placeholder="4242 4242 4242 4242" maxlength="19">
+            <div class="card-icons">
+              <i class="fab fa-cc-visa"></i>
+              <i class="fab fa-cc-mastercard"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Caducidad</label>
+            <input type="text" placeholder="MM/AA" maxlength="5">
+          </div>
+          <div class="form-group">
+            <label>CVC</label>
+            <input type="text" placeholder="123" maxlength="4">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Titular de la tarjeta</label>
+          <input type="text" placeholder="Como aparece en la tarjeta">
+        </div>
+      </div>
+
+      <div id="paypalForm" style="display:none;">
+        <div style="padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:2px;text-align:center;">
+          <i class="fab fa-paypal" style="font-size:3rem;color:#003087;margin-bottom:12px;display:block;"></i>
+          <p style="font-size:.9rem;color:var(--text-sub);margin-bottom:16px;">Serás redirigido a PayPal para completar el pago de forma segura.</p>
+          <div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:2px;font-size:.82rem;color:var(--text-sub);">
+            <i class="fas fa-envelope" style="color:#003087;"></i>
+            <span>usuario@email.com</span>
+          </div>
+        </div>
+      </div>
+      <div id="bizumForm" style="display:none;">
+        <div style="padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:2px;text-align:center;">
+          <i class="fas fa-mobile-alt" style="font-size:3rem;color:#5C6BC0;margin-bottom:12px;display:block;"></i>
+          <p style="font-size:.9rem;color:var(--text-sub);margin-bottom:16px;">Recibirás una solicitud de pago en tu app de Bizum.</p>
+          <div style="display:flex;align-items:center;gap:8px;max-width:240px;margin:0 auto;">
+            <input type="tel" placeholder="Tu número de teléfono" style="flex:1;padding:14px;border:1px solid var(--border);border-radius:2px;font-size:.9rem;text-align:center;outline:none;font-family:inherit;background:var(--surface);color:var(--text);">
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="btn-pagar" onclick="processPayment()">
+          <i class="fas fa-lock"></i> Pagar 276,95€
+        </button>
+        <div class="secure-note">
+          <i class="fas fa-shield-alt"></i> Pago procesado por Stripe. Tus datos están seguros.
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-section">
+      <div class="summary-card">
+        <h3>Resumen del intercambio</h3>
+        <div class="summary-item">
+          <div class="summary-item__img" style="background:#1A2A3A;"><span style="font-size:1.3rem;">📷</span></div>
+          <div class="summary-item__info">
+            <div class="summary-item__name">Canon EOS R</div>
+            <div class="summary-item__meta">de Ana · Como nueva</div>
+          </div>
+          <div class="summary-item__price">650€</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item__img" style="background:#2A1A2A;"><span style="font-size:1.3rem;">🎧</span></div>
+          <div class="summary-item__info">
+            <div class="summary-item__name">AirPods Max</div>
+            <div class="summary-item__meta">tú das · Azul cielo</div>
+          </div>
+          <div class="summary-item__price">380€</div>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="summary-row"><span>Diferencia</span><span>270€</span></div>
+          <div class="summary-row"><span>Envío</span><span>6,95€</span></div>
+          <div class="summary-row"><span>Comisión treqe (5%)</span><span>13,50€</span></div>
+          <div class="summary-row total"><span>Total</span><span>276,95€</span></div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:transparent;border-radius:2px;display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--text-sub);border:1px solid var(--border);">
+          <i class="fas fa-shield-alt" style="color:var(--accent);font-size:1.2rem;"></i>
+          El importe se retiene mediante escrow. Se libera cuando todos reciben sus artículos.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-overlay" id="toastOverlay"></div>
+  <div class="toast" id="toast" style="display:none;">
+    <div class="toast__icon success"><i class="fas fa-check"></i></div>
+    <div class="toast__title">¡Pago realizado!</div>
+    <div class="toast__text">Los 276,95€ se han retenido mediante escrow. Cuando todos los participantes reciban sus artículos, el importe se liberará automáticamente.</div>
+    <button class="toast__btn" onclick="window.location.href='../v12-mis-matches/'">Volver a mis treqes</button>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+    function selectPayTab(el) {
+      document.querySelectorAll('.payment-tab').forEach(function(t) { t.classList.remove('active'); });
+      el.classList.add('active');
+      var method = el.querySelector('span').textContent.trim();
+      var cardForm = document.getElementById('cardForm');
+      var paypalForm = document.getElementById('paypalForm');
+      var bizumForm = document.getElementById('bizumForm');
+      cardForm.style.display = 'none';
+      paypalForm.style.display = 'none';
+      bizumForm.style.display = 'none';
+      if (method === 'Tarjeta') { cardForm.style.display = 'block'; }
+      else if (method === 'PayPal') { paypalForm.style.display = 'block'; }
+      else if (method === 'Bizum') { bizumForm.style.display = 'block'; }
+    }
+
+    function processPayment() {
+      document.getElementById('toastOverlay').classList.add('show');
+      document.getElementById('toast').style.display = 'block';
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+      var btn = document.querySelector(".dark-toggle i");
+      if (btn) {
+        if (document.body.classList.contains("dark")) {
+          btn.className = "fas fa-sun";
+        } else {
+          btn.className = "fas fa-moon";
+        }
+      }
+    }
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+</body>
+</html>

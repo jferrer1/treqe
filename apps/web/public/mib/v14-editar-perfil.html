@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TREQE — Editar perfil</title>
+    <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+:root{--bg:#F9F7F2;--surface:#FFF;--text:#1C1915;--text-sub:#55504B;--text-dim:#8A8580;--border:#E5E0D8;--border-strong:#C5C0B8;--accent:#1C1915;--font-mono:"IBM Plex Mono",monospace;--font-sans:"IBM Plex Sans",sans-serif;}body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth  overflow-y: scroll; }
+    body{font-family:'IBM Plex Sans',sans-serif;background:#F9F7F2;color:#1C1915;min-height:100dvh;padding-bottom:144px;-webkit-font-smoothing:antialiased;overscroll-behavior:contain;scrollbar-gutter:stable}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    :root{--bg:#F9F7F2;--text:#1C1915;--text-secondary:#888;--text-tertiary:#8A8580;--border:#E5E0D8;--accent:#1C1915;--accent-hover:#55504B;--success:#1C1915;--danger:#E74C3C;--card-bg:#FFF;--shadow:0 2px 12px rgba(0,0,0,.06);--radius:12px}
+    button,input,textarea,select{font-family:inherit;font-size:inherit}
+    button{cursor:pointer;border:none;background:none}
+    i{font-style:normal}
+
+    
+    
+    .header__back:active{background:var(--border)}
+    
+
+    .page{padding:0 16px 16px;max-width:500px;margin:0 auto}
+
+    .avatar-section{display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:12px}
+    .avatar-circle{width:96px;height:96px;border-radius:50%;background:var(--accent);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;position:relative;overflow:hidden;flex-shrink:0}
+    .avatar-circle__overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+    .avatar-circle:hover .avatar-circle__overlay,.avatar-circle:active .avatar-circle__overlay{opacity:1}
+    .avatar-circle__overlay i{color:#FFF;font-size:1.2rem}
+    .avatar-change{font-size:.82rem;color:var(--accent);font-weight:500}
+    .avatar-change:active{opacity:.7}
+
+    .form-group{margin-bottom:18px}
+    .form-group__label{font-size:.72rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px}
+    .form-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:.9rem;color:var(--text);background:var(--card-bg);transition:border-color .2s,box-shadow .2s}
+    .form-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,0,0,0.06)}
+    .form-textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:.9rem;color:var(--text);background:var(--card-bg);resize:vertical;min-height:100px;transition:border-color .2s}
+    .form-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,0,0,0.06)}
+    .form-hint{font-size:.68rem;color:var(--text-tertiary);margin-top:4px}
+    .form-section{margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
+    .form-section__title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:14px}
+
+    /* ── Sticky Save Bar ────────────────────────────── */
+    .save-bar{position:fixed;bottom:72px;left:0;right:0;background:rgba(255,255,255,.92);-webkit-border-top:1px solid var(--border);padding:10px 16px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:99;isolation:isolate;display:flex;align-items:center;gap:10px}
+    .save-bar__btn{flex:1;padding:14px;border-radius:var(--radius);font-size:.9rem;font-weight:600;background:var(--accent);color:#FFF;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+    .save-bar__btn:active{opacity:.9;transform:scale(.98)}
+    .save-bar__btn--success{background:var(--success)}
+    .save-bar__preview{width:44px;height:44px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:1.15rem;transition:background .2s,color .2s;flex-shrink:0}
+    .save-bar__preview:active{background:var(--border);color:var(--text)}
+
+    /* ── Inline Username Validation ─────────────────── */
+    .username-wrap{position:relative}
+    .username-input{padding-right:100px!important}
+    .username-status{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:4px;pointer-events:none;opacity:0;transition:opacity .2s}
+    .username-status--visible{opacity:1}
+    .username-status--available{color:var(--success)}
+    .username-status--unavailable{color:var(--danger)}
+    .username-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .5s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── Preview Modal ──────────────────────────────── */
+    .preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);-webkit-z-index:200;display:none;align-items:flex-end;justify-content:center;animation:fadeIn .25s ease}
+    .preview-overlay--open{display:flex}
+    .preview-sheet{background:var(--card-bg);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:90dvh;overflow-y:auto;padding:24px 20px 32px;animation:slideUp .3s ease}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .preview-handle{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 20px}
+    .preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .preview-header__title{font-size:1.05rem;font-weight:600}
+    .preview-close{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-size:1.1rem;transition:background .2s}
+    .preview-close:active{background:var(--border)}
+    .preview-card{background:var(--bg);border-radius:var(--radius);padding:24px 20px;border:1px solid var(--border)}
+    .preview-card__top{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+    .preview-card__avatar{width:60px;height:60px;border-radius:50%;background:var(--accent);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;flex-shrink:0}
+    .preview-card__info{flex:1;min-width:0}
+    .preview-card__name{font-size:1rem;font-weight:700;color:var(--text)}
+    .preview-card__username{font-size:.78rem;color:var(--text-secondary);margin-top:2px}
+    .preview-card__bio{font-size:.82rem;color:var(--text);line-height:1.5;margin-bottom:14px}
+    .preview-card__meta{display:flex;gap:20px;font-size:.75rem;color:var(--text-secondary)}
+    .preview-card__meta i{margin-right:4px;color:var(--accent)}
+    .preview-card__social{display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+    .preview-card__social a{color:var(--text-secondary);font-size:1.1rem;transition:color .2s}
+    .preview-card__social a:active{color:var(--accent)}
+    .preview-badge{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;padding:3px 8px;border-radius:20px;background:rgba(0,0,0,0.06);color:var(--accent);font-weight:600;margin-top:8px}
+    .preview-footer{text-align:center;font-size:.72rem;color:var(--text-tertiary);margin-top:20px;line-height:1.5}
+
+    .bottom-nav{position:fixed;inset:auto 0 0;background:rgba(255,255,255,.92);-webkit-border-top:1px solid var(--border);display:flex;justify-content:space-evenly;align-items:center;padding:0;height:72px;padding-bottom:12px;z-index:100;isolation:isolate}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.65rem;font-weight:500;color:var(--text-tertiary);transition:color .2s;padding:4px 0;flex:1;max-width:80px;position:relative}
+    .nav-item i{font-size:1.3rem}
+    .nav-item.active{color:var(--accent)}
+    .nav-item.active i{transform:scale(1.05)}
+    .nav-item .nav-badge{width:6px;height:6px;background:var(--accent);border-radius:50%;position:absolute;top:2px;right:12px}
+    .nav-item.nav-add{position:relative;top:0}
+    .nav-item.nav-add .nav-add-btn{width:48px;height:48px;background:var(--accent);color:#FFF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform .2s,box-shadow .2s}
+    .nav-item.nav-add .nav-add-btn:active{transform:scale(.92);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+  
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-evenly;align-items:center;padding:0;height:72px;padding-bottom:12px;z-index:100;isolation:isolate;overflow:hidden;}
+.nav-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);transition:color 0.15s;padding:4px 0;flex:1;max-width:80px;border:none;background:none;cursor:pointer;text-decoration:none;}
+.nav-item i{font-size:1rem;}
+.nav-item.active{color:var(--text);}
+.nav-item.active i{color:var(--text);}
+.nav-add-btn{width:40px;height:40px;background:var(--text);color:var(--bg);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+.nav-add-btn i{font-size:1rem;color:var(--bg);}
+.nav-badge{width:5px;height:5px;background:var(--text);border-radius:50%;position:absolute;top:2px;right:4px;}
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+.treqe-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+body.dark .treqe-header{background:#130B00;border-color:#3A3630;}
+.treqe-header__left{display:flex;align-items:center;gap:8px;}
+.treqe-header__back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:.9rem;border-radius:2px;border:1px solid var(--border);background:transparent;cursor:pointer;}
+body.dark .treqe-header__back{color:#B0A9A0;border-color:#3A3630;}
+.treqe-header__title{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;font-weight:600;letter-spacing:-0.3px;color:var(--text);}
+body.dark .treqe-header__title{color:#E8E2D6;}
+.treqe-header__right{display:flex;align-items:center;gap:8px;}
+
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToProfile()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Editar perfil</span>
+    </div>
+    <div class="treqe-header__right">
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="avatar-section">
+      <div class="avatar-circle" id="avatarCircle">
+        <span id="avatarLetter">T</span>
+        <div class="avatar-circle__overlay"><i class="fas fa-camera"></i></div>
+      </div>
+      <button class="avatar-change" onclick="alert('Cambiar foto de perfil')"><i class="fas fa-camera" style="margin-right:4px;"></i> Cambiar foto</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label">Nombre</label>
+      <input class="form-input" type="text" value="Tu Nombre" id="nameInput" maxlength="50">
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label">Nombre de usuario</label>
+      <div class="username-wrap">
+        <input class="form-input username-input" type="text" value="@usuario" id="usernameInput" maxlength="30" autocomplete="off" autocorrect="off" spellcheck="false">
+        <span class="username-status" id="usernameStatus"></span>
+      </div>
+      <div class="form-hint">Es publico y aparecera en tu perfil</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label">Biografia</label>
+      <textarea class="form-textarea" id="bioInput" maxlength="300" placeholder="Cuenta algo sobre ti y lo que buscas en Treqe...">Apasionado de la musica y la tecnologia. Busco intercambios justos y sin complicaciones.</textarea>
+      <div class="form-hint"><span id="bioCount">63</span>/300</div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section__title"><i class="fas fa-map-marker-alt" style="color:var(--accent);margin-right:6px;"></i>Ubicacion</div>
+      <div class="form-group">
+        <label class="form-group__label">Ciudad</label>
+        <input class="form-input" type="text" value="Barcelona" id="cityInput">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section__title"><i class="fas fa-link" style="color:var(--accent);margin-right:6px;"></i>Redes sociales</div>
+      <div class="form-group">
+        <label class="form-group__label">Instagram</label>
+        <input class="form-input" type="text" value="" placeholder="@usuario" id="instagramInput">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Sticky Save Bar ────────────────────────── -->
+  <div class="save-bar" id="saveBar">
+    <button class="save-bar__btn" id="saveBtn" onclick="saveProfile()">
+      <i class="fas fa-check"></i> Guardar cambios
+    </button>
+    <button class="save-bar__preview" onclick="openPreview()" aria-label="Vista previa publica" title="Ver como me ven otros">
+      <i class="fas fa-eye"></i>
+    </button>
+  </div>
+
+  <!-- ── Preview Modal ──────────────────────────── -->
+  <div class="preview-overlay" id="previewOverlay" onclick="closePreview(event)">
+    <div class="preview-sheet" onclick="event.stopPropagation()">
+      <div class="preview-handle"></div>
+      <div class="preview-header">
+        <span class="preview-header__title"><i class="fas fa-eye" style="color:var(--accent);margin-right:6px;"></i>Vista previa publica</span>
+        <button class="preview-close" onclick="closePreview()"><i class="fas fa-xmark"></i></button>
+      </div>
+
+      <div class="preview-card">
+        <div class="preview-card__top">
+          <div class="preview-card__avatar" id="previewAvatarLetter">T</div>
+          <div class="preview-card__info">
+            <div class="preview-card__name" id="previewName">Tu Nombre</div>
+            <div class="preview-card__username" id="previewUsername">@usuario</div>
+            <span class="preview-badge"><i class="fas fa-check-circle"></i> Miembro de Treqe</span>
+          </div>
+        </div>
+        <div class="preview-card__bio" id="previewBio">Apasionado de la musica y la tecnologia. Busco intercambios justos y sin complicaciones.</div>
+        <div class="preview-card__meta">
+          <span><i class="fas fa-map-marker-alt"></i> <span id="previewCity">Barcelona</span></span>
+          <span><i class="fas fa-star"></i> <span id="previewRating">4.8</span> (<span id="previewReviews">12</span>)</span>
+          <span><i class="fas fa-exchange-alt"></i> <span id="previewTrades">24</span> treqes</span>
+        </div>
+        <div class="preview-card__social" id="previewSocial">
+          <a href="#" aria-label="Instagram" rel="noopener"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+
+      <div class="preview-footer">
+        <i class="fas fa-globe" style="margin-right:4px;"></i>
+        Asi ven tu perfil los demas usuarios de Treqe
+      </div>
+    </div>
+  </div>
+
+    <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>Treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+
+<script>
+(function() {
+  "use strict";
+
+  /* ── Bio counter ───────────────────────────── */
+  var bioInput = document.getElementById('bioInput');
+  var bioCount = document.getElementById('bioCount');
+  bioInput.addEventListener('input', function() {
+    bioCount.textContent = this.value.length;
+  });
+
+  /* ── Inline username validation ────────────── */
+  var usernameInput = document.getElementById('usernameInput');
+  var usernameStatus = document.getElementById('usernameStatus');
+  var validateTimer = null;
+  var isChecking = false;
+
+  usernameInput.addEventListener('input', function() {
+    var val = this.value.trim();
+
+    if (!val || val === '@') {
+      usernameStatus.className = 'username-status';
+      usernameStatus.innerHTML = '';
+      return;
+    }
+
+    /* Show spinner */
+    usernameStatus.className = 'username-status username-status--visible';
+    usernameStatus.innerHTML = '<span class="username-spinner"></span>';
+
+    clearTimeout(validateTimer);
+
+    validateTimer = setTimeout(function() {
+      var isAvailable = Math.random() > 0.35;
+
+      usernameStatus.className = 'username-status username-status--visible ' +
+        (isAvailable ? 'username-status--available' : 'username-status--unavailable');
+
+      if (isAvailable) {
+        usernameStatus.innerHTML = '<i class="fas fa-check-circle"></i> disponible';
+      } else {
+        usernameStatus.innerHTML = '<i class="fas fa-times-circle"></i> no disponible';
+      }
+
+      /* Update avatar letter */
+      var letter = val.replace('@','').charAt(0).toUpperCase() || 'T';
+      document.getElementById('avatarLetter').textContent = letter;
+    }, 300);
+  });
+
+  /* ── Save profile ──────────────────────────── */
+  function saveProfile() {
+    var btn = document.getElementById('saveBtn');
+    btn.innerHTML = '<i class="fas fa-check"></i> Guardado';
+    btn.classList.add('save-bar__btn--success');
+    setTimeout(function() {
+      btn.innerHTML = '<i class="fas fa-check"></i> Guardar cambios';
+      btn.classList.remove('save-bar__btn--success');
+    }, 2000);
+  }
+
+  /* ── Preview modal ─────────────────────────── */
+  function openPreview() {
+    var overlay = document.getElementById('previewOverlay');
+
+    /* Sync preview values */
+    var name = document.getElementById('nameInput').value.trim() || 'Tu Nombre';
+    var username = document.getElementById('usernameInput').value.trim() || '@usuario';
+    var bio = document.getElementById('bioInput').value.trim() || 'Sin biografia';
+    var city = document.getElementById('cityInput').value.trim() || 'Sin ubicacion';
+    var instagram = document.getElementById('instagramInput').value.trim();
+
+    document.getElementById('previewName').textContent = name;
+    document.getElementById('previewUsername').textContent = username;
+    document.getElementById('previewBio').textContent = bio;
+    document.getElementById('previewCity').textContent = city;
+
+    var letter = username.replace('@','').charAt(0).toUpperCase() || name.charAt(0).toUpperCase() || 'T';
+    document.getElementById('previewAvatarLetter').textContent = letter;
+
+    var socialBox = document.getElementById('previewSocial');
+    if (instagram) {
+      var ig = instagram.replace('@','');
+      socialBox.innerHTML = '<a href="https://instagram.com/' + ig + '" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>';
+      socialBox.style.display = 'flex';
+    } else {
+      socialBox.style.display = 'none';
+    }
+
+    overlay.classList.add('preview-overlay--open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.openPreview = openPreview;
+
+  function closePreview(e) {
+    if (e && e.target !== document.getElementById('previewOverlay')) return;
+    var overlay = document.getElementById('previewOverlay');
+    overlay.classList.remove('preview-overlay--open');
+    document.body.style.overflow = '';
+  }
+
+  window.closePreview = closePreview;
+
+  /* ── Navigation ────────────────────────────── */
+  window.goToDiscover  = function() { window.parent.location.href = '../v1-catalogo/'; };
+  window.goToTrades    = function() { window.parent.location.href = '../v12-mis-matches/'; };
+  window.goToInbox     = function() { window.parent.location.href = '../v11-notificaciones/'; };
+  window.goToUpload    = function() { window.parent.location.href = '../v3-subir/'; };
+  window.goToProfile   = function() { window.parent.location.href = '../v4-perfil/'; };
+  window.saveProfile   = saveProfile;
+
+})();
+
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+</body>
+</html>

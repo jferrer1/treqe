@@ -1,0 +1,1303 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>treqe — Mis treqes</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+  :root {
+    --bg:        #F9F7F2;
+    --surface:   #FFFFFF;
+    --text:      #1C1915;
+    --text-sub:  #6B6560;
+    --text-dim:  #A09A94;
+    --border:    #E5E0D8;
+    --border-strong: #C5C0B8;
+    --accent:    #1C1915;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+    --font-sans: 'IBM Plex Sans', 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  body.dark {
+    --bg:        #130B00;
+    --surface:   #1A1206;
+    --text:      #E8E2D6;
+    --text-sub:  #A0998F;
+    --text-dim:  #6B6560;
+    --border:    #3A3630;
+    --border-strong: #5A5650;
+    --accent:    #E8E2D6;
+  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; -webkit-text-size-adjust: 100%; overflow-y: scroll; }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      -webkit-font-smoothing: antialiased;
+      transition: background .3s, color .3s;
+    
+  overscroll-behavior: none;}
+    body.dark { background: #130B00; color: #E8E2D6; }
+    button { font-family: 'IBM Plex Mono', monospace; cursor: pointer; border: none; background: none; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== treqe HEADER ===== */
+    .treqe-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: #F9F7F2;
+      border-bottom: 1px solid #E5E0D8;
+      position: sticky; top: 0; z-index: 50;
+      transition: background .3s, border-color .3s;
+    }
+    body.dark .treqe-header { background: #130B00; border-color: #3A3630; }
+    .treqe-header__left { display: flex; align-items: center; gap: 8px; }
+    .treqe-header__back {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .9rem;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .treqe-header__back { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-header__back:active { background: #E5E0D8; }
+    body.dark .treqe-header__back:active { background: #3A3630; }
+    .treqe-header__logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .85rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: #1C1915;
+    }
+    body.dark .treqe-header__logo { color: #E8E2D6; }
+    body.dark .treqe-header__right { display: flex; align-items: center; gap: 8px; }
+    body.dark body.dark .treqe-pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: #55504B;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .treqe-pill { color: #B0A9A0; border-color: #3A3630; }
+    .treqe-pill:active { background: #E5E0D8; color: #1C1915; }
+    body.dark .treqe-pill:active { background: #3A3630; color: #E8E2D6; }
+    .treqe-header__count {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      color: #8A8580;
+      text-transform: uppercase;
+    }
+    body.dark .treqe-header__count { color: #55504B; }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: flex; gap: 6px;
+      padding: 12px 16px;
+      background: #F9F7F2;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    body.dark .tabs { background: #130B00; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .1em;
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      color: #55504B;
+      transition: all .2s;
+    }
+    body.dark .tab { background: #1A1206; border-color: #3A3630; color: #B0A9A0; }
+    .tab.active {
+      background: #1C1915;
+      color: #F9F7F2;
+      border-color: #1C1915;
+    }
+    body.dark .tab.active { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .tab .count {
+      background: #E5E0D8;
+      padding: 1px 6px;
+      border-radius: 2px;
+      font-size: .45rem;
+      margin-left: 3px;
+    }
+    body.dark .tab .count { background: #3A3630; }
+    .tab.active .count { background: rgba(255,255,255,.15); color: inherit; }
+    body.dark .tab.active .count { background: rgba(0,0,0,.1); }
+
+    /* ===== MATCH CARD ===== */
+    .match-section { padding: 0 16px; }
+    .match-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      padding: 20px;
+      margin-bottom: 12px;
+      transition: opacity .3s;
+    }
+    body.dark .match-card { background: #1A1206; border-color: #3A3630; }
+    .match-card__header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .match-card__id {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      color: #8A8580;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+    body.dark .match-card__id { color: #55504B; }
+    .match-card__status {
+      display: flex; align-items: center; gap: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+    }
+    body.dark .match-card__status { border-color: #3A3630; }
+    .match-card__status.active-status { border-color: #1C1915; color: #1C1915; }
+    body.dark .match-card__status.active-status { border-color: #E8E2D6; color: #E8E2D6; }
+    .match-card__status.pending-status { color: #55504B; }
+    body.dark .match-card__status.pending-status { color: #B0A9A0; }
+    .match-card__status.broken-status { color: #55504B; }
+    .match-card__status.in-progress { border-color: #1C1915; color: #1C1915; }
+    body.dark .match-card__status.in-progress { border-color: #E8E2D6; color: #E8E2D6; }
+    .match-card__status.done-status { border-color: #C5C0B8; color: #55504B; }
+    body.dark .match-card__status.done-status { border-color: #5A5650; color: #B0A9A0; }
+    .match-card__timer {
+      display: flex; align-items: center; gap: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      color: #55504B;
+      padding: 4px 10px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      background: #F9F7F2;
+    }
+    body.dark .match-card__timer { color: #B0A9A0; border-color: #3A3630; background: #130B00; }
+    .match-card__timer.timer--urgent {
+      color: #F9F7F2;
+      background: #1C1915;
+      border-color: #1C1915;
+    }
+    body.dark .match-card__timer.timer--urgent { color: #130B00; background: #E8E2D6; border-color: #E8E2D6; }
+
+    /* ===== ITEM COMPARISON ===== */
+    .item-compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      background: #F9F7F2;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+    body.dark .item-compare { background: #130B00; border-color: #3A3630; }
+    .item-compare__item { text-align: center; }
+    .item-compare__emoji {
+      width: 56px; height: 56px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 6px;
+      background: #FFFFFF;
+    }
+    body.dark .item-compare__emoji { border-color: #3A3630; background: #1A1206; }
+    .item-compare__name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .75rem; font-weight: 500;
+      color: #1C1915;
+      line-height: 1.2;
+    }
+    body.dark .item-compare__name { color: #E8E2D6; }
+    .item-compare__price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem;
+      color: #55504B;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    body.dark .item-compare__price { color: #B0A9A0; }
+    .item-compare__from {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem;
+      color: #8A8580;
+      margin-top: 1px;
+    }
+    body.dark .item-compare__from { color: #55504B; }
+    .item-compare__arrow {
+      font-size: 1.1rem;
+      color: #1C1915;
+    }
+    body.dark .item-compare__arrow { color: #E8E2D6; }
+
+    /* ===== CIRCLE ===== */
+    .match-card__circle { margin-bottom: 14px; }
+    .circle-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      color: #8A8580;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 8px;
+    }
+    body.dark .circle-title { color: #55504B; }
+    .circle-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #E5E0D8;
+    }
+    body.dark .circle-row { border-color: #3A3630; }
+    .circle-row:last-child { border-bottom: none; }
+    .circle-avatar {
+      width: 28px; height: 28px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .6rem;
+      color: #55504B;
+      flex-shrink: 0;
+    }
+    body.dark .circle-avatar { border-color: #3A3630; color: #B0A9A0; }
+    .circle-avatar.you { background: #1C1915; color: #F9F7F2; border-color: #1C1915; }
+    body.dark .circle-avatar.you { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .circle-info { flex: 1; min-width: 0; }
+    .circle-name { font-size: .78rem; font-weight: 500; color: #1C1915; }
+    body.dark .circle-name { color: #E8E2D6; }
+    .circle-item {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem;
+      color: #8A8580;
+    }
+    body.dark .circle-item { color: #55504B; }
+    .circle-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      padding: 3px 8px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      display: flex; align-items: center; gap: 2px;
+      flex-shrink: 0;
+    }
+    body.dark .circle-badge { border-color: #3A3630; }
+    .circle-badge.accepted { border-color: #1C1915; color: #1C1915; }
+    body.dark .circle-badge.accepted { border-color: #E8E2D6; color: #E8E2D6; }
+    .circle-badge.pending { color: #55504B; }
+    body.dark .circle-badge.pending { color: #B0A9A0; }
+    .circle-badge.rejected { color: #55504B; }
+
+    /* ===== PROGRESS ===== */
+    .progress-bar-wrap {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem;
+      color: #55504B;
+    }
+    body.dark .progress-bar-wrap { color: #B0A9A0; }
+    .progress-bar {
+      flex: 1; height: 4px;
+      background: #E5E0D8;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    body.dark .progress-bar { background: #3A3630; }
+    .progress-bar__fill {
+      height: 100%;
+      background: #1C1915;
+      border-radius: 2px;
+      transition: width .5s;
+    }
+    body.dark .progress-bar__fill { background: #E8E2D6; }
+
+    /* ===== ACTION BUTTONS ===== */
+    .action-buttons { display: flex; gap: 8px; }
+    .action-btn {
+      flex: 1; padding: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-align: center;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      background: #F9F7F2;
+      color: #55504B;
+      transition: all .2s;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    body.dark .action-btn { border-color: #3A3630; background: #130B00; color: #B0A9A0; }
+    .action-btn:active { opacity: .7; }
+    .action-btn--primary {
+      background: #1C1915; color: #F9F7F2; border-color: #1C1915;
+    }
+    body.dark .action-btn--primary { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .action-btn--ghost { background: transparent; }
+    .action-btn--success {
+      background: #1C1915; color: #F9F7F2; border-color: #1C1915;
+    }
+    body.dark .action-btn--success { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .action-btn--full { width: 100%; }
+
+    /* ===== BROKEN ===== */
+    .broken-reason {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      margin-bottom: 14px;
+      font-size: .78rem;
+      color: #55504B;
+    }
+    body.dark .broken-reason { border-color: #3A3630; color: #B0A9A0; }
+
+    /* ===== SHIPPING ===== */
+    .shipping-block {
+      padding: 10px 14px;
+      background: #F9F7F2;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+    body.dark .shipping-block { background: #130B00; border-color: #3A3630; }
+    .shipping-block__label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem; font-weight: 500;
+      color: #8A8580;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 3px;
+    }
+    body.dark .shipping-block__label { color: #55504B; }
+    .shipping-block__dir {
+      font-size: .72rem;
+      color: #55504B;
+      margin-bottom: 2px;
+      line-height: 1.4;
+    }
+    body.dark .shipping-block__dir { color: #B0A9A0; }
+    .shipping-block__item {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .65rem; font-weight: 500;
+      color: #1C1915;
+    }
+    body.dark .shipping-block__item { color: #E8E2D6; }
+
+    /* ===== TRACKING ===== */
+    .tracking-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #E5E0D8;
+      font-size: .78rem;
+    }
+    body.dark .tracking-item { border-color: #3A3630; }
+    .tracking-item:last-child { border-bottom: none; margin-bottom: 14px; }
+    .tracking-item__icon {
+      width: 32px; height: 32px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem;
+      flex-shrink: 0;
+      color: #55504B;
+    }
+    body.dark .tracking-item__icon { border-color: #3A3630; color: #B0A9A0; }
+    .tracking-item__info { flex: 1; }
+    .tracking-item__label { font-weight: 500; color: #1C1915; }
+    body.dark .tracking-item__label { color: #E8E2D6; }
+    .tracking-item__meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem;
+      color: #8A8580;
+      margin-top: 1px;
+    }
+    body.dark .tracking-item__meta { color: #55504B; }
+
+    /* ===== COMPLETED ===== */
+    .completed-summary {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 10px 14px;
+      background: #F9F7F2;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+    body.dark .completed-summary { background: #130B00; border-color: #3A3630; }
+    .completed-row {
+      font-size: .78rem;
+      color: #1C1915;
+    }
+    body.dark .completed-row { color: #E8E2D6; }
+    .completed-row strong { font-weight: 600; }
+    .rating-stars {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .5rem;
+      color: #55504B;
+    }
+    body.dark .rating-stars { color: #B0A9A0; }
+    .rating-stars span { color: #1C1915; }
+    body.dark .rating-stars span { color: #E8E2D6; }
+
+    /* ===== FEEDBACK TOAST ===== */
+    .feedback-toast {
+      position: sticky;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%) scale(.9);
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      padding: 28px 24px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s;
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+    }
+    body.dark .feedback-toast { background: #1A1206; border-color: #3A3630; }
+    .feedback-toast.show { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
+    .feedback-toast__icon { font-size: 2rem; margin-bottom: 10px; }
+    .feedback-toast__title {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .95rem; font-weight: 500;
+      color: #1C1915;
+      margin-bottom: 6px;
+    }
+    body.dark .feedback-toast__title { color: #E8E2D6; }
+    .feedback-toast__text {
+      font-size: .78rem;
+      color: #55504B;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    body.dark .feedback-toast__text { color: #B0A9A0; }
+    .feedback-toast__btn {
+      padding: 10px 28px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      background: #1C1915;
+      color: #F9F7F2;
+      border: 1px solid #1C1915;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    body.dark .feedback-toast__btn { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .feedback-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.3);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    .feedback-overlay.show { opacity: 1; pointer-events: auto; }
+
+    /* ===== RATE MODAL ===== */
+    .rate-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .rate-overlay.show { display: flex; }
+    .rate-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px 2px 0 0;
+      width: 100%;
+      max-height: 65vh;
+      overflow: hidden;
+    }
+    body.dark .rate-card { background: #1A1206; border-color: #3A3630; }
+    .rate-card__hd {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #E5E0D8;
+    }
+    body.dark .rate-card__hd { border-color: #3A3630; }
+    .rate-card__title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: #1C1915;
+    }
+    body.dark .rate-card__title { color: #E8E2D6; }
+    .rate-card__cls {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      color: #55504B; font-size: .8rem;
+      border: 1px solid #E5E0D8; border-radius: 2px;
+    }
+    body.dark .rate-card__cls { color: #B0A9A0; border-color: #3A3630; }
+    .rate-card__body { padding: 20px; text-align: center;}
+    .rate-card__score {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1rem; font-weight: 400;
+      color: #1C1915;
+      margin-bottom: 12px;
+    }
+    body.dark .rate-card__score { color: #E8E2D6; }
+    .rate-card__stars { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+    .rate-star { font-size: 1.8rem; color: #E5E0D8; cursor: pointer; }
+    body.dark .rate-star { color: #3A3630; }
+    .rate-star.on { color: #1C1915; }
+    body.dark .rate-star.on { color: #E8E2D6; }
+    .rate-card__ta {
+      width: 100%; padding: 10px;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: .8rem;
+      resize: vertical;
+      background: #F9F7F2;
+      color: #1C1915;
+      min-height: 70px;
+      text-align: left;
+    }
+    body.dark .rate-card__ta { border-color: #3A3630; background: #130B00; color: #E8E2D6; }
+    .rate-card__ft {
+      display: flex; gap: 8px;
+      padding: 12px 20px 20px;
+      border-top: 1px solid #E5E0D8;
+    }
+    body.dark .rate-card__ft { border-color: #3A3630; }
+    .btn-r {
+      flex: 1; padding: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: .55rem; font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      border: 1px solid #E5E0D8;
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+    body.dark .btn-r { border-color: #3A3630; }
+    .btn-r--primary { background: #1C1915; color: #F9F7F2; border-color: #1C1915; }
+    body.dark .btn-r--primary { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+    .btn-r--secondary { background: #F9F7F2; color: #55504B; }
+    body.dark .btn-r--secondary { background: #130B00; color: #B0A9A0; }
+
+    
+    
+    body.dark 
+    
+    body.dark 
+    
+    
+    body.dark 
+    .nav-item 
+    body.dark .nav-item 
+    
+    
+    body.dark 
+    
+
+    @media (min-width: 600px) {
+      .treqe-header, .tabs, .match-section { max-width: 600px; margin-left: auto; margin-right: auto; }
+    }
+  /* ══════ BOTTOM NAV (standardized across all treqe pages) ══════ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 68px;
+  padding-bottom: 12px;
+  z-index: 100;
+  isolation: isolate;
+  overflow: hidden;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  padding: 4px 0;
+  flex: 1;
+  max-width: 80px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active { color: var(--text); }
+.nav-item.active i { color: var(--text); }
+
+.nav-item .nav-add-btn,
+.nav-add-btn {
+  width: 42px;
+  height: 42px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.nav-item .nav-add-btn i,
+.nav-add-btn i {
+  font-size: 1rem;
+  color: var(--bg);
+}
+
+.nav-badge {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+.feedback-overlay.visible, .feedback-overlay.open, .feedback-overlay.active { display: flex !important; }
+.rate-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; }
+.rate-overlay.visible, .rate-overlay.open, .rate-overlay.active { display: flex !important; }
+
+
+/* overlay fix */
+.feedback-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.feedback-overlay.visible, .feedback-overlay.open, .feedback-overlay.active { display: flex !important; }
+.rate-overlay { position: fixed !important; inset: 0 !important; z-index: 9999 !important; display: none !important; }
+.rate-overlay.visible, .rate-overlay.open, .rate-overlay.active { display: flex !important; }
+
+body.dark body.dark .treqe-header__title { color: #E8E2D6; }
+  .dm-toggle { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 2px; color: var(--text-sub); background: transparent; cursor: pointer; transition: all 0.15s; }
+  .dm-toggle:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+  body.dark .dm-toggle { border-color: #3A3630; color: #B0A9A0; }
+  body.dark .dm-toggle:hover { background: #E8E2D6; color: #130B00; border-color: #E8E2D6; }
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+
+  <!-- ===== treqe HEADER ===== -->
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToDiscover()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Treqes</span>
+    </div>
+    <div class="treqe-header__right">
+      
+    </div>
+  </div>
+
+<!-- ===== TABS ===== -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this, 'active')">
+      Activos <span class="count">1</span>
+    </button>
+    <button class="tab" onclick="switchTab(this, 'pending')">
+      Pendientes <span class="count">2</span>
+    </button>
+    <button class="tab" onclick="switchTab(this, 'in-progress')">
+      En curso <span class="count">2</span>
+    </button>
+    <button class="tab" onclick="switchTab(this, 'completed')">
+      Completados <span class="count">2</span>
+    </button>
+  </div>
+
+  <!-- ===== ACTIVES — Card 1 ===== -->
+  <div class="match-section" id="active-section">
+    <div class="match-card" id="buy-580" style="border-left:3px solid #1C1915;">
+      <div class="match-card__header">
+        <span class="match-card__id">#ORD-580</span>
+        <span class="match-card__status pending-status"><i class="fas fa-shopping-cart"></i> Solicitud de compra</span>
+      </div>
+      <div class="item-compare">
+        <div class="item-compare__item" style="grid-column:1/-1;text-align:left;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:50px;height:50px;background:#2D2D2D;border:1px solid #E5E0D8;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🎸</div>
+            <div style="flex:1;">
+              <div style="font-size:.85rem;font-weight:500;">Fender Stratocaster</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-top:2px;">de Ana · Barcelona · 580€</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <span style="font-weight:600;"><i class="fas fa-clock"></i> Esperando respuesta del vendedor</span>
+      </div>
+      <div class="action-buttons">
+        <button class="action-btn action-btn--secondary" style="flex:1;" onclick="document.getElementById('buy-580').style.opacity='0.4';alert('Solicitud cancelada')">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="match-card" id="match-7842">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7842</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="match-card__status active-status">⭐ Match encontrado</span>
+          <span class="match-card__timer timer--urgent" id="timer-7842">
+            ⏱ <span id="time-7842">23:45:12</span>
+          </span>
+        </div>
+      </div>
+      <div class="item-compare">
+        <div class="item-compare__item">
+          <div class="item-compare__emoji">📱</div>
+          <div class="item-compare__name">iPhone 15 Pro</div>
+          <div class="item-compare__from">de Ana</div>
+          <div class="item-compare__price">890€</div>
+        </div>
+        <div class="item-compare__arrow">
+          <i class="fas fa-arrow-right"></i><br>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.45rem;">recibes</span>
+        </div>
+        <div class="item-compare__item">
+          <div class="item-compare__emoji">🎸</div>
+          <div class="item-compare__name">Fender Stratocaster</div>
+          <div class="item-compare__from">das tú</div>
+          <div class="item-compare__price">580€ + 310€</div>
+        </div>
+      </div>
+      <div class="match-card__circle">
+        <div class="circle-title">Círculo</div>
+        <div class="circle-row">
+          <div class="circle-avatar you">Tú</div>
+          <div class="circle-info">
+            <div class="circle-name">Tú</div>
+            <div class="circle-item">🎸 F. Stratocaster → Bruno</div>
+          </div>
+          <span class="circle-badge pending">⏳ Decidir</span>
+        </div>
+        <div class="circle-row">
+          <div class="circle-avatar">A</div>
+          <div class="circle-info">
+            <div class="circle-name">Ana</div>
+            <div class="circle-item">📱 iPhone 15 Pro → Tú</div>
+          </div>
+          <span class="circle-badge accepted">✅ Aceptado</span>
+        </div>
+        <div class="circle-row">
+          <div class="circle-avatar">B</div>
+          <div class="circle-info">
+            <div class="circle-name">Bruno</div>
+            <div class="circle-item">🎮 PS5 → Ana</div>
+          </div>
+          <span class="circle-badge accepted">✅ Aceptado</span>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="action-btn action-btn--primary" onclick="acceptMatch('7842')">✅ Aceptar</button>
+        <button class="action-btn action-btn--secondary" onclick="rejectMatch('7842')">❌ Rechazar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PENDING — Cards 2 & 3 ===== -->
+  <div class="match-section" id="pending-section" style="display:none;">
+    <div class="match-card" id="buy-581" style="border-left:3px solid #6B6560;">
+      <div class="match-card__header">
+        <span class="match-card__id">#ORD-581</span>
+        <span class="match-card__status pending-status"><i class="fas fa-clock"></i> Pendiente de pago</span>
+        <span class="match-card__timer">⏱ 23:45:12</span>
+      </div>
+      <div class="item-compare">
+        <div class="item-compare__item" style="grid-column:1/-1;text-align:left;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:50px;height:50px;background:#3A2A1A;border:1px solid #E5E0D8;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">⌚</div>
+            <div style="flex:1;">
+              <div style="font-size:.85rem;font-weight:500;">G-SHOCK Mudmaster</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-top:2px;">de Marcos · Madrid · 250€</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <span style="font-weight:600;"><i class="fas fa-check"></i> Vendedor aceptó</span>
+      </div>
+      <button class="action-btn action-btn--primary action-btn--full" onclick="window.location.href='../v23-pago/'">💳 Pagar 250€</button>
+    </div>
+
+    <div class="match-card" id="match-7843">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7843</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="match-card__status pending-status">⏳ Esperando confirmación</span>
+          <span class="match-card__timer" id="timer-7843">
+            ⏱ <span id="time-7843">18:32:05</span>
+          </span>
+        </div>
+      </div>
+      <div class="item-compare">
+        <div class="item-compare__item">
+          <div class="item-compare__emoji">📷</div>
+          <div class="item-compare__name">Canon EOS R</div>
+          <div class="item-compare__from">de Carlos</div>
+          <div class="item-compare__price">650€</div>
+        </div>
+        <div class="item-compare__arrow">
+          <i class="fas fa-arrow-right"></i><br>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.45rem;">recibes</span>
+        </div>
+        <div class="item-compare__item">
+          <div class="item-compare__emoji">🎧</div>
+          <div class="item-compare__name">AirPods Max</div>
+          <div class="item-compare__from">para Ana</div>
+          <div class="item-compare__price">380€ + 270€</div>
+        </div>
+      </div>
+      <div class="match-card__circle">
+        <div class="circle-title">Círculo</div>
+        <div class="circle-row">
+          <div class="circle-avatar you">Tú</div>
+          <div class="circle-info">
+            <div class="circle-name">Tú</div>
+            <div class="circle-item">🎧 AirPods Max → Ana</div>
+          </div>
+          <span class="circle-badge accepted">✅ Aceptaste</span>
+        </div>
+        <div class="circle-row">
+          <div class="circle-avatar">A</div>
+          <div class="circle-info">
+            <div class="circle-name">Ana</div>
+            <div class="circle-item">🚲 Trek Marlin → Carlos</div>
+          </div>
+          <span class="circle-badge accepted">✅ Aceptado</span>
+        </div>
+        <div class="circle-row">
+          <div class="circle-avatar">C</div>
+          <div class="circle-info">
+            <div class="circle-name">Carlos</div>
+            <div class="circle-item">📷 Canon EOS R → Tú</div>
+          </div>
+          <span class="circle-badge pending">⏳ Pendiente</span>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <span>Progreso</span>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" style="width:66.66%"></div>
+        </div>
+        <span>2/3</span>
+      </div>
+      <div class="action-buttons">
+        <button class="action-btn action-btn--secondary" onclick="cancelParticipation('7843')">⏸ Cancelar</button>
+        <button class="action-btn action-btn--primary" onclick="remindUser('7843', 'Carlos')">🔔 Recordar</button>
+      </div>
+    </div>
+
+    <div class="match-card" id="match-7841">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7841</span>
+        <span class="match-card__status broken-status">❌ Match roto</span>
+      </div>
+      <div class="broken-reason">
+        <i class="fas fa-info-circle"></i>
+        <span>Bruno rechazó el intercambio. Tu artículo vuelve a estar disponible.</span>
+      </div>
+      <div class="item-compare" style="grid-template-columns:1fr;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="text-align:left;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-bottom:2px;">Ibas a recibir</div>
+            <div style="font-size:.8rem;font-weight:500;">⌚ G-SHOCK Mudmaster <span style="font-weight:400;color:var(--text-sub);">(250€)</span></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-bottom:2px;">Ibas a dar</div>
+            <div style="font-size:.8rem;font-weight:500;">🏍️ Casco Shoei NXR2 <span style="font-weight:400;color:#6B6560;">(320€ → 70€)</span></div>
+          </div>
+        </div>
+      </div>
+      <button class="action-btn action-btn--ghost action-btn--full" onclick="findNewMatch('7841', 'Casco Shoei NXR2')">
+        🔍 Buscar nuevo match
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== IN PROGRESS — Cards 4 & 5 ===== -->
+  <div class="match-section" id="in-progress-section" style="display:none;">
+    <div class="match-card" id="buy-582" style="border-left:3px solid #1C1915;">
+      <div class="match-card__header">
+        <span class="match-card__id">#ORD-582</span>
+        <span class="match-card__status pending-status"><i class="fas fa-truck"></i> En camino</span>
+      </div>
+      <div class="item-compare">
+        <div class="item-compare__item" style="grid-column:1/-1;text-align:left;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:50px;height:50px;background:#2D2D2D;border:1px solid #E5E0D8;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">📱</div>
+            <div style="flex:1;">
+              <div style="font-size:.85rem;font-weight:500;">iPhone 15 Pro</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-top:2px;">de Ana · 890€ · Pagado el 10 may</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tracking-item" style="border:none;padding:0;">
+        <div class="tracking-item__icon"><i class="fas fa-truck"></i></div>
+        <div class="tracking-item__info">
+          <div class="tracking-item__label">Correos Express · ES1234567890</div>
+          <div class="tracking-item__meta">Madrid, 14:32h · Llega mañana</div>
+        </div>
+      </div>
+      <button class="action-btn action-btn--ghost action-btn--full" onclick="goToTracking()">📍 Ver seguimiento</button>
+      <button class="action-btn action-btn--ghost action-btn--full" style="margin-top:8px;border-color:#C5C0B8;color:#6B6560;" onclick="window.location.href='../v24-disputa/'">⚠️ Abrir disputa</button>
+    </div>
+
+    <div class="match-card" id="match-7840">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7840</span>
+        <span class="match-card__status in-progress">📦 Coordinar envío</span>
+      </div>
+      <div class="shipping-block">
+        <div class="shipping-block__label">Envía TU artículo a</div>
+        <div class="shipping-block__dir">Carlos · C/ Mayor 23, 28013 Madrid</div>
+        <div class="shipping-block__item">🎧 AirPods Max + 270€</div>
+      </div>
+      <div class="shipping-block">
+        <div class="shipping-block__label">Recibirás de</div>
+        <div class="shipping-block__dir">Ana · Avda. Diagonal 345, 08037 Barcelona</div>
+        <div class="shipping-block__item">📷 Canon EOS R</div>
+      </div>
+      <button class="action-btn action-btn--success action-btn--full" onclick="markAsSent('7840')">
+        ✔️ Ya lo he enviado
+      </button>
+      <div style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:.45rem;text-align:center;">
+        <a href="../v21-pagos-escrow/" style="color:#A09A94;text-decoration:none;">¿Cómo funciona el pago?</a>
+        ·
+        <a href="../v22-envios-costes/" style="color:#A09A94;text-decoration:none;">Costes de envío</a>
+      </div>
+    </div>
+
+    <div class="match-card" id="match-7838">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7838</span>
+        <span class="match-card__status in-progress">🚚 En camino</span>
+      </div>
+      <div class="tracking-item">
+        <div class="tracking-item__icon"><i class="fas fa-check"></i></div>
+        <div class="tracking-item__info">
+          <div class="tracking-item__label">Tu envío a Bruno</div>
+          <div class="tracking-item__meta">📦 Recibido (hace 2 días)</div>
+        </div>
+      </div>
+      <div class="tracking-item">
+        <div class="tracking-item__icon"><i class="fas fa-truck"></i></div>
+        <div class="tracking-item__info">
+          <div class="tracking-item__label">Tu recepción de Ana</div>
+          <div class="tracking-item__meta">🚚 En camino → llega mañana</div>
+          <div class="tracking-item__meta">📍 Última actualización: Madrid, 14:32h</div>
+        </div>
+      </div>
+      <button class="action-btn action-btn--primary action-btn--full" onclick="viewTracking('7838')">
+        📍 Ver seguimiento completo
+      </button>
+      <button class="action-btn action-btn--ghost action-btn--full" style="margin-top:8px;border-color:#C5C0B8;color:#6B6560;" onclick="window.location.href='../v24-disputa/'">⚠️ Abrir disputa</button>
+    </div>
+  </div>
+
+  <!-- ===== COMPLETED — Card 6 ===== -->
+  <div class="match-section" id="completed-section" style="display:none;">
+    <div class="match-card" id="buy-583" style="border-left:3px solid #C5C0B8;">
+      <div class="match-card__header">
+        <span class="match-card__id">#ORD-583</span>
+        <span class="match-card__status done-status"><i class="fas fa-check-double"></i> Recibido · Hace 2 días</span>
+      </div>
+      <div class="completed-summary">
+        <div class="completed-row"><strong>Recibiste:</strong> 🎧 AirPods Max (380€)</div>
+        <div class="completed-row"><strong>Vendedor:</strong> Bruno · ⭐⭐⭐⭐</div>
+      </div>
+      <button class="action-btn action-btn--primary action-btn--full" onclick="ratePurchase('583')">⭐ Valorar compra</button>
+    </div>
+
+    <div class="match-card" id="match-7839">
+      <div class="match-card__header">
+        <span class="match-card__id">#TRX-7839</span>
+        <span class="match-card__status done-status">✅ Completado · Hace 3 días</span>
+      </div>
+      <div class="completed-summary">
+        <div class="completed-row"><strong>Recibiste:</strong> 🎧 AirPods Max (380€)</div>
+        <div class="completed-row"><strong>Diste:</strong> 🚲 Trek Marlin 7 (420€ → recibiste <strong>40€</strong>)</div>
+      </div>
+      <div class="rating-stars">
+        <span>Participantes:</span>
+        <span>Ana ⭐⭐⭐⭐⭐</span>
+        <span>Bruno ⭐⭐⭐⭐</span>
+      </div>
+      <button class="action-btn action-btn--primary action-btn--full" onclick="rateTrade('7839')">
+        ⭐ Valorar intercambio
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== FEEDBACK ===== -->
+  <div class="feedback-overlay" id="feedbackOverlay"></div>
+  <div class="feedback-toast" id="feedbackToast">
+    <div class="feedback-toast__icon" id="feedbackIcon">✅</div>
+    <div class="feedback-toast__title" id="feedbackTitle">¡Hecho!</div>
+    <div class="feedback-toast__text" id="feedbackText">Acción completada correctamente.</div>
+    <button class="feedback-toast__btn" onclick="closeFeedback()">Cerrar</button>
+  </div>
+
+  <!-- ===== RATE MODAL ===== -->
+  <div class="rate-overlay" id="rateOverlay" onclick="if(event.target===this)(function(){document.getElementById('rateOverlay').classList.remove('show');document.body.style.overflow='';})()">
+    <div class="rate-card">
+      <div class="rate-card__hd">
+        <span class="rate-card__title"><i class="fas fa-star" style="margin-right:8px;"></i>Valorar intercambio</span>
+        <button class="rate-card__cls" onclick="document.getElementById('rateOverlay').classList.remove('show');document.body.style.overflow='';"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="rate-card__body">
+        <div class="rate-card__score" id="rateScore">Selecciona estrellas</div>
+        <div class="rate-card__stars">
+          <i class="fas fa-star rate-star" onclick="var s=document.querySelectorAll('.rate-star');for(var i=0;i<5;i++)s[i].classList.toggle('on',i<1);document.getElementById('rateScore').textContent='Muy malo (1/5)';document.getElementById('rateVal').value=1"></i>
+          <i class="fas fa-star rate-star" onclick="var s=document.querySelectorAll('.rate-star');for(var i=0;i<5;i++)s[i].classList.toggle('on',i<2);document.getElementById('rateScore').textContent='Regular (2/5)';document.getElementById('rateVal').value=2"></i>
+          <i class="fas fa-star rate-star" onclick="var s=document.querySelectorAll('.rate-star');for(var i=0;i<5;i++)s[i].classList.toggle('on',i<3);document.getElementById('rateScore').textContent='Aceptable (3/5)';document.getElementById('rateVal').value=3"></i>
+          <i class="fas fa-star rate-star" onclick="var s=document.querySelectorAll('.rate-star');for(var i=0;i<5;i++)s[i].classList.toggle('on',i<4);document.getElementById('rateScore').textContent='Bueno (4/5)';document.getElementById('rateVal').value=4"></i>
+          <i class="fas fa-star rate-star" onclick="var s=document.querySelectorAll('.rate-star');for(var i=0;i<5;i++)s[i].classList.toggle('on',i<5);document.getElementById('rateScore').textContent='Excelente (5/5)';document.getElementById('rateVal').value=5"></i>
+        </div>
+        <textarea class="rate-card__ta" id="rateComment" placeholder="Añade un comentario (opcional)..."></textarea>
+      </div>
+      <div class="rate-card__ft">
+        <button class="btn-r btn-r--secondary" onclick="document.getElementById('rateOverlay').classList.remove('show');document.body.style.overflow='';">Cancelar</button>
+        <button class="btn-r btn-r--primary" onclick="var v=document.getElementById('rateVal').value;if(!v)return;document.getElementById('rateOverlay').classList.remove('show');document.body.style.overflow='';setTimeout(function(){showFeedback('⭐','Valoración enviada','Has valorado el intercambio con '+v+' estrellas. Gracias por tu feedback.');},300);"><i class="fas fa-paper-plane"></i> Enviar</button>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="rateVal" value="0">
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item active"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+  <script>
+    // ===== DARK MODE =====
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      var icon = document.getElementById('darkToggle').querySelector('i');
+      icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+      try { localStorage.setItem('treqe-dark-mode', document.body.classList.contains('dark') ? '1' : '0'); } catch(e) {}
+    }
+    try { if (localStorage.getItem('treqe-dark-mode') === '1') document.body.classList.add('dark'); } catch(e) {}
+    if (document.body.classList.contains('dark')) {
+      var icon = document.getElementById('darkToggle').querySelector('i');
+      if (icon) icon.className = 'fas fa-sun';
+    }
+
+    // ===== TAB SWITCHING =====
+    function updateCounts() {
+      var tabs = [ 'active', 'pending', 'in-progress', 'completed' ];
+      tabs.forEach(function(t) {
+        var section = document.getElementById(t + '-section');
+        var count = section ? section.querySelectorAll('.match-card').length : 0;
+        var btn = document.querySelector('.tab[onclick*="' + t + '"] .count');
+        if (btn) btn.textContent = count;
+      });
+    }
+    function switchTab(tab, filter) {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      var sections = ['active-section', 'pending-section', 'in-progress-section', 'completed-section'];
+      sections.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      var target = document.getElementById(filter + '-section');
+      if (target) target.style.display = 'block';
+      updateCounts();
+    }
+
+    // ===== TIMERS =====
+    var timers = {};
+
+    function startTimer(id, initialSeconds) {
+      var remaining = initialSeconds;
+      var display = document.getElementById('time-' + id);
+      var wrapper = document.getElementById('timer-' + id);
+      if (!display) return;
+
+      timers[id] = setInterval(function() {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(timers[id]);
+          display.textContent = '00:00:00';
+          if (wrapper) {
+            wrapper.className = 'match-card__timer';
+            wrapper.style.color = '#6B6560';
+            wrapper.innerHTML = '⏱ Expirado';
+          }
+          showFeedback('⏰', 'Tiempo agotado', 'El match #TRX-' + id + ' ha expirado. El artículo vuelve al catálogo.');
+          return;
+        }
+        var hrs = Math.floor(remaining / 3600);
+        var mins = Math.floor((remaining % 3600) / 60);
+        var secs = remaining % 60;
+        display.textContent =
+          String(hrs).padStart(2, '0') + ':' +
+          String(mins).padStart(2, '0') + ':' +
+          String(secs).padStart(2, '0');
+
+        if (wrapper && remaining < 3600 && remaining > 0) {
+          wrapper.className = 'match-card__timer timer--urgent';
+        }
+      }, 1000);
+    }
+
+    startTimer('7842', 85512);
+    startTimer('7843', 66725);
+
+    // ===== FEEDBACK =====
+    function showFeedback(icon, title, text) {
+      document.getElementById('feedbackIcon').textContent = icon;
+      document.getElementById('feedbackTitle').textContent = title;
+      document.getElementById('feedbackText').textContent = text;
+      document.getElementById('feedbackToast').classList.add('show');
+      document.getElementById('feedbackOverlay').classList.add('show');
+    }
+    function closeFeedback() {
+      document.getElementById('feedbackToast').classList.remove('show');
+      document.getElementById('feedbackOverlay').classList.remove('show');
+    }
+
+    // ===== MATCH ACTIONS =====
+    function acceptMatch(id) {
+      var card = document.getElementById('match-' + id);
+      if (!card) return;
+      if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
+      showFeedback('✅', '¡Match aceptado!',
+        'Has aceptado el intercambio #TRX-' + id + '. Ahora pasará a Pendientes mientras esperamos la confirmación del resto del círculo.');
+      card.style.opacity = '0.4';
+      card.style.pointerEvents = 'none';
+    }
+
+    function rejectMatch(id) {
+      var card = document.getElementById('match-' + id);
+      if (!card) return;
+      if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
+      showFeedback('❌', 'Match rechazado',
+        'Has rechazado el intercambio #TRX-' + id + '. Tu artículo vuelve a estar disponible.');
+      card.style.opacity = '0.4';
+      card.style.pointerEvents = 'none';
+    }
+
+    function cancelParticipation(id) {
+      if (!confirm('¿Seguro que quieres cancelar tu participación en #TRX-' + id + '?')) return;
+      if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
+      showFeedback('⏸', 'Participación cancelada',
+        'Has cancelado tu participación en #TRX-' + id + '. Todos los participantes han sido liberados.');
+    }
+
+    function remindUser(id, name) {
+      showFeedback('🔔', 'Recordatorio enviado a ' + name,
+        'Le hemos notificado para que revise su match #TRX-' + id + ' pendiente.');
+    }
+
+    function markAsSent(id) {
+      var card = document.getElementById('match-' + id);
+      if (!card) return;
+      var btn = card.querySelector('.action-btn--success');
+      if (btn) {
+        btn.textContent = '✅ Enviado — Pendiente de recepción';
+        btn.style.background = '#E5E0D8';
+        btn.style.color = '#6B6560';
+        btn.style.borderColor = '#E5E0D8';
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+      }
+      showFeedback('📦', '¡Envío registrado!',
+        'Hemos marcado el envío de #TRX-' + id + ' como realizado.');
+    }
+
+    function viewTracking(id) { goToTracking(); }
+
+    function openRateModal() {
+      document.getElementById('rateOverlay').classList.add('show');
+      document.getElementById('rateScore').textContent = 'Selecciona estrellas';
+      document.getElementById('rateVal').value = 0;
+      document.querySelectorAll('.rate-star').forEach(function(s){ s.classList.remove('on'); });
+      document.body.style.overflow = 'hidden';
+    }
+    function rateTrade(id) { openRateModal(); }
+    function ratePurchase(id) {
+      document.querySelector('.rate-card__title').innerHTML = '<i class="fas fa-star" style="color:#1C1915;margin-right:8px;"></i>Valorar compra';
+      openRateModal();
+    }
+
+    function findNewMatch(id, itemName) {
+      showFeedback('🔍', 'Buscando nuevo match',
+        'Estamos buscando un nuevo círculo para tu ' + itemName + '. Te notificaremos cuando encontremos un match.');
+    }
+
+    // ===== NAVIGATION =====
+    function goToHome() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToSearch() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToMatches() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToNotifs() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToCatalog() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTracking() { window.parent.location.href = "../v7-seguimiento/"; }
+    function goToDetail(id) { window.parent.location.href = '../v2-detalle/?id=' + id; }
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+
+    console.log('⭐ treqe v12 — Mis treqes (prototipo completo)');
+    console.log('🧪 9 cards | 4 tabs | timers | May 2026');
+  
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+
+</body>
+</html>

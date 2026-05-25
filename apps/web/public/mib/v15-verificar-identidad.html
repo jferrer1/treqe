@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TREQE — Verificar identidad</title>
+    <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+:root{--bg:#F9F7F2;--surface:#FFF;--text:#1C1915;--text-sub:#55504B;--text-dim:#8A8580;--border:#E5E0D8;--border-strong:#C5C0B8;--accent:#1C1915;--font-mono:"IBM Plex Mono",monospace;--font-sans:"IBM Plex Sans",sans-serif;}body.dark{--bg:#130B00;--surface:#1A1206;--text:#E8E2D6;--text-sub:#B0A9A0;--text-dim:#7A7570;--border:#3A3630;--border-strong:#5A5650;--accent:#E8E2D6;}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-text-size-adjust:100%  overflow-y: scroll; }
+    body{font-family:'IBM Plex Sans',sans-serif;background:#F9F7F2;color:#1C1915;min-height:100dvh;padding-bottom:80px;-webkit-font-smoothing:antialiased}
+    :root{--bg:#F9F7F2;--text:#1C1915;--text-secondary:#888;--text-tertiary:#8A8580;--border:#E5E0D8;--accent:#1C1915;--success:#1C1915;--card-bg:#FFF;--shadow:0 2px 12px rgba(0,0,0,.06)}
+    button{font-family:inherit;cursor:pointer;border:none;background:none}
+    a{text-decoration:none}
+    
+    
+    .header__back:active{background:var(--border)}
+    
+
+    .page{padding:0 16px 16px;max-width:500px;margin:0 auto}
+
+    /* Progress bar */
+    .progress-wrap{margin:0 0 20px;padding:16px 0 0}
+    .progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;font-weight:500;color:var(--text-secondary);margin-bottom:8px}
+    .progress-label__count{color:var(--accent);font-weight:600}
+    .progress-track{width:100%;height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--success),#01D0D0);border-radius:99px;transition:width .6s ease;width:67%}
+    .progress-steps{display:flex;justify-content:space-between;margin-top:8px;font-size:.68rem;color:var(--text-tertiary)}
+    .progress-steps .step-dot{display:flex;align-items:center;gap:4px}
+    .progress-steps .step-dot i{font-size:.6rem}
+    .progress-steps .step-dot.done{color:var(--success)}
+    .progress-steps .step-dot.active{color:var(--accent);font-weight:600}
+    .progress-steps .step-dot.pending{color:var(--text-tertiary)}
+
+    .verify-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 0 16px}
+    .verify-icon{width:70px;height:70px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--accent);margin-bottom:12px}
+    .verify-hero__title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:6px}
+    .verify-hero__text{font-size:.82rem;color:var(--text-secondary);line-height:1.5;max-width:320px}
+    .verify-hero__badge{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;color:var(--success);background:#E8F8F5;padding:6px 12px;border-radius:20px;margin-top:10px}
+    .verify-hero__badge i{font-size:.85rem}
+
+    .verify-card{background:var(--card-bg);border-radius:14px;padding:16px 16px 12px;margin-bottom:12px;box-shadow:var(--shadow)}
+    .verify-card__row{display:flex;gap:12px;align-items:flex-start}
+    .verify-card__icon{width:40px;height:40px;min-width:40px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--accent)}
+    .verify-card__body{flex:1;min-width:0}
+    .verify-card__title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:3px}
+    .verify-card__text{font-size:.75rem;color:var(--text-secondary);line-height:1.4}
+    .verify-card__status{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:.72rem;font-weight:600}
+    .verify-card__status.completed{color:var(--success)}
+    .verify-card__status.pending{color:var(--accent)}
+
+    /* CTA button inside card */
+    .verify-card__action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:12px 0;border-radius:10px;font-size:.82rem;font-weight:600;background:var(--accent);color:#FFF;transition:all .2s}
+    .verify-card__action:active{opacity:.85;transform:scale(.98)}
+    .verify-card__action i{font-size:.85rem}
+
+    /* Privacy link */
+    .privacy-link{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;color:var(--text-tertiary);margin-top:8px;cursor:pointer;transition:color .2s;border-bottom:1px dashed var(--border);padding-bottom:0}
+    .privacy-link:hover{color:var(--accent);border-bottom-color:var(--accent)}
+    .privacy-link i{font-size:.7rem}
+
+    .action-btn{width:100%;padding:14px;border-radius:12px;font-size:.9rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;transition:all .2s}
+    .action-btn--primary{background:var(--accent);color:#FFF}
+    .action-btn--primary:active{opacity:.9}
+    .action-btn--disabled{background:var(--border);color:var(--text-tertiary);cursor:not-allowed}
+
+    .bottom-nav{position:fixed;inset:auto 0 0;background:rgba(255,255,255,.92);-webkit-border-top:1px solid var(--border);display:flex;justify-content:space-evenly;align-items:center;padding:0;height:72px;padding-bottom:12px;z-index:100;isolation:isolate}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.65rem;font-weight:500;color:var(--text-tertiary);transition:color .2s;padding:4px 0;flex:1;max-width:80px;position:relative}
+    .nav-item i{font-size:1.3rem}
+    .nav-item.active{color:var(--accent)}
+    .nav-item.active i{transform:scale(1.05)}
+    .nav-item .nav-badge{width:6px;height:6px;background:var(--accent);border-radius:50%;position:absolute;top:2px;right:12px}
+    .nav-item.nav-add{position:relative;top:0}
+    .nav-item.nav-add .nav-add-btn{width:48px;height:48px;background:var(--accent);color:#FFF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform .2s,box-shadow .2s}
+    .nav-item.nav-add .nav-add-btn:active{transform:scale(.92);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+  
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-evenly;align-items:center;padding:0;height:72px;padding-bottom:12px;z-index:100;isolation:isolate;overflow:hidden;}
+.nav-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);transition:color 0.15s;padding:4px 0;flex:1;max-width:80px;border:none;background:none;cursor:pointer;text-decoration:none;}
+.nav-item i{font-size:1rem;}
+.nav-item.active{color:var(--text);}
+.nav-item.active i{color:var(--text);}
+.nav-add-btn{width:40px;height:40px;background:var(--text);color:var(--bg);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+.nav-add-btn i{font-size:1rem;color:var(--bg);}
+.nav-badge{width:5px;height:5px;background:var(--text);border-radius:50%;position:absolute;top:2px;right:4px;}
+
+body.dark .bottom-nav{background:#1A1206;border-color:#3A3630;}body.dark .nav-item{color:#7A7570;}body.dark .nav-item i{color:#7A7570;}body.dark .nav-item.active{color:#E8E2D6;}body.dark .nav-item.active i{color:#E8E2D6;}body.dark .nav-add-btn{background:#E8E2D6;color:#130B00;}body.dark .nav-add-btn i{color:#130B00;}
+
+.treqe-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+body.dark .treqe-header{background:#130B00;border-color:#3A3630;}
+.treqe-header__left{display:flex;align-items:center;gap:8px;}
+.treqe-header__back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:.9rem;border-radius:2px;border:1px solid var(--border);background:transparent;cursor:pointer;}
+body.dark .treqe-header__back{color:#B0A9A0;border-color:#3A3630;}
+.treqe-header__title{font-family:"IBM Plex Sans",sans-serif;font-size:1rem;font-weight:600;letter-spacing:-0.3px;color:var(--text);}
+body.dark .treqe-header__title{color:#E8E2D6;}
+.treqe-header__right{display:flex;align-items:center;gap:8px;}
+
+
+body.dark .profile-wrap, body.dark .settings-wrap, body.dark .form-wrap, body.dark .detail-layout, body.dark .inbox-content, body.dark .notif-list, body.dark .container, body.dark .page, body.dark .catalog, body.dark .verify-hero, body.dark .progress-wrap { background: #130B00 !important; }
+body.dark .card, body.dark [class*="-card"], body.dark [class*="item-card"], body.dark [class*="settings-item"], body.dark [class*="verify-card"], body.dark [class*="match-card"], body.dark [class*="profile-action"] { background: #1A1206 !important; border-color: #3A3630 !important; }
+body.dark [class*="-card"] h3, body.dark [class*="-card"] .title, body.dark [class*="settings-item"] h3 { color: #E8E2D6 !important; }
+body.dark [class*="-card"] p, body.dark [class*="-card"] span[class*="sub"], body.dark [class*="settings-item"] [class*="sub"] { color: #B0A9A0 !important; }
+
+body.dark{background:#130B00;color:#E8E2D6;}
+</style>
+</head>
+<body>
+  <div class="treqe-header">
+    <div class="treqe-header__left">
+      <button class="treqe-header__back" onclick="goToProfile()" aria-label="Atras"><i class="fas fa-chevron-left"></i></button>
+      <span class="treqe-header__title">Verificar identidad</span>
+    </div>
+    <div class="treqe-header__right">
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="verify-hero">
+      <div class="verify-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="verify-hero__title">Verifica tu identidad</div>
+      <div class="verify-hero__text">La verificacion aumenta tu reputacion y la confianza de otros usuarios en Treqe</div>
+      <div class="verify-hero__badge"><i class="fas fa-star"></i> +15 al scoring al verificar</div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progreso de verificacion</span>
+        <span class="progress-label__count">2 de 3 completados</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+      <div class="progress-steps">
+        <span class="step-dot done"><i class="fas fa-check-circle"></i> DNI</span>
+        <span class="step-dot done"><i class="fas fa-check-circle"></i> Telefono</span>
+        <span class="step-dot active"><i class="fas fa-circle"></i> Selfie</span>
+      </div>
+    </div>
+
+    <!-- Step 1: DNI -->
+    <div class="verify-card">
+      <div class="verify-card__row">
+        <div class="verify-card__icon"><i class="fas fa-id-card"></i></div>
+        <div class="verify-card__body">
+          <div class="verify-card__title">DNI o documento oficial</div>
+          <div class="verify-card__text">Sube una foto de tu documento. Solo se usara para verificacion, nunca se mostrara publicamente.</div>
+          <div class="verify-card__status completed"><i class="fas fa-check-circle"></i> Completado</div>
+          <!-- Privacy reassurance -->
+          <div class="privacy-link" onclick="showPrivacyInfo()">
+            <i class="fas fa-shield-halved"></i> ¿Por que lo pedimos? · Como protegemos tus datos
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Telefono -->
+    <div class="verify-card">
+      <div class="verify-card__row">
+        <div class="verify-card__icon"><i class="fas fa-phone"></i></div>
+        <div class="verify-card__body">
+          <div class="verify-card__title">Numero de telefono</div>
+          <div class="verify-card__text">Verifica tu numero de telefono mediante SMS.</div>
+          <div class="verify-card__status completed"><i class="fas fa-check-circle"></i> Completado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Selfie (pending + CTA) -->
+    <div class="verify-card">
+      <div class="verify-card__row">
+        <div class="verify-card__icon"><i class="fas fa-camera"></i></div>
+        <div class="verify-card__body">
+          <div class="verify-card__title">Selfie de verificacion</div>
+          <div class="verify-card__text">Hazte una foto mostrando tu cara. La IA la comparara con tu documento.</div>
+          <div class="verify-card__status pending"><i class="fas fa-clock"></i> Pendiente</div>
+          <button class="verify-card__action" onclick="startSelfieVerification()">
+            <i class="fas fa-camera"></i> Iniciar verificacion
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button class="action-btn action-btn--primary" onclick="alert('Completa el selfie de verificacion para finalizar')">
+      <i class="fas fa-arrow-right"></i> Completar verificacion
+    </button>
+  </div>
+
+    <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>Treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+
+<script>
+    function goToDiscover() { window.parent.location.href = '../v1-catalogo/'; }
+    function goToTrades() { window.parent.location.href = '../v12-mis-matches/'; }
+    function goToInbox() { window.parent.location.href = '../v11-notificaciones/'; }
+    function goToUpload() { window.parent.location.href = '../v3-subir/'; }
+    function goToProfile() { window.parent.location.href = '../v4-perfil/'; }
+
+    function startSelfieVerification() {
+      alert('Iniciando verificacion con selfie...')
+    }
+
+    function showPrivacyInfo() {
+      alert('Tus datos estan protegidos: usamos cifrado de extremo a extremo, nunca compartimos tu documento con otros usuarios, y puedes eliminar tus datos en cualquier momento desde Ajustes > Privacidad.')
+    }
+
+(function() {
+  if (localStorage.getItem('treqe-darkmode') === 'true') {
+    document.body.classList.add('dark');
+  }
+})();
+
+</script>
+
+  <nav class="bottom-nav">
+    <a href="../v1-catalogo/" class="nav-item"><i class="fas fa-search"></i><span>Buscar</span></a>
+    <a href="../v12-mis-matches/" class="nav-item"><i class="fas fa-exchange-alt"></i><span>treqes</span></a>
+    <a href="../v3-subir/" class="nav-item nav-add"><div class="nav-add-btn"><i class="fas fa-plus"></i></div></a>
+    <a href="../v11-notificaciones/" class="nav-item"><i class="fas fa-bell"></i><span>Avisos</span><span class="nav-badge"></span></a>
+    <a href="../v4-perfil/" class="nav-item"><i class="fas fa-user"></i><span>Perfil</span></a>
+  </nav>
+
+</body>
+</html>
