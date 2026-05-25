@@ -5,7 +5,7 @@ export function LandingPage() {
   return (
     <>
       <div className="header">
-    <Link  to="/" className="logo-link"><img className="treqe-logo" src="../../assets/treqe-logo-mib.png" alt="treqe" /></Link>
+    <Link  to="/" className="logo-link"><img className="treqe-logo" src="/treqe-logo.png" alt="treqe" /></Link>
     <div className="header-right">
       
       <Link  to="/blog" className="blog-link"><i className="fas fa-book-open"></i>Blog</Link>
