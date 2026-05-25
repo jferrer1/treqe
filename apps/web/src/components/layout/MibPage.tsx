@@ -28,6 +28,11 @@ export function MibPage({ page }: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Desactivar CSS global para que solo aplique el CSS de esta página MIB
+    const globalCSS = document.querySelector('link[href*="treqe-mib"]') || 
+                       [...document.styleSheets].find(s => s.href?.includes('treqe-mib'));
+    if (globalCSS) (globalCSS as HTMLLinkElement).disabled = true;
+
     fetch(`/mib/${page}.html`)
       .then(r => r.text())
       .then(html => {
@@ -35,7 +40,6 @@ export function MibPage({ page }: Props) {
         const sm = html.match(/<style>([\s\S]*?)<\/style>/);
         const bm = html.match(/<body>([\s\S]*?)<\/body>/);
         if (sm) {
-          // Inyectar en head para que html/body/:root funcionen
           const existing = document.getElementById("mib-page-style");
           if (existing) existing.remove();
           const s = document.createElement("style");
@@ -48,7 +52,7 @@ export function MibPage({ page }: Props) {
           b = b.replace(/<script[\s\S]*?<\/script>/g, "");
           b = b.replace(/\s+on\w+="[^"]*"/g, "");
           b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-          ref.current.innerHTML += b;
+          ref.current.innerHTML = b;
         }
         ref.current?.addEventListener("click", (e: Event) => {
           const a = (e.target as HTMLElement).closest("a");
@@ -59,6 +63,12 @@ export function MibPage({ page }: Props) {
           }
         });
       });
+    return () => {
+      // Re-activar CSS global al desmontar
+      document.getElementById("mib-page-style")?.remove();
+      const globalCSS = [...document.styleSheets].find(s => s.href?.includes('treqe-mib'));
+      if (globalCSS) (globalCSS as CSSStyleSheet).disabled = false;
+    };
   }, [page, navigate]);
   return <div ref={ref} />;
 }
