@@ -16,26 +16,30 @@ export function UploadPage() {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      // Hide preview overlay initially (MIB shows it via JS)
+      b = b.replace(/class="([^"]*preview[^"]*)"/g, 'class="$1" style="display:none"');
       setHtml(s + b);
     });
   }, []);
 
-  // Redirect unauthenticated to register on button click
+  // Show preview when "Vista previa" clicked, submit redirects to register if not logged in
   useEffect(() => {
-    if (user) return;
     const h = (e: MouseEvent) => {
       const btn = (e.target as HTMLElement).closest("button");
       if (!btn) return;
       const t = btn.textContent || "";
-      if (t.includes("Publicar") || t.includes("publicar") || t.includes("Subir")) {
-        e.preventDefault(); e.stopPropagation(); navigate("/registro");
+      if ((t.includes("Vista") || t.includes("vista")) && !user) {
+        e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
+      }
+      if ((t.includes("Publicar") || t.includes("publicar")) && !user) {
+        e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
       }
     };
     document.addEventListener("click", h, true);
     return () => document.removeEventListener("click", h, true);
   }, [user, navigate]);
 
-  // Intercept internal links for React Router navigation  
+  // Navigation clicks
   useEffect(() => {
     const h = (e: MouseEvent) => {
       const a = (e.target as HTMLElement).closest("a");
