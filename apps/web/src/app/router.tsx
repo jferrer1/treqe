@@ -1,6 +1,5 @@
 import { createBrowserRouter, Link } from "react-router-dom";
 import { LandingPage } from "@/pages/landing/LandingPage";
-import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage } from "@/pages/register/RegisterPage";
 import { MibPage } from "@/components/layout/MibPage";
@@ -26,7 +25,7 @@ function HubPage() {
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/hub", element: <HubPage /> },
-  { path: "/catalogo", element: <CatalogPage /> },
+  { path: "/catalogo", element: <MibPage page="v1-catalogo" /> },
   { path: "/articulo/:id", element: <ProductDetailPage /> },
   { path: "/registro", element: <RegisterPage /> },
   // MIB EXACT pages via dangerouslySetInnerHTML
