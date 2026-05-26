@@ -39,8 +39,10 @@ export function MibPage({ page }: Props) {
           if (old) old.remove();
           const s = document.createElement("style");
           s.id = "mib-page-style";
-          s.textContent = sm[1];
+          s.textContent = sm[1].replace(/@import[^;]*;/g, '');
           document.head.appendChild(s);
+          // Forzar recarga de fuentes
+          document.fonts?.ready?.then(() => {});
         }
         if (bm) {
           let b = bm[1];
