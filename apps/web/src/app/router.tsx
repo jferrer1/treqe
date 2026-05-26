@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { LandingPage } from "@/pages/landing/LandingPage";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage } from "@/pages/register/RegisterPage";
@@ -26,7 +25,7 @@ function HubPage() {
 }
 
 export const router = createBrowserRouter([
-  { path: "/", element: <LandingPage /> },
+  { path: "/", element: <MibPage page="v16-portada" /> },
   { path: "/hub", element: <HubPage /> },
   { path: "/catalogo", element: <CatalogPage /> },
   { path: "/articulo/:id", element: <ProductDetailPage /> },
