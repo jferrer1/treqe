@@ -1,5 +1,6 @@
 import { createBrowserRouter, Link } from "react-router-dom";
 import { LandingPage } from "@/pages/landing/LandingPage";
+import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage } from "@/pages/register/RegisterPage";
 import { MibPage } from "@/components/layout/MibPage";
@@ -16,7 +17,7 @@ function HubPage() {
   return (
     <div style={{fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh",padding:20}}>
       <h1 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"1.2rem",fontWeight:600}}>Treqe — Índice</h1>
-      <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:32}}>{pages.reduce((s,c)=>s+c.items.length,0)} páginas — diseño MIB exacto</p>
+      <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:32}}>{pages.reduce((s,c)=>s+c.items.length,0)} páginas</p>
       {pages.map(s=><div key={s.cat} style={{marginBottom:28}}><h2 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.65rem",fontWeight:600,textTransform:"uppercase",letterSpacing:1,color:"#8A8580",marginBottom:10}}>{s.cat}</h2><div style={{display:"flex",flexDirection:"column",gap:2}}>{s.items.map(p=><Link key={p.v} to={p.p} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:"#FFF",border:"1px solid #E5E0D8",textDecoration:"none",color:"#1C1915",fontSize:"0.85rem"}}><span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#8A8580",minWidth:28}}>{p.v}</span><span>{p.n}</span></Link>)}</div></div>)}
     </div>
   );
@@ -25,10 +26,9 @@ function HubPage() {
 export const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/hub", element: <HubPage /> },
-  { path: "/catalogo", element: <MibPage page="v1-catalogo" /> },
+  { path: "/catalogo", element: <CatalogPage /> },
   { path: "/articulo/:id", element: <ProductDetailPage /> },
   { path: "/registro", element: <RegisterPage /> },
-  // MIB EXACT pages via dangerouslySetInnerHTML
   { path: "/subir", element: <MibPage page="v3-subir" /> },
   { path: "/perfil", element: <MibPage page="v4-perfil" /> },
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },

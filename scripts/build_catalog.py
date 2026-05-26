@@ -24,18 +24,14 @@ new_catalog = '''<div class="catalog" id="catalog">
 </div>
 
 <script>
-// Cargar productos desde la API
-const API = window.location.hostname === 'localhost' 
-  ? 'http://localhost:8000' 
-  : 'https://treqe-production-8518.up.railway.app';
-
+// Cargar productos desde la API (proxy de Vite /api → backend)
 async function loadCatalog() {
   try {
-    const res = await fetch(API + '/api/products/?limit=70');
+    const res = await fetch('/api/products/?limit=70');
     const data = await res.json();
     renderProducts(data.items);
   } catch(e) {
-    document.getElementById('pagingSentinel').innerHTML = 'Error al cargar';
+    document.getElementById('catalog').innerHTML = '<div class="empty-state"><div class="empty-state__icon"><i class="fas fa-box-open"></i></div><div class="empty-state__title">No hay productos aún</div><div class="empty-state__text">Sé el primero en publicar un artículo</div><a href="/subir" class="empty-state__btn"><i class="fas fa-plus"></i> Publicar artículo</a></div>';
   }
 }
 
@@ -43,16 +39,26 @@ const BG_COLORS = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","
 
 function renderProducts(products) {
   const catalog = document.getElementById('catalog');
-  catalog.innerHTML = products.map((p, i) => 
-    '<div class="item-card" onclick="window.location.href=\\'/articulo/' + p.id + '\\'">' +
-    '<div class="item-card__image" style="background:' + BG_COLORS[i % BG_COLORS.length] + '">' +
-    '<button class="like-btn" onclick="event.stopPropagation();this.classList.toggle(\\'liked\\')"><i class="far fa-heart"></i></button>' +
-    '<i class="fas fa-box placeholder-icon white"></i>' +
-    '<span class="price-tag">€' + p.price + '</span></div>' +
-    '<div class="item-card__info"><div class="item-card__title">' + p.title + '</div>' +
-    '<div class="item-card__meta"><i class="fas fa-tag"></i> ' + p.category + '</div></div></div>'
-  ).join('');
-  document.getElementById('articleCount').textContent = products.length + ' articulos';
+  const count = document.getElementById('articleCount');
+  if (count) count.textContent = products.length + ' artículos';
+  if (products.length === 0) {
+    catalog.innerHTML = '<div class="empty-state"><div class="empty-state__icon"><i class="fas fa-box-open"></i></div><div class="empty-state__title">No hay productos aún</div><div class="empty-state__text">Sé el primero en publicar un artículo</div><a href="/subir" class="empty-state__btn"><i class="fas fa-plus"></i> Publicar artículo</a></div>';
+    return;
+  }
+  catalog.innerHTML = products.map((p, i) => {
+    const bg = BG_COLORS[i % BG_COLORS.length];
+    const cond = p.condition === 'like_new' ? 'Como nuevo' : p.condition === 'good' ? 'Buen estado' : p.condition;
+    return '<div class="item-card" onclick="window.location.href=\'/articulo/' + p.id + '\'">' +
+      '<div class="item-card__image" style="background:' + bg + '">' +
+      '<button class="like-btn" onclick="event.stopPropagation();this.classList.toggle(\'liked\')"><i class="far fa-heart"></i></button>' +
+      '<i class="fas fa-box placeholder-icon white"></i>' +
+      '<span class="price-tag">€' + p.price + '</span>' +
+      '</div>' +
+      '<div class="item-card__info">' +
+      '<div class="item-card__title">' + p.title + ' · ' + cond + '</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
 }
 
 loadCatalog();
