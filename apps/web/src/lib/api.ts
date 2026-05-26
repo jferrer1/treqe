@@ -50,4 +50,5 @@ export interface Product {
   id: string; title: string; description: string | null; price: number;
   category: string; subcategory: string | null; condition: string;
   photos: string[]; status: string; created_at: string;
+  weight: number | null; user_id?: string;
 }
