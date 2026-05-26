@@ -53,6 +53,7 @@ function renderProducts(products) {
       '<button class="like-btn" onclick="event.stopPropagation();this.classList.toggle(\'liked\')"><i class="far fa-heart"></i></button>' +
       '<i class="fas fa-box placeholder-icon white"></i>' +
       '<span class="price-tag">€' + p.price + '</span>' +
+      '<button class="trade-btn" onclick="event.stopPropagation();window.location.href=\'/subir?offer_for=' + p.id + '\'"><i class="fas fa-exchange-alt"></i></button>' +
       '</div>' +
       '<div class="item-card__info">' +
       '<div class="item-card__title">' + p.title + ' · ' + cond + '</div>' +
