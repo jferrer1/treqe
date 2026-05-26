@@ -94,7 +94,7 @@ for sel, props in all_rules:
                                '.placeholder-icon', '.item-card__video-badge']):
         output += f"{sel} {{ {props} }}\n"
 
-output += "\n/* === Page-Specific Styles === */\n"
+output += "\n/* === Page-Specific Styles (ALL) === */\n"
 for sel, props in all_rules:
     if not any(x in sel for x in ['.header', '.bottom-nav', '.section-title', '.toolbar', '.tool-btn',
                                    '.blog-link', '.search-icon', '.search-expand', '.logo', '.treqe-logo',
