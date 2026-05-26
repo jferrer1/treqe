@@ -1,287 +1,138 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { useAuthStore } from "@/stores/authStore";
+
+const CATEGORIES = ["Electrónica","Móviles","Consolas","Hogar","Deporte","Moda","Libros","Música","Coleccionismo","Motor","Niños","Herramientas","Decoración","Jardín","Informática","Cámaras","Bicicletas","Instrumentos","Juguetes","Otros"];
+const CONDITIONS = ["like_new","good","fair","new","poor"];
+const cl = (c: string) => ({like_new:"Como nuevo",good:"Buen estado",fair:"Aceptable",new:"Nuevo",poor:"Con desgaste"}[c]||c);
 
 export function UploadPage() {
+  const navigate = useNavigate();
+  const user = useAuthStore(s => s.user);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
+  const [weight, setWeight] = useState("");
+  const [step, setStep] = useState<"form"|"preview">("form");
+
+  const uploadMutation = useMutation({
+    mutationFn: () => api.post(`/api/products/?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&price=${price}&category=${encodeURIComponent(category)}&condition=${condition}&weight=${weight || "0"}`),
+    onSuccess: () => navigate("/catalogo"),
+  });
+
+  if (!user) {
+    return (
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:16,background:"var(--bg)",fontFamily:"var(--font-sans)"}}>
+        <div style={{fontSize:"3rem"}}>🔒</div>
+        <h2 style={{fontWeight:600}}>Necesitas una cuenta</h2>
+        <p style={{color:"var(--text-sub)"}}>Regístrate para publicar artículos</p>
+        <Link to="/registro" className="btn-primary" style={{textDecoration:"none",padding:"14px 32px"}}>Crear cuenta</Link>
+      </div>
+    );
+  }
+
+  if (step === "preview") {
+    return (
+      <>
+        <div className="detail-header">
+          <button className="back-btn" onClick={() => setStep("form")}><i className="fas fa-chevron-left"></i></button>
+        </div>
+        <div style={{padding:24,fontFamily:"var(--font-sans)"}}>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:"0.55rem",textTransform:"uppercase",letterSpacing:"0.15em",color:"var(--text-dim)",marginBottom:24}}>Vista previa</div>
+          <div className="gallery" style={{marginBottom:20}}>
+            <div className="gallery-slide active" style={{background:"linear-gradient(135deg, #2D2D2D, #111)",height:280,display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <i className="fas fa-box main-icon"></i>
+            </div>
+          </div>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:"0.55rem",textTransform:"uppercase",letterSpacing:"0.15em",color:"var(--text-dim)",marginBottom:8}}>{category.toUpperCase()}</div>
+          <h1 style={{fontSize:"1.3rem",fontWeight:600,marginBottom:8}}>{title} · {cl(condition)}</h1>
+          <div style={{fontSize:"1.6rem",fontWeight:700,marginBottom:24}}>€{price}</div>
+          <p style={{color:"var(--text-sub)",lineHeight:1.6,marginBottom:32}}>{description}</p>
+          <div style={{display:"flex",gap:8}}>
+            <button className="btn-secondary" onClick={() => setStep("form")} style={{flex:1}}>Editar</button>
+            <button className="btn-primary" onClick={() => uploadMutation.mutate()} disabled={uploadMutation.isPending} style={{flex:1}}>
+              {uploadMutation.isPending ? "Publicando..." : "Publicar artículo"}
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <div className="treqe-header">
- <div className="treqe-header__left">
- <button className="treqe-header__back" aria-label="Atras"><i className="fas fa-chevron-left"></i></button>
- <span className="treqe-header__title">Subir articulo</span>
- </div>
- <div className="treqe-header__right">
- <button className="treqe-header__help" aria-label="Ayuda"><i className="fas fa-question-circle"></i></button>
- 
- </div>
- </div>
+      <div className="detail-header">
+        <button className="back-btn" onClick={() => navigate(-1)}><i className="fas fa-chevron-left"></i></button>
+        <span style={{fontFamily:"var(--font-mono)",fontSize:"0.65rem",fontWeight:500,textTransform:"uppercase",letterSpacing:"0.1em",marginLeft:12}}>Publicar artículo</span>
+      </div>
 
- 
- <form className="form-wrap" id="submitForm">
+      <div style={{padding:24,fontFamily:"var(--font-sans)"}}>
+        {/* Upload slots */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:24}}>
+          {[...Array(8)].map((_,i) => (
+            <div key={i} style={{aspectRatio:"1",border:"1px dashed var(--border)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--text-dim)",fontSize:"1.5rem",background:"var(--bg)"}}>
+              <i className={i===0?"fas fa-camera":"fas fa-plus"} style={{fontSize:i===0?"1.2rem":"0.8rem"}}></i>
+            </div>
+          ))}
+        </div>
 
- 
- <div className="photo-section">
- <div className="section-label"><i className="fas fa-camera"></i> Fotos <span style={{ fontWeight: '400', textTransform: 'none', letterSpacing: '0' }}>(min. 1, max. 8)</span></div>
- <div className="photo-grid" id="photoGrid">
- <div className="photo-slot primary" id="slot0">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-camera"></i>
- <span>Principal</span>
- </div>
- </div>
- <div className="photo-slot" id="slot1">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot2">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot3">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot4">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot5">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot6">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="photo-slot" id="slot7">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- </div>
- </div>
+        {/* Title */}
+        <input placeholder="Título del artículo" value={title} onChange={e => setTitle(e.target.value)}
+          style={inputStyle} />
 
- 
- <div className="video-section">
- <div className="section-label"><i className="fas fa-video"></i> Videos <span style={{ fontWeight: '400', textTransform: 'none', letterSpacing: '0' }}>(opcional, max. 4)</span></div>
- <div className="video-grid" id="videoGrid">
- <div className="video-slot" id="video0">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="video-slot" id="video1">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="video-slot" id="video2">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- <div className="video-slot" id="video3">
- <div className="placeholder-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
- <i className="fas fa-plus"></i>
- <span>Añadir</span>
- </div>
- </div>
- </div>
- </div>
+        {/* Category */}
+        <select value={category} onChange={e => setCategory(e.target.value)} style={{...inputStyle,appearance:"none"}}>
+          <option value="">Categoría</option>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
 
- <div className="form-group">
- <label htmlFor="title">Título del artículo</label>
- <input type="text" id="title" placeholder="Ej. Fender Stratocaster Player Series" required />
- </div>
+        {/* Price */}
+        <input type="number" placeholder="Precio (€)" value={price} onChange={e => setPrice(e.target.value)}
+          style={inputStyle} />
 
- 
- <div className="form-group">
- <label htmlFor="mainCat">Categoría</label>
- <div className="category-row">
- <div className="select-wrap">
- <select id="mainCat" required>
- <option value="" disabled selected>Categoría</option>
- <option value="electronica">Electrónica</option>
- <option value="moda">Moda</option>
- <option value="deporte">Deporte</option>
- <option value="musica">Música</option>
- <option value="libros">Libros</option>
- <option value="videojuegos">Videojuegos</option>
- <option value="fotografia">Fotografía</option>
- <option value="hogar">Hogar</option>
- <option value="juguetes">Juguetes</option>
- <option value="coleccionismo">Coleccionismo</option>
- </select>
- </div>
- <div className="select-wrap">
- <select id="subCat" required>
- <option value="" disabled selected>Subcategoría</option>
- </select>
- </div>
- </div>
- </div>
+        {/* Condition */}
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>
+          {CONDITIONS.map(c => (
+            <button key={c} onClick={() => setCondition(c)}
+              style={{padding:"6px 14px",border:"1px solid var(--border)",background:condition===c?"var(--accent)":"transparent",color:condition===c?"var(--surface)":"var(--text)",fontFamily:"var(--font-mono)",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:1,cursor:"pointer"}}>
+              {cl(c)}
+            </button>
+          ))}
+        </div>
 
- 
- <div className="form-group">
- <label>Estado</label>
- <div className="condition-row" id="conditionRow">
- <div className="condition-option" data-value="nuevo">
- <i className="fas fa-tag"></i>
- Nuevo
- </div>
- <div className="condition-option selected" data-value="como-nuevo">
- <i className="fas fa-star"></i>
- Como nuevo
- </div>
- <div className="condition-option" data-value="bueno">
- <i className="fas fa-check"></i>
- Bueno
- </div>
- <div className="condition-option" data-value="aceptable">
- <i className="fas fa-undo"></i>
- Aceptable
- </div>
- </div>
- </div>
+        {/* Weight */}
+        <input type="number" placeholder="Peso (kg)" value={weight} onChange={e => setWeight(e.target.value)}
+          style={inputStyle} step="0.1" />
 
- 
- <div className="form-group">
- <label htmlFor="price">Precio <span className="optional">(tú fijas el valor)</span></label>
- <div className="price-wrap" style={{ position: 'relative' }}>
- <span className="currency-symbol">€</span>
- <input type="number" id="price" placeholder="0" min="1" step={1} required />
- </div>
- </div>
+        {/* Description */}
+        <textarea placeholder="Descripción del artículo..." value={description} onChange={e => setDescription(e.target.value)}
+          style={{...inputStyle,minHeight:100,resize:"vertical"}} />
 
- 
- <div className="form-group">
- <label htmlFor="desc">Descripción <span className="optional">(opcional)</span></label>
- <textarea id="desc" placeholder="Describe el estado, año, accesorios incluidos..."></textarea>
- </div>
+        {/* Preview button */}
+        <button className="btn-primary" onClick={() => setStep("preview")}
+          disabled={!title || !price || !category || !condition}
+          style={{width:"100%",opacity: title&&price&&category&&condition ? 1 : 0.5}}>
+          Vista previa
+        </button>
+      </div>
 
- 
- <div className="form-group">
- <label>Datos para el envío</label>
- <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '6px' }}>
- <div>
- <label style={{ fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.5rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--text-sub)', marginBottom: '4px', display: 'block' }}>Peso</label>
- <div style={{ display: 'flex', alignItems: 'center', maxWidth: '140px', padding: '0 4px 0 0', border: '1px solid #E5E0D8', borderRadius: '2px', background: '#FFFFFF' }}>
- <input type="number" id="weight" placeholder="0" min="0" step="0.1" style={{ padding: '10px 8px', flex: '1', border: 'none', outline: 'none', background: 'transparent', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.85rem', color: 'var(--text)', textAlign: 'right' }} />
- <span style={{ paddingRight: '12px', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem', color: 'var(--text-sub)', fontWeight: '500' }}>kg</span>
- </div>
- </div>
- <div>
- <label style={{ fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.5rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '.1em', color: 'var(--text-sub)', marginBottom: '4px', display: 'block' }}>Dimensiones</label>
- <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
- <input type="number" id="dimL" placeholder="Largo" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
- <span style={{ color: 'var(--text-dim)', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem' }}>×</span>
- <input type="number" id="dimW" placeholder="Ancho" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
- <span style={{ color: 'var(--text-dim)', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem' }}>×</span>
- <input type="number" id="dimH" placeholder="Alto" min="0" step={1} style={{ flex: '1', padding: '10px 4px', border: '1px solid #E5E0D8', borderRadius: '2px', fontFamily: '\'IBM Plex Sans\',sans-serif', fontSize: '.75rem', textAlign: 'center', outline: 'none', background: 'transparent' }} />
- <span style={{ fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.65rem', color: 'var(--text-dim)', fontWeight: '500', paddingLeft: '4px' }}>cm</span>
- </div>
- </div>
- </div>
- </div>
-
- 
- <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
- <button type="button" className="submit-btn" style={{ flex: '1' }}>
- <i className="fas fa-eye"></i> Vista previa
- </button>
- <button type="submit" className="submit-btn" id="submitBtn" style={{ flex: '2' }}>
- <i className="fas fa-cloud-upload-alt"></i> Publicar
- </button>
- </div>
-
- </form>
-
- 
- <div className="preview-modal" id="previewModal">
- <div className="preview-content">
- <div className="preview-header">
- <button className="preview-back"><i className="fas fa-arrow-left"></i></button>
- <span className="preview-title">Vista previa</span>
- <span></span>
- </div>
- <div className="preview-body">
- <div className="preview-image" id="previewImage" style={{ background: '#2D2D2D', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
- <i className="fas fa-guitar" style={{ fontSize: '4rem', color: 'rgba(255,255,255,0.2)' }}></i>
- </div>
- <div className="preview-info">
- <div className="preview-price" id="previewPrice">€0</div>
- <h3 className="preview-name" id="previewName">Título del artículo</h3>
- <div className="preview-meta">
- <span id="previewCondition">Como nuevo</span> · <span id="previewCategory">Categoría</span>
- </div>
- <p className="preview-desc" id="previewDesc">Descripción del artículo...</p>
- </div>
- </div>
- <div className="preview-actions">
- <button className="preview-btn">Editar</button>
- <button className="preview-btn preview-btn--primary"><i className="fas fa-check"></i> Publicar</button>
- </div>
- </div>
- </div>
-
- 
- <div className="success-overlay" id="successOverlay">
- <div className="check"><i className="fas fa-check"></i></div>
- <h2>Artículo publicado</h2>
- <p>Ya está disponible en el catálogo</p>
- <button style={{ marginTop: '12px', padding: '12px 24px', fontFamily: '\'IBM Plex Mono\',monospace', fontSize: '.6rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '.1em', background: '#1C1915', color: '#F9F7F2', border: '1px solid #1C1915', borderRadius: '2px', cursor: 'pointer' }}>
- <i className="fas fa-search"></i> Ver en catálogo
- </button>
- </div>
-
- 
- <nav className="bottom-nav">
- <Link to="/catalogo" className="nav-item"><i className="fas fa-search"></i><span>Buscar</span></Link>
- <Link to="/treqes" className="nav-item"><i className="fas fa-exchange-alt"></i><span>treqes</span></Link>
- <Link to="/subir" className="nav-item nav-add active"><div className="nav-add-btn"><i className="fas fa-plus"></i></div></Link>
- <Link to="/avisos" className="nav-item"><i className="fas fa-bell"></i><span>Avisos</span><span className="nav-badge"></span></Link>
- <Link to="/perfil" className="nav-item"><i className="fas fa-user"></i><span>Perfil</span></Link>
- </nav>
-
- 
-
- 
- <div className="help-modal-overlay" id="helpModal">
- <div className="help-modal">
- <div className="help-modal__header">
- <span className="help-modal__title">Subir artículo</span>
- <button className="help-modal__close"><i className="fas fa-times"></i></button>
- </div>
- <div className="help-modal__body">
- <div className="help-step">
- <div className="help-step__num">1</div>
- <div className="help-step__text"><strong>Haz fotos</strong> del artículo que quieres intercambiar. Sube hasta 8 imágenes y hasta 4 vídeos cortos.</div>
- </div>
- <div className="help-step">
- <div className="help-step__num">2</div>
- <div className="help-step__text"><strong>Describe tu artículo</strong> con título, categoría, estado y precio. Cuanta más información, más posibilidades de match.</div>
- </div>
- <div className="help-step">
- <div className="help-step__num">3</div>
- <div className="help-step__text"><strong>Publícalo</strong>. Tu artículo se convierte en tu moneda de cambio: úsalo para conseguir lo que quieras mediante intercambio.</div>
- </div>
- </div>
- </div>
- </div>
+      <nav className="bottom-nav">
+        <Link to="/catalogo" className="nav-item"><i className="fas fa-search"></i><span>Buscar</span></Link>
+        <Link to="/treqes" className="nav-item"><i className="fas fa-exchange-alt"></i><span>treqes</span></Link>
+        <Link to="/subir" className="nav-item active"><div className="nav-add-btn"><i className="fas fa-plus"></i></div><span>Subir</span></Link>
+        <Link to="/avisos" className="nav-item"><i className="fas fa-bell"></i><span>Avisos</span><span className="nav-badge"></span></Link>
+        <Link to="/perfil" className="nav-item"><i className="fas fa-user"></i><span>Perfil</span></Link>
+      </nav>
     </>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  width:"100%",padding:"12px 16px",border:"1px solid var(--border)",
+  background:"var(--surface)",fontSize:"0.95rem",fontFamily:"var(--font-sans)",
+  marginBottom:12,outline:"none",display:"block"
+};
