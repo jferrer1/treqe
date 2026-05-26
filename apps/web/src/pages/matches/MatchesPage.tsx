@@ -1,18 +1,57 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 
 export function MatchesPage() {
-  return (
-    <>
-      <div className="header"><Link to="/" className="logo-link"><span className="logo">treqe</span></Link></div>
-      <div className="section-title"><h2>Mis Treqes</h2><span>0 activos</span></div>
-      <div style={{display:"flex",gap:0,padding:"0 24px",marginBottom:16}}>
-        {["Activos","Pendientes","En curso","Completados"].map(t=><button key={t} style={{flex:1,padding:"10px 0",fontFamily:"IBM Plex Mono,monospace",fontSize:"0.6rem",fontWeight:500,textTransform:"uppercase",letterSpacing:1,border:"none",borderBottom:"2px solid #E5E0D8",background:"none",color:"#8A8580",cursor:"pointer"}}>{t}</button>)}
-      </div>
-      <div style={{textAlign:"center",padding:"60px 20px",color:"#8A8580"}}>
-        <div style={{fontSize:"2rem",marginBottom:12}}>🔄</div>
-        <div style={{fontWeight:600,color:"#1C1915",marginBottom:4}}>No hay treqes aún</div>
-        <div style={{fontSize:"0.85rem"}}>Los intercambios aparecerán aquí</div>
-      </div>
-    </>
-  );
+  const navigate = useNavigate();
+  const user = useAuthStore(s => s.user);
+  const [html, setHtml] = useState("");
+
+  useEffect(() => {
+    fetch("/mib/v12-mis-matches.html").then(r => r.text()).then(raw => {
+      const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
+      const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
+      let s = sm ? `<style>${sm[1]}</style>` : "";
+      let b = bm ? bm[1] : "";
+      b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      setHtml(s + b);
+    });
+  }, []);
+
+  // Redirect to register if not logged in and clicking action buttons
+  useEffect(() => {
+    if (user) return;
+    const h = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement).closest("button");
+      if (!btn) return;
+      const t = btn.textContent || "";
+      if (t.includes("Aceptar") || t.includes("Rechazar") || t.includes("Valorar") || t.includes("Confirmar")) {
+        e.preventDefault(); e.stopPropagation(); navigate("/registro");
+      }
+    };
+    document.addEventListener("click", h, true);
+    return () => document.removeEventListener("click", h, true);
+  }, [user, navigate]);
+
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest("a");
+      if (!a) return;
+      const href = a.getAttribute("href") || "";
+      const map: Record<string,string> = {
+        "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v4-perfil/":"/perfil",
+        "../v12-mis-matches/":"/treqes","../v11-notificaciones/":"/avisos","../v3-subir/":"/subir",
+      };
+      for (const [old,path] of Object.entries(map)) {
+        if (href.startsWith(old)) { e.preventDefault(); navigate(path); return; }
+      }
+    };
+    document.addEventListener("click", h);
+    return () => document.removeEventListener("click", h);
+  }, [navigate]);
+
+  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+  return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
