@@ -1,4 +1,5 @@
-import { createBrowserRouter, Link } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LandingPage } from "@/pages/landing/LandingPage";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
