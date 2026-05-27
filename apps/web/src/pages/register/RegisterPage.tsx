@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 
-function AuthPage({ mode }: { mode: "login" | "register" }) {
+export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
-  const { login, register } = useAuthStore();
+  const { login, register, user } = useAuthStore();
   const [html, setHtml] = useState("");
+
+  // Redirect to catalog if already logged in
+  useEffect(() => { if (user) navigate("/catalogo", { replace: true }); }, [user, navigate]);
 
   useEffect(() => {
     fetch("/mib/v10-registro.html").then(r => r.text()).then(raw => {
