@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/stores/authStore";
 
-interface Props { page: string; requireAuth?: boolean; }
+interface Props { page: string; noBottomNav?: boolean; }
 
 const ROUTE_MAP: Record<string, string> = {
   "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
@@ -23,10 +22,8 @@ const ROUTE_MAP: Record<string, string> = {
 
 const CACHE: Record<string, string> = {};
 
-export function MibPage({ page, requireAuth }: Props) {
+export function MibPage({ page, noBottomNav }: Props) {
   const navigate = useNavigate();
-  const user = useAuthStore(s => s.user);
-  const authLoading = useAuthStore(s => s.loading);
   const [html, setHtml] = useState(CACHE[page] || "");
 
   useEffect(() => {
@@ -39,16 +36,11 @@ export function MibPage({ page, requireAuth }: Props) {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      if (noBottomNav) b = b.replace(/<nav class="bottom-nav"[\s\S]*?<\/nav>/g, '');
       CACHE[page] = s + b;
       setHtml(CACHE[page]);
     });
   }, [page]);
-
-  // Redirect to register if not logged in on auth-required pages
-  useEffect(() => {
-    if (!requireAuth || authLoading) return;
-    if (!user) navigate("/registro", { replace: true });
-  }, [requireAuth, user, authLoading, navigate]);
 
   // Intercept link clicks for React Router navigation
   useEffect(() => {
