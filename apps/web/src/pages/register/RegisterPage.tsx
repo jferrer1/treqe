@@ -1,54 +1,69 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 
 export function RegisterPage() {
-  return (
-    <>
-      <div className="treqe-header">
- <div className="treqe-header__left">
- <button className="treqe-header__back" aria-label="Atras"><i className="fas fa-chevron-left"></i></button>
- <span className="treqe-header__title">Registro</span>
- </div>
- <div className="treqe-header__right"></div>
-</div>
+  const navigate = useNavigate();
+  const { login, register } = useAuthStore();
+  const [html, setHtml] = useState("");
 
-<div className="container">
- <h2>Crear cuenta</h2>
- <p className="sub">Únete a la comunidad de intercambio circular.</p>
+  useEffect(() => {
+    fetch("/mib/v10-registro.html").then(r => r.text()).then(raw => {
+      const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
+      const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
+      let s = sm ? `<style>${sm[1]}</style>` : "";
+      let b = bm ? bm[1] : "";
+      b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      setHtml(s + b);
+    });
+  }, []);
 
- <button className="btn btn-google">
- <i className="fab fa-google"></i> Continuar con Google
- </button>
+  // Add form handlers after HTML is rendered
+  useEffect(() => {
+    if (!html) return;
+    const timer = setTimeout(() => {
+      const forms = document.querySelectorAll("form");
+      forms.forEach(form => {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = (form.querySelector('input[type="email"]') as HTMLInputElement)?.value;
+          const password = (form.querySelector('input[type="password"]') as HTMLInputElement)?.value;
+          const name = (form.querySelector('input[type="text"]') as HTMLInputElement)?.value;
+          if (!email || !password) return;
 
- <button className="btn btn-google" style={{ marginTop: '10px' }}>
- <i className="fab fa-apple"></i> Continuar con Apple
- </button>
+          if (name) {
+            // Register mode
+            await register(email, password, name);
+          } else {
+            // Login mode
+            await login(email, password);
+          }
+          
+          if (useAuthStore.getState().user) {
+            navigate("/catalogo");
+          }
+        });
+      });
 
- <div className="divider">o con email</div>
+      // Toggle login/register
+      const toggleBtn = document.querySelector('[data-action="toggle"]');
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          const loginForm = document.getElementById("loginForm");
+          const registerForm = document.getElementById("registerForm");
+          if (loginForm && registerForm) {
+            const isLogin = loginForm.style.display !== "none";
+            loginForm.style.display = isLogin ? "none" : "block";
+            registerForm.style.display = isLogin ? "block" : "none";
+          }
+        });
+      }
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [html]);
 
- <form>
- <div className="form-group">
- <label>Nombre</label>
- <input type="text" placeholder="Tu nombre" required />
- </div>
- <div className="form-group">
- <label>Email</label>
- <input type="email" placeholder="tu@email.com" required />
- </div>
- <div className="form-group">
- <label>Contraseña</label>
- <input type="password" placeholder="Mínimo 8 caracteres" required minLength={8} />
- </div>
- <div className="checkbox-group">
- <input type="checkbox" id="terms" required />
- <label htmlFor="terms">Acepto los <Link to="/legal/terminos">términos</Link> y la <Link to="/legal/privacidad">política de privacidad</Link></label>
- </div>
- <button type="submit" className="btn">Crear cuenta <i className="fas fa-arrow-right"></i></button>
- </form>
-
- <div className="footer-link">
- ¿Ya tienes cuenta? <Link to="/registro">Iniciar sesión</Link>
- </div>
-</div>
-    </>
-  );
+  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+  return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
