@@ -35,7 +35,7 @@ export function UploadPage() {
 
         // Redirect to register if not logged in
         if (!user && (text.includes("Vista") || text.includes("Publicar") || text.includes("vista") || text.includes("publicar"))) {
-          e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
+          e.preventDefault(); e.stopPropagation(); navigate("/login"); return;
         }
 
         // Publicar button
@@ -50,7 +50,7 @@ export function UploadPage() {
       forms.forEach(form => {
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
-          if (!user) { navigate("/registro"); return; }
+          if (!user) { navigate("/login"); return; }
           handlePublish();
         });
       });

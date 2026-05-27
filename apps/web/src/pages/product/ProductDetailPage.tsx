@@ -47,7 +47,7 @@ export function ProductDetailPage() {
       if (text.includes("COMPRAR") || text.includes("INTERCAMBIO") || text.includes("Quiero")) {
         e.preventDefault();
         e.stopPropagation();
-        navigate("/registro");
+        navigate("/login");
       }
     };
     document.addEventListener("click", handler, true);
