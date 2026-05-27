@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
-import { RegisterPage } from "@/pages/register/RegisterPage";
+import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
 import { MibPage } from "@/components/layout/MibPage";
 
@@ -30,6 +30,7 @@ export const router = createBrowserRouter([
   { path: "/catalogo", element: <CatalogPage /> },
   { path: "/articulo/:id", element: <ProductDetailPage /> },
   { path: "/registro", element: <RegisterPage /> },
+  { path: "/login", element: <LoginPage /> },
   { path: "/subir", element: <UploadPage /> },
   { path: "/perfil", element: <MibPage page="v4-perfil" /> },
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },

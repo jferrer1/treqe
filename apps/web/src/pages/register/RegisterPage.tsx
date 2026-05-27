@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 
-export function RegisterPage() {
+function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
   const { login, register } = useAuthStore();
   const [html, setHtml] = useState("");
@@ -16,46 +16,41 @@ export function RegisterPage() {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Fix toggle link to be a button
-      b = b.replace(/<a href="\.\.\/v10-registro\/">Iniciar sesión<\/a>/, '<button class="toggle-link" style="background:none;border:none;color:var(--text-sub);text-decoration:underline;cursor:pointer;font-size:inherit;font-family:inherit">Iniciar sesión</button>');
+      // Fix toggle link
+      b = b.replace(/<a href="\.\.\/v10-registro\/">Iniciar sesión<\/a>/, `<a href="${mode === "login" ? "/registro" : "/login"}" style="color:var(--text-sub)">${mode === "login" ? "¿No tienes cuenta? Crear cuenta" : "¿Ya tienes cuenta? Iniciar sesión"}</a>`);
       setHtml(s + b);
     });
-  }, []);
+  }, [mode]);
 
   useEffect(() => {
     if (!html) return;
     const t = setTimeout(() => {
       const form = document.querySelector("form");
-      const nameGrp = form?.querySelector(".form-group"); // First form-group is "Nombre"
+      if (!form) return;
+      const nameGrp = form.querySelector(".form-group");
       const title = document.querySelector("h2");
       const sub = document.querySelector(".sub");
-      const submitBtn = form?.querySelector('button[type="submit"]');
+      const submitBtn = form.querySelector('button[type="submit"]');
       const termsDiv = document.querySelector(".checkbox-group");
-      const toggleBtn = document.querySelector(".toggle-link");
       const googleBtns = document.querySelectorAll(".btn-google");
 
-      let isLogin = false;
+      // Set initial state based on mode
+      if (mode === "login") {
+        if (nameGrp) (nameGrp as HTMLElement).style.display = "none";
+        if (termsDiv) (termsDiv as HTMLElement).style.display = "none";
+        if (title) title.textContent = "Iniciar sesión";
+        if (sub) sub.textContent = "Accede a tu cuenta de Treqe.";
+        if (submitBtn) submitBtn.innerHTML = 'Iniciar sesión <i class="fas fa-arrow-right"></i>';
+        googleBtns.forEach(b => { (b as HTMLElement).style.display = "none"; });
+      }
 
-      const toggle = () => {
-        isLogin = !isLogin;
-        if (nameGrp) (nameGrp as HTMLElement).style.display = isLogin ? "none" : "block";
-        if (termsDiv) (termsDiv as HTMLElement).style.display = isLogin ? "none" : "block";
-        if (title) title.textContent = isLogin ? "Iniciar sesión" : "Crear cuenta";
-        if (sub) sub.textContent = isLogin ? "Accede a tu cuenta de Treqe." : "Únete a la comunidad de intercambio circular.";
-        if (submitBtn) submitBtn.innerHTML = isLogin ? 'Iniciar sesión <i class="fas fa-arrow-right"></i>' : 'Crear cuenta <i class="fas fa-arrow-right"></i>';
-        if (toggleBtn) toggleBtn.textContent = isLogin ? "¿No tienes cuenta? Crear cuenta" : "¿Ya tienes cuenta? Iniciar sesión";
-        if (googleBtns.length) googleBtns.forEach(b => { (b as HTMLElement).style.display = isLogin ? "none" : "block"; });
-      };
-
-      toggleBtn?.addEventListener("click", (e) => { e.preventDefault(); toggle(); });
-
-      form?.addEventListener("submit", async (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = (form.querySelector('input[type="email"]') as HTMLInputElement)?.value;
         const password = (form.querySelector('input[type="password"]') as HTMLInputElement)?.value;
         if (!email || !password) return;
 
-        if (isLogin) {
+        if (mode === "login") {
           await login(email, password);
         } else {
           const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
@@ -65,8 +60,11 @@ export function RegisterPage() {
       });
     }, 200);
     return () => clearTimeout(t);
-  }, [html, login, register, navigate]);
+  }, [html, mode, login, register, navigate]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
+
+export function RegisterPage() { return <AuthPage mode="register" />; }
+export function LoginPage() { return <AuthPage mode="login" />; }
