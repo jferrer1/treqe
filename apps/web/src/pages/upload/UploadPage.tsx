@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { api } from "@/lib/api";
 
 export function UploadPage() {
   const navigate = useNavigate();
   const user = useAuthStore(s => s.user);
   const [html, setHtml] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetch("/mib/v3-subir.html").then(r => r.text()).then(raw => {
@@ -16,47 +18,76 @@ export function UploadPage() {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Hide preview overlay initially (MIB shows it via JS)
+      // Hide preview initially
       b = b.replace(/class="([^"]*preview[^"]*)"/g, 'class="$1" style="display:none"');
       setHtml(s + b);
     });
   }, []);
 
-  // Show preview when "Vista previa" clicked, submit redirects to register if not logged in
   useEffect(() => {
-    const h = (e: MouseEvent) => {
-      const btn = (e.target as HTMLElement).closest("button");
-      if (!btn) return;
-      const t = btn.textContent || "";
-      if ((t.includes("Vista") || t.includes("vista")) && !user) {
-        e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
-      }
-      if ((t.includes("Publicar") || t.includes("publicar")) && !user) {
-        e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
-      }
-    };
-    document.addEventListener("click", h, true);
-    return () => document.removeEventListener("click", h, true);
-  }, [user, navigate]);
+    if (!html) return;
+    const t = setTimeout(() => {
+      // Intercept "Vista previa" button clicks
+      document.addEventListener("click", (e) => {
+        const btn = (e.target as HTMLElement).closest("button");
+        if (!btn) return;
+        const text = btn.textContent || "";
 
-  // Navigation clicks
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement).closest("a");
-      if (!a) return;
-      const href = a.getAttribute("href") || "";
-      const map: Record<string,string> = {
-        "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v4-perfil/":"/perfil",
-        "../v12-mis-matches/":"/treqes","../v11-notificaciones/":"/avisos","../v3-subir/":"/subir",
-      };
-      for (const [old,path] of Object.entries(map)) {
-        if (href.startsWith(old)) { e.preventDefault(); navigate(path); return; }
-      }
-    };
-    document.addEventListener("click", h);
-    return () => document.removeEventListener("click", h);
-  }, [navigate]);
+        // Redirect to register if not logged in
+        if (!user && (text.includes("Vista") || text.includes("Publicar") || text.includes("vista") || text.includes("publicar"))) {
+          e.preventDefault(); e.stopPropagation(); navigate("/registro"); return;
+        }
+
+        // Publicar button
+        if (text.includes("Publicar") || text.includes("publicar")) {
+          e.preventDefault(); e.stopPropagation();
+          handlePublish();
+        }
+      }, true);
+
+      // Intercept form submit
+      const forms = document.querySelectorAll("form");
+      forms.forEach(form => {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!user) { navigate("/registro"); return; }
+          handlePublish();
+        });
+      });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [html, user, navigate]);
+
+  const handlePublish = async () => {
+    const title = (document.querySelector('input[placeholder*="tulo"], input[placeholder*="Título"], input[placeholder*="nombre"]') as HTMLInputElement)?.value;
+    const desc = (document.querySelector('textarea') as HTMLTextAreaElement)?.value;
+    const priceEl = document.querySelector('input[type="number"], input[placeholder*="recio"], input[placeholder*="Precio"]') as HTMLInputElement;
+    const price = priceEl?.value;
+    // Category from select or first visible
+    const catSelect = document.querySelector('select');
+    const category = (catSelect as HTMLSelectElement)?.value;
+    // Condition from active pill
+    const activePill = document.querySelector('[class*="active"], [class*="selected"]');
+    const condition = activePill?.textContent?.toLowerCase().replace(/ /g, "_") || "good";
+
+    if (!title || !price || !category) {
+      setError("Título, precio y categoría son obligatorios");
+      return;
+    }
+
+    try {
+      await api.post(`/api/products/?title=${encodeURIComponent(title)}&description=${encodeURIComponent(desc||"")}&price=${price}&category=${encodeURIComponent(category)}&condition=${condition}`);
+      navigate("/catalogo");
+    } catch (e: any) {
+      setError(e.message || "Error al publicar");
+    }
+  };
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return <div dangerouslySetInnerHTML={{__html: html}} />;
+  return (
+    <>
+      {error && <div style={{position:"fixed",top:16,left:"50%",transform:"translateX(-50%)",background:"#E74C3C",color:"#FFF",padding:"8px 20px",fontFamily:"var(--font-mono)",fontSize:"0.65rem",zIndex:9999}}>{error}</div>}
+      <div dangerouslySetInnerHTML={{__html: html}} />
+    </>
+  );
 }
