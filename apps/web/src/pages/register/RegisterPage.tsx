@@ -17,7 +17,7 @@ function AuthPage({ mode }: { mode: "login" | "register" }) {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Fix toggle link
-      b = b.replace(/<a href="\.\.\/v10-registro\/">Iniciar sesión<\/a>/, `<a href="${mode === "login" ? "/registro" : "/login"}" style="color:var(--text-sub)">${mode === "login" ? "¿No tienes cuenta? Crear cuenta" : "¿Ya tienes cuenta? Iniciar sesión"}</a>`);
+      b = b.replace(/<a href="\.\.\/v10-registro\/">Iniciar sesión<\/a>/, `<span style="color:var(--text-sub)">${mode === "login" ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}</span><a href="${mode === "login" ? "/registro" : "/login"}" style="color:var(--text-sub);text-decoration:underline">${mode === "login" ? "Crear cuenta" : "Iniciar sesión"}</a>`);
       setHtml(s + b);
     });
   }, [mode]);
@@ -32,17 +32,22 @@ function AuthPage({ mode }: { mode: "login" | "register" }) {
       const sub = document.querySelector(".sub");
       const submitBtn = form.querySelector('button[type="submit"]');
       const termsDiv = document.querySelector(".checkbox-group");
-      const googleBtns = document.querySelectorAll(".btn-google");
 
       // Set initial state based on mode
       if (mode === "login") {
-        if (nameGrp) (nameGrp as HTMLElement).style.display = "none";
-        if (termsDiv) (termsDiv as HTMLElement).style.display = "none";
         if (title) title.textContent = "Iniciar sesión";
         if (sub) sub.textContent = "Accede a tu cuenta de Treqe.";
         if (submitBtn) submitBtn.innerHTML = 'Iniciar sesión <i class="fas fa-arrow-right"></i>';
-        googleBtns.forEach(b => { (b as HTMLElement).style.display = "none"; });
+        // Keep Google/Apple visible on login too — just hide name+terms
+      } else {
+        if (nameGrp) (nameGrp as HTMLElement).style.display = "block";
+        if (termsDiv) (termsDiv as HTMLElement).style.display = "block";
+        if (title) title.textContent = "Crear cuenta";
+        if (sub) sub.textContent = "Únete a la comunidad de intercambio circular.";
+        if (submitBtn) submitBtn.innerHTML = 'Crear cuenta <i class="fas fa-arrow-right"></i>';
       }
+      if (mode === "login" && nameGrp) (nameGrp as HTMLElement).style.display = "none";
+      if (mode === "login" && termsDiv) (termsDiv as HTMLElement).style.display = "none";
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
