@@ -17,7 +17,12 @@ function AuthPage({ mode }: { mode: "login" | "register" }) {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Fix toggle link
-      b = b.replace(/<a href="\.\.\/v10-registro\/">Iniciar sesión<\/a>/, `<span style="color:var(--text-sub)">${mode === "login" ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}</span><a href="${mode === "login" ? "/registro" : "/login"}" style="color:var(--text-sub);text-decoration:underline">${mode === "login" ? "Crear cuenta" : "Iniciar sesión"}</a>`);
+      // Replace the toggle link in footer
+      const newLink = mode === "login"
+        ? '<span style="color:var(--text-sub)">¿No tienes cuenta? </span><a href="/registro" style="color:var(--text-sub);text-decoration:underline">Crear cuenta</a>'
+        : '<span style="color:var(--text-sub)">¿Ya tienes cuenta? </span><a href="/login" style="color:var(--text-sub);text-decoration:underline">Iniciar sesión</a>';
+      b = b.replace(/¿Ya tienes cuenta\? <a[^>]*>Iniciar sesión<\/a>/, newLink);
+      b = b.replace(/¿No tienes cuenta\? <a[^>]*>Crear cuenta<\/a>/, newLink);
       setHtml(s + b);
     });
   }, [mode]);
