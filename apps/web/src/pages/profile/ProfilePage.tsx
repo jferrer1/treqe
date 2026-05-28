@@ -3,15 +3,42 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
 
+interface Product {
+  id: string; title: string; price: number; emoji: string; color: string;
+  status: "active" | "pending" | "accepted" | "rejected";
+}
+
 interface UserProfile {
   id: string; email: string; name: string;
   score: number; swaps: number; products: number; months: number;
   verified: boolean;
 }
 
-interface Product {
-  id: string; title: string; price: number; emoji: string; color: string;
-  status: "active" | "pending" | "accepted" | "rejected";
+const GRADIENTS = ["#1A3A2A,#2A5A3A","#2D2D2D,#4D4D4D","#3A2A1A,#5A3A2A","#1A2A3A,#2A3A5A","#2A1A2A,#4A2A4A","#3A3A1A,#5A5A2A"];
+
+function randomColor(seed: string) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = ((h << 5) - h) + seed.charCodeAt(i);
+  return GRADIENTS[Math.abs(h) % GRADIENTS.length];
+}
+
+function statusLabel(s: string): string {
+  const m: Record<string, string> = { active: "Activo", pending: "Cambio", accepted: "Aceptado", rejected: "Rechazado" };
+  return m[s] || s;
+}
+
+function renderProduct(p: Product, asLiked = false): string {
+  return `<div class="my-item" onclick="window.location.href='/articulo/${p.id}'">
+    <div class="${asLiked ? "my-item__image my-item__image--liked" : "my-item__image"}" style="${asLiked ? `background:linear-gradient(135deg,${p.color})!important` : ""}">
+      <span class="my-item__emoji">${p.emoji}</span>
+      ${asLiked ? `<div class="my-item__overlay">${p.title}</div>` : `<i class="fas fa-box"></i>`}
+    </div>
+    <div class="my-item__info">
+      <div class="my-item__title">${p.title}</div>
+      <div class="my-item__price">\u20AC${p.price}</div>
+    </div>
+    ${!asLiked ? `<span class="my-item__status ${p.status}">${statusLabel(p.status)}</span>` : ""}
+  </div>`;
 }
 
 export function ProfilePage() {
@@ -22,15 +49,22 @@ export function ProfilePage() {
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [likedProducts, setLikedProducts] = useState<Product[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
+  const [wired, setWired] = useState(false);
 
   // Fetch MIB HTML
   useEffect(() => {
     fetch("/mib/v4-perfil.html").then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
-      let s = sm ? `<style>${sm[1]}</style>` : "";
+      const s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      // Replace specific MIB navigations BEFORE strip
+      b = b.replace(/onclick="goToEditProfile\(\)"/g, 'data-nav="perfil/editar"');
+      b = b.replace(/onclick="goToVerify\(\)"/g, 'data-nav="perfil/verificar"');
+      b = b.replace(/onclick="goToUpload\(\)"/g, 'data-nav="subir"');
+      b = b.replace(/onclick="goToFavorites\(\)"/g, 'data-nav="favoritos"');
+      b = b.replace(/onclick="goToSettings\(\)"/g, 'data-nav="ajustes"');
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       setHtml(s + b);
@@ -46,122 +80,126 @@ export function ProfilePage() {
         const my: any = await api.get("/api/products/mine");
         const fav: any = await api.get("/api/favorites");
         setProfile({
-          id: p.id, email: p.email, name: p.name || p.email.split("@")[0],
+          id: p.id, email: p.email, name: p.name || p.email?.split("@")[0] || "Usuario",
           score: p.score || 50, swaps: p.swaps_completed || 0,
           products: p.products_count || 0, months: p.months_active || 1,
           verified: p.verified || false
         });
         setMyProducts((my.products || my || []).slice(0, 6).map((x: any) => ({
-          id: x.id, title: x.title, price: x.price, emoji: x.emoji || "📦",
-          color: randomColor(x.id), status: x.status || "active"
+          id: x.id, title: x.title, price: x.price, emoji: x.emoji || "\uD83D\uDCE6",
+          color: randomColor(String(x.id)), status: x.status || "active"
         })));
         setLikedProducts((fav.products || fav || []).slice(0, 3).map((x: any) => ({
-          id: x.id, title: x.title, price: x.price, emoji: x.emoji || "❤️",
-          color: randomColor(x.id), status: "active"
+          id: x.id, title: x.title, price: x.price, emoji: x.emoji || "\u2764\uFE0F",
+          color: randomColor(String(x.id)), status: "active"
         })));
       } catch { /* use defaults */ }
       setDataLoading(false);
     })();
   }, [user, html]);
 
-  // Inject data into DOM + wire nav
+  // Wire event handlers once HTML is in the DOM
   useEffect(() => {
-    if (!html) return;
-    const t = setTimeout(() => {
-      // Auth links
-      document.querySelectorAll(".profile-action, .profile-actions button").forEach(el => {
-        el.addEventListener("click", (e) => {
-          e.preventDefault(); e.stopPropagation();
-          if (!user) { navigate("/login"); return; }
-          const text = (el as HTMLElement).textContent || "";
-          if (text.includes("Editar")) navigate("/perfil/editar");
-          if (text.includes("Verificar")) navigate("/perfil/verificar");
-        });
+    if (!html || wired) return;
+    const check = () => {
+      const btn = document.querySelector(".profile-action");
+      if (!btn) { setTimeout(check, 200); return; }
+      wireHandlers();
+      setWired(true);
+    };
+    check();
+  }, [html, wired]);
+
+  // Inject real data into DOM
+  useEffect(() => {
+    if (!wired || dataLoading || !profile) return;
+    const check = () => {
+      const scoreEl = document.querySelector(".scoring-card__score");
+      if (!scoreEl) { setTimeout(check, 200); return; }
+      scoreEl.innerHTML = `${profile.score} <small>/ 100</small>`;
+      const fill = document.getElementById("scoreFill");
+      if (fill) fill.style.width = `${profile.score}%`;
+      const stats = document.querySelectorAll(".stat-card__number");
+      if (stats[0]) stats[0].textContent = String(profile.swaps);
+      if (stats[1]) stats[1].textContent = String(profile.products);
+      if (stats[2]) stats[2].textContent = String(profile.months);
+      // Products
+      const sections = document.querySelectorAll(".section");
+      sections.forEach(sec => {
+        const title = sec.querySelector(".section__title")?.textContent || "";
+        const grid = sec.querySelector(".my-items") as HTMLElement;
+        if (!grid) return;
+        if (title.includes("Mis") || title.includes("art")) {
+          if (myProducts.length) grid.innerHTML = myProducts.map(p => renderProduct(p)).join("");
+        }
+        if (title.includes("gustan")) {
+          if (likedProducts.length) grid.innerHTML = likedProducts.map(p => renderProduct(p, true)).join("");
+        }
       });
+    };
+    check();
+  }, [wired, profile, dataLoading, myProducts, likedProducts]);
 
-      // Nav buttons in section headers
-      document.querySelectorAll(".section__action, .section__header button").forEach(el => {
-        el.addEventListener("click", (e) => {
-          e.preventDefault(); e.stopPropagation();
-          if (!user) { navigate("/login"); return; }
-          const text = (el as HTMLElement).textContent || "";
-          if (text.includes("Ver todo") || text.includes("Ver todas")) navigate("/favoritos");
-          if (text.includes("Añadir")) navigate("/subir");
-        });
+  function wireHandlers() {
+    // Global click handler for data-nav buttons
+    document.addEventListener("click", (e) => {
+      const target = (e.target as HTMLElement).closest("[data-nav]") as HTMLElement | null;
+      if (!target) return;
+      e.preventDefault(); e.stopPropagation();
+      const user = useAuthStore.getState().user;
+      const token = localStorage.getItem("treqe-token");
+      if (!user && !token) { navigate("/login"); return; }
+      navigate("/" + target.dataset.nav);
+    });
+
+    // View-all / Add buttons in section headers
+    document.querySelectorAll(".section__action, .section__header button").forEach(el => {
+      (el as HTMLElement).addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const user = useAuthStore.getState().user;
+        const token = localStorage.getItem("treqe-token");
+        if (!user && !token) { navigate("/login"); return; }
+        const text = (el as HTMLElement).textContent || "";
+        if (text.includes("Ver todo") || text.includes("Ver todas")) navigate("/favoritos");
+        if (text.includes("\u00F1adir") || text.includes("A\u00F1adir")) navigate("/subir");
       });
+    });
 
-      // Scoring modal buttons
-      const scoringCard = document.querySelector(".scoring-card");
-      const scoringInfoBtn = scoringCard?.querySelector("button");
-      const scoringOverlay = document.getElementById("scoringModal");
-      scoringInfoBtn?.addEventListener("click", (e) => { e.stopPropagation(); scoringOverlay?.classList.add("visible"); });
-      scoringOverlay?.addEventListener("click", (e) => {
-        if (e.target === scoringOverlay || (e.target as HTMLElement).classList.contains("scoring-modal__close")) scoringOverlay.classList.remove("visible");
-      });
-    }, 300);
+    const scoringInfoBtn = document.querySelector(".scoring-card button");
+    const scoringOverlay = document.getElementById("scoringModal");
+    scoringInfoBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      scoringOverlay?.classList.add("visible");
+    });
+    scoringOverlay?.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (e.target === scoringOverlay || t.classList.contains("scoring-modal__close") || t.closest(".scoring-modal__close")) {
+        scoringOverlay.classList.remove("visible");
+      }
+    });
+  }
 
-    // Inject profile data into the DOM
-    if (!dataLoading && profile) {
-      const t2 = setTimeout(() => {
-        // Score
-        const scoreEl = document.querySelector(".scoring-card__score");
-        if (scoreEl) scoreEl.innerHTML = `${profile.score} <small>/ 100</small>`;
-        const fill = document.getElementById("scoreFill");
-        if (fill) fill.style.width = `${profile.score}%`;
-        // Stats
-        const stats = document.querySelectorAll(".stat-card__number");
-        if (stats[0]) stats[0].textContent = String(profile.swaps);
-        if (stats[1]) stats[1].textContent = String(profile.products);
-        if (stats[2]) stats[2].textContent = String(profile.months);
-        // My products
-        const mySection = Array.from(document.querySelectorAll(".section")).find(s => s.querySelector(".section__title")?.textContent?.includes("art") || s.querySelector(".section__title")?.textContent?.includes("Mis"));
-        if (mySection && myProducts.length) injectProducts(mySection.querySelector(".my-items")!, myProducts);
-        // Liked products
-        const likedSection = Array.from(document.querySelectorAll(".section")).find(s => s.querySelector(".section__title")?.textContent?.includes("gustan"));
-        if (likedSection && likedProducts.length) injectProducts(likedSection.querySelector(".my-items")!, likedProducts, true);
-      }, 400);
-      return () => clearTimeout(t2);
-    }
-    return () => clearTimeout(t);
-  }, [html, user, profile, dataLoading, navigate]);
+  // Loading
+  if (!html) return <div style={{ padding: 60, textAlign: "center", fontFamily: "var(--font-sans)" }}>Cargando...</div>;
 
-  // Loading / no-auth states
-  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+  // No auth
   if (!authLoading && !user) {
     return (
-      <div style={{maxWidth:420, margin:"60px auto", padding:32, textAlign:"center", fontFamily:"var(--font-sans)"}}>
-        <div style={{fontSize:"3rem",marginBottom:16}}>👤</div>
-        <h2 style={{fontSize:"1.3rem",fontWeight:600,marginBottom:8}}>Tu perfil te espera</h2>
-        <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:24,lineHeight:1.5}}>Regístrate o inicia sesión para ver tu perfil, scoring y artículos.</p>
-        <button onClick={() => navigate("/login")} style={{fontFamily:"var(--font-mono)",fontSize:"0.75rem",fontWeight:600,padding:"12px 32px",background:"#1C1915",color:"#F9F7F2",border:"none",cursor:"pointer"}}>Iniciar sesión</button>
-        <button onClick={() => navigate("/registro")} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",fontFamily:"var(--font-mono)",fontSize:"0.65rem",color:"#8A8580",cursor:"pointer",textDecoration:"underline"}}>Crear cuenta</button>
+      <div style={{ maxWidth: 420, margin: "60px auto", padding: 32, textAlign: "center", fontFamily: "var(--font-sans)" }}>
+        <div style={{ fontSize: "3rem", marginBottom: 16 }}>\uD83D\uDC64</div>
+        <h2 style={{ fontSize: "1.3rem", fontWeight: 600, marginBottom: 8 }}>Tu perfil te espera</h2>
+        <p style={{ color: "#8A8580", fontSize: "0.85rem", marginBottom: 24, lineHeight: 1.5 }}>
+          Reg\u00EDstrate o inicia sesi\u00F3n para ver tu perfil, scoring y art\u00EDculos.
+        </p>
+        <button onClick={() => navigate("/login")} style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", fontWeight: 600, padding: "12px 32px", background: "#1C1915", color: "#F9F7F2", border: "none", cursor: "pointer" }}>
+          Iniciar sesi\u00F3n
+        </button>
+        <button onClick={() => navigate("/registro")} style={{ display: "block", margin: "12px auto 0", background: "none", border: "none", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#8A8580", cursor: "pointer", textDecoration: "underline" }}>
+          Crear cuenta
+        </button>
       </div>
     );
   }
 
-  return <div dangerouslySetInnerHTML={{__html: html}} />;
-}
-
-const GRADIENTS = ["#1A3A2A,#2A5A3A","#2D2D2D,#4D4D4D","#3A2A1A,#5A3A2A","#1A2A3A,#2A3A5A","#2A1A2A,#4A2A4A","#3A3A1A,#5A5A2A"];
-function randomColor(seed: string) { let h=0; for(let i=0;i<seed.length;i++) h=((h<<5)-h)+seed.charCodeAt(i); return GRADIENTS[Math.abs(h)%GRADIENTS.length]; }
-
-function injectProducts(container: Element, products: Product[], asLiked = false) {
-  container.innerHTML = products.map(p => `
-    <div class="my-item" onclick="window.parent.location.href='/articulo/${p.id}'">
-      <div class="${asLiked ? "my-item__image my-item__image--liked" : "my-item__image"}" style="${asLiked ? `background:linear-gradient(135deg,${p.color})!important` : ""}">
-        <span class="my-item__emoji">${p.emoji}</span>
-        ${asLiked ? `<div class="my-item__overlay">${p.title}</div>` : `<i class="fas fa-box"></i>`}
-      </div>
-      <div class="my-item__info">
-        <div class="my-item__title">${p.title}</div>
-        <div class="my-item__price">€${p.price}</div>
-      </div>
-      ${!asLiked ? `<span class="my-item__status ${p.status}">${statusLabel(p.status)}</span>` : ""}
-    </div>
-  `).join("");
-}
-
-function statusLabel(s: string): string {
-  const m: Record<string,string> = { active: "Activo", pending: "Cambio", accepted: "Aceptado", rejected: "Rechazado" };
-  return m[s] || s;
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }

@@ -4,6 +4,7 @@ import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
+import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
   { path: "/registro", element: <RegisterPage /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/subir", element: <UploadPage /> },
-  { path: "/perfil", element: <MibPage page="v4-perfil" /> },
+  { path: "/perfil", element: <ProfilePage /> },
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },
   { path: "/seguimiento/:id", element: <MibPage page="v7-seguimiento" /> },
   { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
