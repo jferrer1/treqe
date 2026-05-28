@@ -69,6 +69,8 @@ export function ProfilePage() {
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Inject logout button into header right
       b = b.replace('class="treqe-header__right"', 'class="treqe-header__right" id="treqe-header-right"');
+      // Add logout button directly in HTML
+      b = b.replace(/<button class="dm-toggle"[^>]*>Dark<\/button>/, '<button class="dm-toggle" onclick="document.location.href=&quot;/perfil&quot;;localStorage.removeItem(&quot;treqe-token&quot;);sessionStorage.clear()" style="margin-right:4px;color:#E74C3C;border-color:#E74C3C">Salir</button><button class="dm-toggle" onclick="document.body.classList.toggle(&quot;dark&quot;)">Dark</button>');
       setHtml(s + b);
     });
   }, []);
@@ -179,21 +181,6 @@ export function ProfilePage() {
         scoringOverlay.classList.remove("visible");
       }
     });
-
-    // Inject logout button
-    const headerRight = document.getElementById("treqe-header-right");
-    if (headerRight && user) {
-      const logoutBtn = document.createElement("button");
-      logoutBtn.textContent = "Salir";
-      logoutBtn.className = "dm-toggle";
-      logoutBtn.style.cssText = "margin-left:4px;color:#E74C3C;border-color:#E74C3C";
-      logoutBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        useAuthStore.getState().logout();
-        window.location.href = "/perfil";
-      });
-      headerRight.prepend(logoutBtn);
-    }
   }
 
   // Loading
