@@ -183,11 +183,13 @@ export function ProfilePage() {
     });
   }
 
+  const hasToken = !!localStorage.getItem("treqe-token");
+
   // Loading
   if (!html) return <div style={{ padding: 60, textAlign: "center", fontFamily: "var(--font-sans)" }}>Cargando...</div>;
 
   // No auth
-  if (!authLoading && !user) {
+  if (!authLoading && !user && !hasToken) {
     return (
       <div style={{ maxWidth: 420, margin: "60px auto", padding: 32, textAlign: "center", fontFamily: "var(--font-sans)" }}>
         <div style={{ fontSize: "3rem", marginBottom: 16 }}>\uD83D\uDC64</div>
@@ -207,9 +209,9 @@ export function ProfilePage() {
 
   return (
     <>
-      {user && (
+      {hasToken && (
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px",background:"#F9F7F2",borderBottom:"1px solid #E5E0D8",fontFamily:"var(--font-mono)",fontSize:"0.65rem",position:"sticky",top:0,zIndex:60}}>
-          <span style={{color:"#8A8580"}}>{user.email || user.name}</span>
+          <span style={{color:"#8A8580"}}>{user?.email || user?.name || "Sesión activa"}</span>
           <button onClick={() => { useAuthStore.getState().logout(); window.location.reload(); }} style={{background:"none",border:"1px solid #E74C3C",color:"#E74C3C",padding:"4px 12px",cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:"0.6rem"}}>Salir</button>
         </div>
       )}
