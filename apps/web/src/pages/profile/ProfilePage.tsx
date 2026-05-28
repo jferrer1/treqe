@@ -70,7 +70,7 @@ export function ProfilePage() {
       // Inject logout button into header right
       b = b.replace('class="treqe-header__right"', 'class="treqe-header__right" id="treqe-header-right"');
       // Add logout button directly in HTML
-      b = b.replace(/<button class="dm-toggle"[^>]*>Dark<\/button>/, '<button class="dm-toggle" onclick="document.location.href=&quot;/perfil&quot;;localStorage.removeItem(&quot;treqe-token&quot;);sessionStorage.clear()" style="margin-right:4px;color:#E74C3C;border-color:#E74C3C">Salir</button><button class="dm-toggle" onclick="document.body.classList.toggle(&quot;dark&quot;)">Dark</button>');
+      b = b.replace(/<button class="dm-toggle"[^>]*>Dark<\/button>/, '<button class="dm-toggle" onclick="localStorage.removeItem(&quot;treqe-token&quot;);window.location.reload()" style="margin-right:4px;color:#E74C3C;border-color:#E74C3C">Salir</button><button class="dm-toggle" onclick="document.body.classList.toggle(&quot;dark&quot;)">Dark</button>');
       setHtml(s + b);
     });
   }, []);
