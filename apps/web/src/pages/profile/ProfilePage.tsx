@@ -66,11 +66,11 @@ export function ProfilePage() {
       b = b.replace(/onclick="goToFavorites\(\)"/g, 'data-nav="favoritos"');
       b = b.replace(/onclick="goToSettings\(\)"/g, 'data-nav="ajustes"');
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      // Restore dark mode toggle (stripped above)
+      b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Inject logout button into header right
-      b = b.replace('class="treqe-header__right"', 'class="treqe-header__right" id="treqe-header-right"');
-      // Add logout button directly in HTML
-      b = b.replace(/<button class="dm-toggle"[^>]*>Dark<\/button>/, '<button class="dm-toggle" onclick="localStorage.removeItem(&quot;treqe-token&quot;);window.location.reload()" style="margin-right:4px;color:#E74C3C;border-color:#E74C3C">Salir</button><button class="dm-toggle" onclick="document.body.classList.toggle(&quot;dark&quot;)">Dark</button>');
+
       setHtml(s + b);
     });
   }, []);
@@ -205,5 +205,15 @@ export function ProfilePage() {
     );
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <>
+      {user && (
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px",background:"#F9F7F2",borderBottom:"1px solid #E5E0D8",fontFamily:"var(--font-mono)",fontSize:"0.65rem",position:"sticky",top:0,zIndex:60}}>
+          <span style={{color:"#8A8580"}}>{user.email || user.name}</span>
+          <button onClick={() => { useAuthStore.getState().logout(); window.location.reload(); }} style={{background:"none",border:"1px solid #E74C3C",color:"#E74C3C",padding:"4px 12px",cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:"0.6rem"}}>Salir</button>
+        </div>
+      )}
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+    </>
+  );
 }
