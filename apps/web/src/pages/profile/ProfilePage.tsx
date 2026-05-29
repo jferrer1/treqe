@@ -43,7 +43,7 @@ function renderProduct(p: Product, asLiked = false): string {
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuthStore();
+  const { user } = useAuthStore();
   const [html, setHtml] = useState("");
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
@@ -188,8 +188,8 @@ export function ProfilePage() {
   // Loading
   if (!html) return <div style={{ padding: 60, textAlign: "center", fontFamily: "var(--font-sans)" }}>Cargando...</div>;
 
-  // No auth
-  if (!authLoading && !user && !hasToken) {
+  // No auth — show CTA immediately if no token
+  if (!hasToken) {
     return (
       <div style={{ maxWidth: 420, margin: "60px auto", padding: 32, textAlign: "center", fontFamily: "var(--font-sans)" }}>
         <div style={{ fontSize: "3rem", marginBottom: 16 }}>\uD83D\uDC64</div>
