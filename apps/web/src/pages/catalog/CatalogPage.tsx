@@ -15,6 +15,7 @@ const cl = (c: string) => ({ like_new:"Como nuevo",good:"Buen estado",new:"Nuevo
 export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/mib/v1-catalogo.html").then(r => r.text()).then(raw => {
@@ -34,15 +35,25 @@ export function CatalogPage() {
       try {
         const res: any = await api.get("/api/products/?limit=70");
         setProducts((res.items || res || []).slice(0, 70));
-      } catch { /* no API, keep MIB demo */ }
+      } catch { /* no API */ }
+      setLoaded(true);
     })();
   }, []);
 
   useEffect(() => {
-    if (!html) return;
-    const check = () => {
-      const grid = document.querySelector(".catalog");
-      if (!grid || products.length === 0) { if (products.length === 0) return; setTimeout(check, 300); return; }
+    if (!html || !loaded) return;
+    // Update counter
+    const counter = document.querySelector(".section-title span");
+    if (counter) counter.textContent = `${products.length} art\u00EDculos`;
+    // Grid
+    const grid = document.querySelector(".catalog");
+    if (!grid) return;
+    if (products.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
+        <i class="fas fa-box-open" style="font-size:2rem;display:block;margin-bottom:12px;opacity:.3"></i>
+        No hay art\u00EDculos todav\u00EDa
+      </div>`;
+    } else {
       grid.innerHTML = products.map((p, i) => `
         <a href="/articulo/${p.id}" class="item-card">
           <div class="item-card__image" style="background:${BG[i % BG.length]}">
@@ -56,9 +67,8 @@ export function CatalogPage() {
           </div>
         </a>
       `).join("");
-    };
-    check();
-  }, [html, products]);
+    }
+  }, [html, loaded, products]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
