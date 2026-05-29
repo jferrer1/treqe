@@ -188,23 +188,22 @@ export function ProfilePage() {
   // Loading
   if (!html) return <div style={{ padding: 60, textAlign: "center", fontFamily: "var(--font-sans)" }}>Cargando...</div>;
 
-  // No auth — show CTA immediately if no token
+  // No auth — inject CTA into MIB HTML, keeping header + bottom nav
   if (!hasToken) {
-    return (
-      <div style={{ maxWidth: 420, margin: "60px auto", padding: 32, textAlign: "center", fontFamily: "var(--font-sans)" }}>
-        <div style={{ fontSize: "3rem", marginBottom: 16 }}>\uD83D\uDC64</div>
-        <h2 style={{ fontSize: "1.3rem", fontWeight: 600, marginBottom: 8 }}>Tu perfil te espera</h2>
-        <p style={{ color: "#8A8580", fontSize: "0.85rem", marginBottom: 24, lineHeight: 1.5 }}>
-          Reg\u00EDstrate o inicia sesi\u00F3n para ver tu perfil, scoring y art\u00EDculos.
-        </p>
-        <button onClick={() => navigate("/login")} style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", fontWeight: 600, padding: "12px 32px", background: "#1C1915", color: "#F9F7F2", border: "none", cursor: "pointer" }}>
-          Iniciar sesi\u00F3n
-        </button>
-        <button onClick={() => navigate("/registro")} style={{ display: "block", margin: "12px auto 0", background: "none", border: "none", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#8A8580", cursor: "pointer", textDecoration: "underline" }}>
-          Crear cuenta
-        </button>
-      </div>
-    );
+    const ctaBlock = `<div class="profile-wrap" style="text-align:center;padding:40px 24px">
+      <div style="font-size:2.5rem;margin-bottom:16px">\uD83D\uDC64</div>
+      <h2 style="font-family:var(--font-sans);font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:8px">Tu perfil te espera</h2>
+      <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-dim);margin-bottom:28px;line-height:1.5;text-transform:uppercase;letter-spacing:.06em">Reg\u00EDstrate o inicia sesi\u00F3n para ver tu perfil,<br>scoring y art\u00EDculos.</p>
+      <button onclick="window.location.href='/login'" style="display:block;width:100%;max-width:320px;margin:0 auto 12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;padding:12px 24px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase">Iniciar sesi\u00F3n</button>
+      <button onclick="window.location.href='/registro'" style="display:block;width:100%;max-width:320px;margin:0 auto;background:none;border:1px solid var(--border);font-family:var(--font-mono);font-size:.6rem;color:var(--text-dim);cursor:pointer;padding:10px 24px;letter-spacing:.06em;text-transform:uppercase">Crear cuenta</button>
+    </div>`;
+    const profileStart = html.indexOf('<div class="profile-wrap">');
+    const bottomNavStart = html.indexOf('<!-- ===== BOTTOM');
+    let styledHtml = html;
+    if (profileStart >= 0 && bottomNavStart > profileStart) {
+      styledHtml = html.substring(0, profileStart) + ctaBlock + html.substring(bottomNavStart);
+    }
+    return <div dangerouslySetInnerHTML={{ __html: styledHtml }} />;
   }
 
   return (
