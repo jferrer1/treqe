@@ -4,7 +4,7 @@ import { rewriteMibLinks } from "@/lib/mibLinks";
 
 interface Product {
   id: string; title: string; price: number; emoji: string;
-  condition?: string; images?: string[];
+  condition?: string; images?: string[]; photos?: string[];
 }
 
 const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A",
@@ -103,11 +103,16 @@ export function CatalogPage() {
             No hay art\u00EDculos todav\u00EDa
           </div>`;
         } else {
-          grid.innerHTML = products.map((p, i) => `
+          grid.innerHTML = products.map((p, i) => {
+            const imgUrl = p.photos?.[0] || p.images?.[0] || "";
+            return `
             <a href="/articulo/${p.id}" class="item-card">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
                 <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
-                <i class="fas fa-box placeholder-icon white"></i>
+                ${imgUrl 
+                  ? `<img src="${imgUrl}" style="position:absolute;inset:0;width:100%25;height:100%25;object-fit:cover" />`
+                  : `<i class="fas fa-box placeholder-icon white"></i>`
+                }
                 <span class="price-tag">&euro;${p.price}</span>
                 <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
               </div>
@@ -115,7 +120,7 @@ export function CatalogPage() {
                 <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
               </div>
             </a>
-          `).join("");
+          `}).join("");
         }
       }
       att++;
