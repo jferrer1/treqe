@@ -98,6 +98,7 @@ async def delete_product(product_id: str, current_user=Depends(get_current_user)
 async def update_product(
     product_id: str, title: str = Query(None), description: str = Query(None),
     price: float = Query(None), category: str = Query(None), condition: str = Query(None),
+    photos: str = Query(None),
     current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db),
 ):
     """Editar producto (solo el dueño)."""
@@ -117,6 +118,8 @@ async def update_product(
         product.category = category
     if condition:
         product.condition = condition
+    if photos is not None:
+        product.photos = photos
     await db.commit()
     await db.refresh(product)
     return product.to_dict()
