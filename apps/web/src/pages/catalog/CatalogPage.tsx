@@ -46,6 +46,10 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
+      // Add back sort dropdown toggle (AFTER strip)
+      b = b.replace(/<div class="sort-wrapper">/, '<div class="sort-wrapper" style="position:relative">');
+      b = b.replace(/class="sort-dropdown" id="sortDropdown"/, 'class="sort-dropdown" id="sortDropdown" style="display:none"');
+      // Wire sort dropdown via event delegation in JS
       setHtml(s + b);
     });
   }, []);
@@ -63,7 +67,32 @@ export function CatalogPage() {
   // Wire interactive elements after DOM is ready
   useEffect(() => {
     if (!html) return;
-    // No JS wiring needed — filter button + modal wired via HTML onclick
+    // Sort dropdown toggle
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const sortBtn = target.closest(".sort-wrapper .tool-btn");
+      if (sortBtn) {
+        e.stopPropagation();
+        const dropdown = document.getElementById("sortDropdown");
+        if (dropdown) {
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+        return;
+      }
+      const sortOption = target.closest(".sort-option");
+      if (sortOption) {
+        e.stopPropagation();
+        document.querySelectorAll(".sort-option").forEach(o => o.classList.remove("active"));
+        sortOption.classList.add("active");
+        document.getElementById("sortDropdown")!.style.display = "none";
+        return;
+      }
+      // Close dropdown when clicking outside
+      if (!target.closest(".sort-wrapper")) {
+        const dd = document.getElementById("sortDropdown");
+        if (dd) dd.style.display = "none";
+      }
+    });
   }, [html]);
 
   // Inject product data
