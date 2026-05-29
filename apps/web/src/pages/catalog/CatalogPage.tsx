@@ -113,7 +113,7 @@ export function CatalogPage() {
                   ? `<img src="${imgUrl}" style="position:absolute;inset:0;width:100%25;height:100%25;object-fit:cover" />`
                   : `<i class="fas fa-box placeholder-icon white"></i>`
                 }
-                <span class="price-tag">&euro;${p.price}</span>
+                <span class="price-tag">&euro;${String(p.price).replace(".", ",")}</span>
                 <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
               </div>
               <div class="item-card__info">

@@ -36,7 +36,7 @@ function renderProduct(p: Product, asLiked = false): string {
     </div>
     <div class="my-item__info">
       <div class="my-item__title">${p.title}</div>
-      <div class="my-item__price">\u20AC${p.price}</div>
+      <div class="my-item__price">\u20AC${String(p.price).replace(".", ",")}</div>
     </div>
     ${!asLiked ? `<span class="my-item__status ${p.status}">${statusLabel(p.status)}</span>` : ""}
   </div>`;
