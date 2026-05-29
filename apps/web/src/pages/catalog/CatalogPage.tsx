@@ -24,10 +24,12 @@ export function CatalogPage() {
       const s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
-      // Replace specific onclicks BEFORE global strip
-      b = b.replace(/onclick="closeFilters\(\)"/g, 'onclick="document.getElementById(&quot;filterModal&quot;).classList.remove(&quot;visible&quot;)"');
-      b = b.replace(/onclick="updateSubcategories\(\)"/g, '');
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      // Add back filter button + modal close (AFTER strip)
+      b = b.replace(/class="tool-btn"/, 'class="tool-btn" onclick="document.getElementById(\'filterModal\').classList.add(\'visible\')"');
+      b = b.replace('id="filterModal"', 'id="filterModal" onclick="if(event.target===this)this.classList.remove(\'visible\')"');
+      // Make close X button in modal work
+      b = b.replace(/<button[^>]*><i class="fas fa-times"><\/i><\/button>/g, '<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Rewrite MIB links to SPA routes
@@ -61,21 +63,7 @@ export function CatalogPage() {
   // Wire interactive elements after DOM is ready
   useEffect(() => {
     if (!html) return;
-    let att = 0;
-    const iv = setInterval(() => {
-      const filterBtn = document.querySelector(".tool-btn") as HTMLElement | null;
-      if (!filterBtn && att < 15) { att++; return; }
-      clearInterval(iv);
-      // Wire filter button
-      filterBtn?.addEventListener("click", () => {
-        document.getElementById("filterModal")?.classList.add("visible");
-      });
-      // Close filter modal on overlay click
-      document.getElementById("filterModal")?.addEventListener("click", function(this: HTMLElement, e: Event) {
-        if (e.target === this) this.classList.remove("visible");
-      });
-    }, 200);
-    return () => clearInterval(iv);
+    // No JS wiring needed — filter button + modal wired via HTML onclick
   }, [html]);
 
   // Inject product data
