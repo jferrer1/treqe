@@ -207,7 +207,7 @@ export function ProfilePage() {
       styledHtml = html.substring(0, profileStart) + ctaBlock + html.substring(bottomNavStart);
     }
     // Remove the gear icon (no session = no settings) but keep dark toggle
-    styledHtml = styledHtml.replace(/<a[^>]*fas fa-cog[^>]*>[\s\S]*?<\/a>/, '');
+    styledHtml = styledHtml.replace(/<a[^>]*>[^<]*<i class="fas fa-cog"><\/i><\/a>/g, '');
     return <div dangerouslySetInnerHTML={{ __html: styledHtml }} />;
   }
 
