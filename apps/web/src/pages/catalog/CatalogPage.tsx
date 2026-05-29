@@ -25,9 +25,19 @@ export function CatalogPage() {
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
-      // Re-add back button
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      // Rewrite MIB links to SPA routes
+      const routeMap: Record<string,string> = {
+        "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
+        "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
+        "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
+        "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog",
+        "../v13-favoritos/":"/favoritos"
+      };
+      for (const [mib, spa] of Object.entries(routeMap)) {
+        b = b.split(mib).join(spa);
+      }
       setHtml(s + b);
     });
   }, []);
@@ -44,32 +54,39 @@ export function CatalogPage() {
 
   useEffect(() => {
     if (!html || !loaded) return;
-    // Update counter
-    const counter = document.querySelector(".section-title span");
-    if (counter) counter.textContent = `${products.length} art\u00EDculos`;
-    // Grid
-    const grid = document.querySelector(".catalog");
-    if (!grid) return;
-    if (products.length === 0) {
-      grid.innerHTML = `<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
-        <i class="fas fa-box-open" style="font-size:2rem;display:block;margin-bottom:12px;opacity:.3"></i>
-        No hay art\u00EDculos todav\u00EDa
-      </div>`;
-    } else {
-      grid.innerHTML = products.map((p, i) => `
-        <a href="/articulo/${p.id}" class="item-card">
-          <div class="item-card__image" style="background:${BG[i % BG.length]}">
-            <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
-            <i class="fas fa-box placeholder-icon white"></i>
-            <span class="price-tag">&euro;${p.price}</span>
-            <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
-          </div>
-          <div class="item-card__info">
-            <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
-          </div>
-        </a>
-      `).join("");
-    }
+    let attempts = 0;
+    const iv = setInterval(() => {
+      const counter = document.querySelector(".section-title span");
+      const grid = document.querySelector(".catalog");
+      if (attempts >= 15) { clearInterval(iv); return; }
+      if (!counter && !grid) { attempts++; return; }
+      clearInterval(iv);
+      if (counter) counter.textContent = `${products.length} art\u00EDculos`;
+      if (grid) {
+        if (products.length === 0) {
+          grid.innerHTML = `<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
+            <i class="fas fa-box-open" style="font-size:2rem;display:block;margin-bottom:12px;opacity:.3"></i>
+            No hay art\u00EDculos todav\u00EDa
+          </div>`;
+        } else {
+          grid.innerHTML = products.map((p, i) => `
+            <a href="/articulo/${p.id}" class="item-card">
+              <div class="item-card__image" style="background:${BG[i % BG.length]}">
+                <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
+                <i class="fas fa-box placeholder-icon white"></i>
+                <span class="price-tag">&euro;${p.price}</span>
+                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
+              </div>
+              <div class="item-card__info">
+                <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
+              </div>
+            </a>
+          `).join("");
+        }
+      }
+      attempts++;
+    }, 200);
+    return () => clearInterval(iv);
   }, [html, loaded, products]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
