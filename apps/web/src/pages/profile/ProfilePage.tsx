@@ -66,6 +66,8 @@ export function ProfilePage() {
       b = b.replace(/onclick="goToFavorites\(\)"/g, 'data-nav="favoritos"');
       b = b.replace(/onclick="goToSettings\(\)"/g, 'data-nav="ajustes"');
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      // Re-add back button
+      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       // Restore dark mode toggle (stripped above)
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');

@@ -39,6 +39,8 @@ export function MatchesPage() {
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      // Re-add back button
+      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Remove hardcoded MIB cards — keep an empty section container
       b = b.replace(/<!-- ===== ACTIVES[\s\S]*?(?=<!-- ===== BOTTOM)/, '<div class="match-section" id="matches-container"></div>\n');
