@@ -40,8 +40,8 @@ export function MatchesPage() {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Remove hardcoded MIB cards — we'll inject real ones
-      b = b.replace(/<!-- ===== ACTIVES[\s\S]*?(?=<!-- ===== BOTTOM)/, "<!-- matches-go-here -->\n");
+      // Remove hardcoded MIB cards — keep an empty section container
+      b = b.replace(/<!-- ===== ACTIVES[\s\S]*?(?=<!-- ===== BOTTOM)/, '<div class="match-section" id="matches-container"></div>\n');
       // Dark toggle
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
       setHtml(s + b);
@@ -63,16 +63,15 @@ export function MatchesPage() {
   useEffect(() => {
     if (!html) return;
     const check = () => {
-      const placeholder = document.getElementById("matches-container") || document.querySelector(".match-section");
-      if (!placeholder && matches.length === 0) return;
-      if (!placeholder) { setTimeout(check, 300); return; }
+      const container = document.getElementById("matches-container");
+      if (!container) { setTimeout(check, 300); return; }
       const active = matches.filter(m => m.status === "active");
       const pending = matches.filter(m => m.status === "pending");
       const inProgress = matches.filter(m => m.status === "in_progress");
       const completed = matches.filter(m => m.status === "completed");
       updateCounts(active.length, pending.length, inProgress.length, completed.length);
-      renderTab(active.length + pending.length + inProgress.length + completed.length === 0);
-      renderMatches(tab === "active" ? active : tab === "pending" ? pending : tab === "in_progress" ? inProgress : completed);
+      const list = tab === "active" ? active : tab === "pending" ? pending : tab === "in_progress" ? inProgress : completed;
+      renderTab(list);
     };
     check();
   }, [html, matches, tab]);
@@ -116,26 +115,26 @@ export function MatchesPage() {
     if (counts[3]) counts[3].textContent = String(c);
   }
 
-  function renderTab(empty: boolean) {
-    const sections = document.querySelectorAll(".match-section");
-    sections.forEach(s => {
-      s.innerHTML = empty
-        ? `<div style="text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
-            <i class="fas fa-exchange-alt" style="font-size:2rem;display:block;margin-bottom:16px;opacity:.3"></i>
-            No hay treqes todav\u00EDa<br><br>
-            <button onclick="window.location.href='/catalogo'" style="font-family:var(--font-mono);font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase">Explorar cat\u00E1logo</button>
-          </div>`
-        : "";
-    });
+  function renderTab(list: Match[]) {
+    const container = document.getElementById("matches-container");
+    if (!container) return;
+    if (!list.length) {
+      container.innerHTML = `<div style="text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
+        <i class="fas fa-exchange-alt" style="font-size:2rem;display:block;margin-bottom:16px;opacity:.3"></i>
+        No hay treqes todav\u00EDa<br><br>
+        <button onclick="window.location.href='/catalogo'" style="font-family:var(--font-mono);font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase">Explorar cat\u00E1logo</button>
+      </div>`;
+    } else {
+      renderMatches(list);
+    }
   }
 
   const EM = ["🎸","📱","🎮","📷","⌚","🎧","🚲","💻","📚","🎯","🖥️","🎹"];
 
   function renderMatches(list: Match[]) {
-    if (!list.length) return;
-    const section = document.querySelector(".match-section");
-    if (!section) return;
-    section.innerHTML = list.map(m => {
+    const container = document.getElementById("matches-container");
+    if (!container) return;
+    container.innerHTML = list.map(m => {
       const myEmoji = m.my_item?.emoji || EM[Math.abs(hash(m.my_item?.id || "0")) % EM.length];
       const otherEmoji = m.other_item?.emoji || EM[Math.abs(hash(m.other_item?.id || "1")) % EM.length];
       const status = m.status === "in_progress" ? "in_progress" : m.status;
@@ -180,13 +179,14 @@ export function MatchesPage() {
   // No auth
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   if (!hasToken) {
-    return <div dangerouslySetInnerHTML={{__html: html.replace(/<!-- matches-go-here -->[\s\S]*?(?=<!-- ===== BOTTOM)/, `<div class="match-section" style="text-align:center;padding:60px 20px">
+    const ctaHtml = html.replace(/<div class="match-section" id="matches-container">[\s\S]*?(?=<!-- ===== BOTTOM)/, `<div class="match-section" style="text-align:center;padding:60px 20px">
       <div style="font-size:2rem;margin-bottom:12px;color:var(--text-dim)"><i class="fas fa-exchange-alt"></i></div>
       <h2 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2>
       <p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesi\u00F3n para ver tus intercambios</p>
       <button onclick="window.location.href='/login'" style="font-family:var(--font-mono);font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.1em;text-transform:uppercase">Iniciar sesi\u00F3n</button>
       <button onclick="window.location.href='/registro'" style="display:block;margin:10px auto 0;background:none;border:1px solid var(--border);font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);cursor:pointer;padding:8px 20px;letter-spacing:.08em;text-transform:uppercase">Crear cuenta</button>
-    </div>`) }} />;
+    </div>`);
+    return <div dangerouslySetInnerHTML={{__html: ctaHtml}} />;
   }
 
   return <div dangerouslySetInnerHTML={{__html: html}} />;
