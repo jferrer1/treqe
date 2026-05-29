@@ -24,6 +24,9 @@ export function CatalogPage() {
       const s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      // Replace specific onclicks BEFORE global strip
+      b = b.replace(/onclick="closeFilters\(\)"/g, 'onclick="document.getElementById(&quot;filterModal&quot;).classList.remove(&quot;visible&quot;)"');
+      b = b.replace(/onclick="updateSubcategories\(\)"/g, '');
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
@@ -41,8 +44,6 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
-      // Add back closeFilter function for modal
-      b = b.replace(/onclick="closeFilters\(\)"/g, 'onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"');
       setHtml(s + b);
     });
   }, []);
