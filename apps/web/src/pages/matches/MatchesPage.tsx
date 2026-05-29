@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
+import { rewriteMibLinks } from "@/lib/mibLinks";
 
 interface Match {
   id: string; match_id: string;
@@ -43,6 +44,7 @@ export function MatchesPage() {
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Remove hardcoded MIB cards — keep an empty section container
+      b = rewriteMibLinks(b);
       b = b.replace(/<!-- ===== ACTIVES[\s\S]*?(?=<!-- ===== BOTTOM)/, '<div class="match-section" id="matches-container"></div>\n');
       // Dark toggle
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');

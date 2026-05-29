@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { rewriteMibLinks } from "@/lib/mibLinks";
 
 interface Product {
   id: string; title: string; price: number; emoji: string;
@@ -32,17 +33,7 @@ export function CatalogPage() {
       b = b.replace(/<button[^>]*><i class="fas fa-times"><\/i><\/button>/g, '<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Rewrite MIB links to SPA routes
-      const routeMap: Record<string,string> = {
-        "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
-        "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
-        "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
-        "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog",
-        "../v13-favoritos/":"/favoritos"
-      };
-      for (const [mib, spa] of Object.entries(routeMap)) {
-        b = b.split(mib).join(spa);
-      }
+      b = rewriteMibLinks(b);
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { rewriteMibLinks } from "@/lib/mibLinks";
 import { api } from "@/lib/api";
 
 export function UploadPage() {
@@ -16,8 +17,10 @@ export function UploadPage() {
       let s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      b = rewriteMibLinks(b);
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = rewriteMibLinks(b);
       // Hide preview initially
       b = b.replace(/class="([^"]*preview[^"]*)"/g, 'class="$1" style="display:none"');
       setHtml(s + b);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
+import { rewriteMibLinks } from "@/lib/mibLinks";
 
 interface Product {
   id: string; title: string; price: number; emoji: string; color: string;
@@ -71,7 +72,7 @@ export function ProfilePage() {
       // Restore dark mode toggle (stripped above)
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Inject logout button into header right
+      b = rewriteMibLinks(b);
 
       setHtml(s + b);
     });
