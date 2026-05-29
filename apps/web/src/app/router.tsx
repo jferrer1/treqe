@@ -4,6 +4,7 @@ import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
+import { MatchesPage } from "@/pages/matches/MatchesPage";
 import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
@@ -39,7 +40,7 @@ export const router = createBrowserRouter([
   { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
   { path: "/splash", element: <MibPage page="v9-splash" /> },
   { path: "/avisos", element: <MibPage page="v11-notificaciones" /> },
-  { path: "/treqes", element: <MibPage page="v12-mis-matches" /> },
+  { path: "/treqes", element: <MatchesPage /> },
   { path: "/blog", element: <MibPage page="v13-blog" /> },
   { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },
   { path: "/favoritos", element: <MibPage page="v13-favoritos" /> },
