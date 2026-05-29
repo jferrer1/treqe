@@ -38,6 +38,11 @@ export function CatalogPage() {
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
       }
+      // Pre-replace hardcoded MIB values to prevent flash
+      b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
+      b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
+      // Add back closeFilter function for modal
+      b = b.replace(/onclick="closeFilters\(\)"/g, 'onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"');
       setHtml(s + b);
     });
   }, []);
@@ -52,14 +57,34 @@ export function CatalogPage() {
     })();
   }, []);
 
+  // Wire interactive elements after DOM is ready
+  useEffect(() => {
+    if (!html) return;
+    let att = 0;
+    const iv = setInterval(() => {
+      const filterBtn = document.querySelector(".tool-btn") as HTMLElement | null;
+      if (!filterBtn && att < 15) { att++; return; }
+      clearInterval(iv);
+      // Wire filter button
+      filterBtn?.addEventListener("click", () => {
+        document.getElementById("filterModal")?.classList.add("visible");
+      });
+      // Close filter modal on overlay click
+      document.getElementById("filterModal")?.addEventListener("click", function(this: HTMLElement, e: Event) {
+        if (e.target === this) this.classList.remove("visible");
+      });
+    }, 200);
+    return () => clearInterval(iv);
+  }, [html]);
+
+  // Inject product data
   useEffect(() => {
     if (!html || !loaded) return;
-    let attempts = 0;
+    let att = 0;
     const iv = setInterval(() => {
       const counter = document.querySelector(".section-title span");
       const grid = document.querySelector(".catalog");
-      if (attempts >= 15) { clearInterval(iv); return; }
-      if (!counter && !grid) { attempts++; return; }
+      if (!counter && !grid && att < 15) { att++; return; }
       clearInterval(iv);
       if (counter) counter.textContent = `${products.length} art\u00EDculos`;
       if (grid) {
@@ -84,7 +109,7 @@ export function CatalogPage() {
           `).join("");
         }
       }
-      attempts++;
+      att++;
     }, 200);
     return () => clearInterval(iv);
   }, [html, loaded, products]);
