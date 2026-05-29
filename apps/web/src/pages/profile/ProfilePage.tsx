@@ -206,9 +206,8 @@ export function ProfilePage() {
     if (profileStart >= 0 && bottomNavStart > profileStart) {
       styledHtml = html.substring(0, profileStart) + ctaBlock + html.substring(bottomNavStart);
     }
-    // Remove the gear icon and dark toggle from header
-    styledHtml = styledHtml.replace(/<a href="[^"]*v8-ajustes[^"]*"[^>]*><i class="fas fa-cog"><\/i><\/a>/, '');
-    styledHtml = styledHtml.replace(/<button class="dm-toggle"[^>]*>Dark<\/button>/, '');
+    // Remove the gear icon (no session = no settings) but keep dark toggle
+    styledHtml = styledHtml.replace(/<a[^>]*fas fa-cog[^>]*>[\s\S]*?<\/a>/, '');
     return <div dangerouslySetInnerHTML={{ __html: styledHtml }} />;
   }
 
