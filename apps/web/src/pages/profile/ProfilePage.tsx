@@ -191,11 +191,11 @@ export function ProfilePage() {
   // No auth — inject CTA into MIB HTML, keeping header + bottom nav
   if (!hasToken) {
     const ctaBlock = `<div class="profile-wrap" style="text-align:center;padding:40px 24px">
-      <div style="font-size:2.5rem;margin-bottom:16px">\uD83D\uDC64</div>
-      <h2 style="font-family:var(--font-sans);font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:8px">Tu perfil te espera</h2>
-      <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-dim);margin-bottom:28px;line-height:1.5;text-transform:uppercase;letter-spacing:.06em">Reg\u00EDstrate o inicia sesi\u00F3n para ver tu perfil,<br>scoring y art\u00EDculos.</p>
-      <button onclick="window.location.href='/login'" style="display:block;width:100%;max-width:320px;margin:0 auto 12px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;padding:12px 24px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase">Iniciar sesi\u00F3n</button>
-      <button onclick="window.location.href='/registro'" style="display:block;width:100%;max-width:320px;margin:0 auto;background:none;border:1px solid var(--border);font-family:var(--font-mono);font-size:.6rem;color:var(--text-dim);cursor:pointer;padding:10px 24px;letter-spacing:.06em;text-transform:uppercase">Crear cuenta</button>
+      <div style="font-size:2.2rem;margin-bottom:16px;color:var(--text-dim)"><i class="fas fa-user-circle"></i></div>
+      <h2 style="font-family:var(--font-sans);font-size:1.15rem;font-weight:500;color:var(--text);margin-bottom:8px">Tu perfil te espera</h2>
+      <p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:28px;line-height:1.5;text-transform:uppercase;letter-spacing:.08em">Reg\u00EDstrate o inicia sesi\u00F3n<br>para ver tu perfil, scoring y art\u00EDculos.</p>
+      <button onclick="window.location.href='/login'" style="display:block;width:100%;max-width:320px;margin:0 auto 10px;font-family:var(--font-mono);font-size:.6rem;font-weight:500;padding:12px 24px;background:var(--text);color:var(--bg);border:1px solid var(--text);cursor:pointer;letter-spacing:.1em;text-transform:uppercase">Iniciar sesi\u00F3n <i class="fas fa-arrow-right" style="margin-left:6px"></i></button>
+      <button onclick="window.location.href='/registro'" style="display:block;width:100%;max-width:320px;margin:0 auto;background:var(--bg);border:1px solid var(--border);font-family:var(--font-mono);font-size:.55rem;font-weight:400;color:var(--text-dim);cursor:pointer;padding:10px 24px;letter-spacing:.08em;text-transform:uppercase">Crear cuenta</button>
     </div>`;
     const profileStart = html.indexOf('<div class="profile-wrap">');
     const bottomNavStart = html.indexOf('<!-- ===== BOTTOM');
