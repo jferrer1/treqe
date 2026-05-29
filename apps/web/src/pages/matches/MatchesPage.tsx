@@ -179,7 +179,9 @@ export function MatchesPage() {
   // No auth
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   if (!hasToken) {
-    const ctaHtml = html.replace(/<div class="match-section" id="matches-container">[\s\S]*?(?=<!-- ===== BOTTOM)/, `<div class="match-section" style="text-align:center;padding:60px 20px">
+    const ctaHtml = html
+      .replace(/<span class="count">[^<]*<\/span>/g, '<span class="count">0</span>')
+      .replace(/<div class="match-section" id="matches-container">[\s\S]*?(?=<!-- ===== BOTTOM)/, `<div class="match-section" style="text-align:center;padding:60px 20px">
       <div style="font-size:2rem;margin-bottom:12px;color:var(--text-dim)"><i class="fas fa-exchange-alt"></i></div>
       <h2 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2>
       <p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesi\u00F3n para ver tus intercambios</p>
