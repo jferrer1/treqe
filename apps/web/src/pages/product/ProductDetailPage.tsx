@@ -63,9 +63,20 @@ export function ProductDetailPage() {
       const btn = (e.target as HTMLElement).closest("button");
       if (!btn) return;
       const text = btn.textContent || "";
-      if (/COMPRAR|comprar|INTERCAMBIO|intercambiar|TRUEQUE|trueque/.test(text)) {
+      if (/Comprar|COMPRAR|comprar|Solicitar|Trueque|TRUECASE|trueque|Intercambio|intercambio|INTERCAMBIO|consulta/.test(text)) {
         e.preventDefault(); e.stopPropagation();
         if (!hasToken) { navigate("/login"); return; }
+        if (/consulta/i.test(text)) {
+          alert("Consulta enviada (demo)");
+          return;
+        }
+        // Trade/Comprar — show coming soon
+        if (/trueque|intercambio|solicitar/i.test(text)) {
+          document.querySelector('.gallery-trade')?.classList.toggle('requested');
+          alert("Solicitud de trueque enviada (demo)");
+          return;
+        }
+        alert("Funcionalidad de compra en desarrollo");
       }
     };
     document.addEventListener("click", handler, true);
@@ -97,7 +108,7 @@ function buildGallery(photos: string[]): string {
     <div class="gallery-slides" id="gallerySlides" style="position:relative;width:100%;height:100%;overflow:hidden">${slides}</div>
     <div class="gallery-dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10">${dots}</div>
     <button class="gallery-wish" style="position:absolute;bottom:12px;right:12px;z-index:10;width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer"><i class="far fa-heart"></i></button>
-    <button class="gallery-trade" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
+    <button class="gallery-trade" onclick="var btn=Array.from(document.querySelectorAll('button')).find(function(b){return /trueque|intercambio|solicitar/i.test(b.textContent)});if(btn){btn.scrollIntoView({behavior:'smooth',block:'center'});btn.click()}else{alert('Solicitud de trueque (demo)'}" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
     <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i-1+${photos.length})%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=document.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-left"></i></button>
     <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i+1)%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=document.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-right"></i></button>
   </div>
