@@ -1,117 +1,93 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { rewriteMibLinks } from "@/lib/mibLinks";
+
+interface FavoriteItem {
+  id: string; title: string; price: number; photos?: string[];
+  condition?: string;
+}
+
+const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A"];
 
 export function FavoritesPage() {
-  return (
-    <>
-      <div className="treqe-header">
- <div className="treqe-header__left">
- <button className="treqe-header__back" aria-label="Atras"><i className="fas fa-chevron-left"></i></button>
- <span className="treqe-header__title">Favoritos</span>
- </div>
- <div className="treqe-header__right">
- 
- </div>
- </div>
+  const [html, setHtml] = useState("");
+  const [items, setItems] = useState<FavoriteItem[]>([]);
+  const hasToken = !!localStorage.getItem("treqe-token");
 
- 
- <div className="section-title">
- <h2>Tus favoritos</h2>
- <span id="articleCount">8 artículos</span>
- </div>
+  useEffect(() => {
+    fetch("/mib/v13-favoritos.html").then(r => r.text()).then(raw => {
+      const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
+      const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
+      const s = sm ? `<style>${sm[1]}</style>` : "";
+      let b = bm ? bm[1] : "";
+      b = b.replace(/<script[\s\S]*?<\/script>/g, "");
+      b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.location.href=&quot;/catalogo&quot;" class="treqe-header__back" aria-label=');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      // Replace MIB hardcoded items with placeholder
+      const listStart = b.indexOf('<div class="my-items"');
+      const bottomStart = b.indexOf('<nav class="bottom-nav"');
+      if (listStart >= 0 && bottomStart > listStart) {
+        b = b.substring(0, listStart) + '<div class="my-items" id="fav-items"></div>\n' + b.substring(bottomStart);
+      }
+      b = rewriteMibLinks(b);
+      setHtml(s + b);
+    });
+  }, []);
 
- 
- <div className="catalog" id="catalog">
- 
- <div className="item-card" data-price="580">
- <div className="item-card__image" style={{ background: '#2D2D2D' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-guitar placeholder-icon white"></i>
- <span className="price-tag">€580</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Fender Stratocaster · Muy buen estado</div>
- </div>
- </div>
- <div className="item-card" data-price="890">
- <div className="item-card__image" style={{ background: '#1A2A3A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-mobile-alt placeholder-icon white"></i>
- <span className="price-tag">€890</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">iPhone 15 Pro · 256GB · Titanio natural</div>
- </div>
- </div>
- <div className="item-card" data-price="650">
- <div className="item-card__image" style={{ background: '#1A3A2A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-camera placeholder-icon white"></i>
- <span className="price-tag">€650</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Canon EOS R · Objetivo 24-70mm · Como nueva</div>
- </div>
- </div>
- <div className="item-card" data-price="420">
- <div className="item-card__image" style={{ background: '#3A2A3A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-bicycle placeholder-icon white"></i>
- <span className="price-tag">€420</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Trek Marlin 7 · Mtb · Talla L · 2023</div>
- </div>
- </div>
- <div className="item-card" data-price="380">
- <div className="item-card__image" style={{ background: '#1A1A2A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-headphones placeholder-icon white"></i>
- <span className="price-tag">€380</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">AirPods Max · Azul cielo · Como nuevos</div>
- </div>
- </div>
- <div className="item-card" data-price="250">
- <div className="item-card__image" style={{ background: '#3A2A1A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-clock placeholder-icon white"></i>
- <span className="price-tag">€250</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">G-SHOCK Mudmaster · Edición limitada</div>
- </div>
- </div>
- <div className="item-card" data-price="720">
- <div className="item-card__image" style={{ background: '#3A1A1A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-mobile-alt placeholder-icon white"></i>
- <span className="price-tag">€720</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Samsung Galaxy S25 Ultra · 512GB · Titanium</div>
- </div>
- </div>
- <div className="item-card" data-price="550">
- <div className="item-card__image" style={{ background: '#1A3A3A' }}>
- <span className="like-btn liked"><i className="fas fa-heart"></i></span>
- <i className="fas fa-apple-alt placeholder-icon white"></i>
- <span className="price-tag">€550</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Apple Watch Ultra 2 · Naranja · 49mm</div>
- </div>
- </div>
- </div>
+  useEffect(() => {
+    if (!hasToken) return;
+    (async () => {
+      try {
+        const res: any = await api.get("/api/favorites/");
+        setItems(res.items || res || []);
+      } catch {}
+    })();
+  }, [hasToken]);
 
- 
- <nav className="bottom-nav">
- <Link to="/catalogo" className="nav-item"><i className="fas fa-search"></i><span>Buscar</span></Link>
- <Link to="/treqes" className="nav-item"><i className="fas fa-exchange-alt"></i><span>treqes</span></Link>
- <Link to="/subir" className="nav-item nav-add"><div className="nav-add-btn"><i className="fas fa-plus"></i></div></Link>
- <Link to="/avisos" className="nav-item"><i className="fas fa-bell"></i><span>Avisos</span><span className="nav-badge"></span></Link>
- <Link to="/perfil" className="nav-item active"><i className="fas fa-user"></i><span>Perfil</span></Link>
- </nav>
-    </>
-  );
+  useEffect(() => {
+    if (!html) return;
+    let att = 0;
+    const iv = setInterval(() => {
+      const grid = document.getElementById("fav-items");
+      if (!grid && att < 15) { att++; return; }
+      clearInterval(iv);
+      if (!grid) return;
+      if (items.length === 0) {
+        grid.innerHTML = `<div style="text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
+          <i class="fas fa-heart-broken" style="font-size:2rem;display:block;margin-bottom:16px;opacity:.3"></i>
+          No tienes favoritos todavia
+        </div>`;
+      } else {
+        grid.outerHTML = `<div class="my-items" id="fav-items">${items.map((p, i) => `
+          <a href="/articulo/${p.id}" class="my-item">
+            <div class="my-item__image my-item__image--liked" style="background:linear-gradient(135deg,${BG[i%6]},${BG[(i+1)%6]})!important">
+              ${p.photos?.[0] ? `<img src="${p.photos[0]}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />` : `<i class="fas fa-heart" style="color:rgba(255,255,255,0.3)"></i>`}
+              <div class="my-item__overlay">${p.title}</div>
+            </div>
+            <div class="my-item__info">
+              <div class="my-item__title">${p.title}</div>
+              <div class="my-item__price">\u20AC${String(p.price).replace(".", ",")}</div>
+            </div>
+          </a>
+        `).join("")}</div>`;
+      }
+    }, 200);
+    return () => clearInterval(iv);
+  }, [html, items]);
+
+  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+  if (!hasToken) {
+    const ctaHtml = html.replace(
+      /<div class="my-items"[\s\S]*?(?=<nav class="bottom-nav")/,
+      `<div class="my-items" style="text-align:center;padding:60px 20px">
+        <div style="font-size:2rem;margin-bottom:12px;color:var(--text-dim)"><i class="fas fa-heart"></i></div>
+        <h2 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus favoritos te esperan</h2>
+        <p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesion para ver tus articulos guardados</p>
+        <button onclick="window.location.href='/login'" style="font-family:var(--font-mono);font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.1em;text-transform:uppercase">Iniciar sesion</button>
+      </div>`
+    );
+    return <div dangerouslySetInnerHTML={{__html: ctaHtml}} />;
+  }
+  return <div dangerouslySetInnerHTML={{__html: html}} />;
 }

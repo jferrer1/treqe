@@ -5,12 +5,13 @@ import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
 import { MatchesPage } from "@/pages/matches/MatchesPage";
+import { FavoritesPage } from "@/pages/favorites/FavoritesPage";
 import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
 import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
-  const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v11","v12"]);
+  const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v11","v12","v13f"]);
   const notes: Record<string,string> = {
     "v1": "Pendiente: ordenar (bug stale closure), filtrar (necesita backend + chips MIB), link blog",
     "v2": "Pendiente: modal trueque (seleccionar producto), wish/trade persistir a API, miniaturas responsive",
@@ -18,7 +19,7 @@ function HubPage() {
     "v4": "Pendiente: datos reales cuando API conectada, editar perfil funcional",
     "v11": "Pendiente: notificaciones reales WebSocket",
     "v12": "Pendiente: matches reales (API ofertas→matches), timers, chat entre usuarios",
-    "v13f": "Pendiente: favoritos persistidos a API",
+    
   };
   const pages = [
     { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catálogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/347edc40-6372-443f-a2dd-ba22fc7f85b4"},{v:"v13",n:"Blog",p:"/blog"}]},
@@ -54,7 +55,7 @@ export const router = createBrowserRouter([
   { path: "/treqes", element: <MatchesPage /> },
   { path: "/blog", element: <MibPage page="v13-blog" /> },
   { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },
-  { path: "/favoritos", element: <MibPage page="v13-favoritos" /> },
+  { path: "/favoritos", element: <FavoritesPage /> },
   { path: "/perfil/editar", element: <MibPage page="v14-editar-perfil" noBottomNav /> },
   { path: "/perfil/verificar", element: <MibPage page="v15-verificar-identidad" noBottomNav /> },
   { path: "/legal/aviso", element: <MibPage page="v17-aviso-legal" /> },
