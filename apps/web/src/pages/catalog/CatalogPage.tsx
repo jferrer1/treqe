@@ -88,7 +88,9 @@ function applyFilterDOM() {
         });
         container.appendChild(ch);
       });
-      tb.after(container);
+      const sectionTitle = document.querySelector(".section-title");
+      if (sectionTitle) sectionTitle.after(container);
+      else tb.after(container);
     }
   }
   document.getElementById("filterModal")?.classList.remove("visible");
@@ -130,6 +132,11 @@ export function CatalogPage() {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       // Add back filter button + modal close (AFTER strip)
       b = b.replace(/class="tool-btn"/, 'class="tool-btn" onclick="document.getElementById(\'filterModal\').classList.add(\'visible\')"');
+      // Add data-min/max to price quick buttons
+      b = b.replace(/onclick="setPriceRange\(0, 50[^)]*\)"/, 'data-min="0" data-max="50"');
+      b = b.replace(/onclick="setPriceRange\(50, 200[^)]*\)"/, 'data-min="50" data-max="200"');
+      b = b.replace(/onclick="setPriceRange\(200, 500[^)]*\)"/, 'data-min="200" data-max="500"');
+      b = b.replace(/onclick="setPriceRange\(500[^)]*\)"/, 'data-min="500" data-max=""');
       b = b.replace('id="filterModal"', 'id="filterModal" onclick="if(event.target===this)this.classList.remove(\'visible\')"');
       // Make close X button in modal work
       b = b.replace(/<button[^>]*><i class="fas fa-times"><\/i><\/button>/g, '<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
