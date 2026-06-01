@@ -11,7 +11,7 @@ import { MibPage } from "@/components/layout/MibPage";
 function HubPage() {
   const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v12"]);
   const pages = [
-    { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catálogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/demo"},{v:"v13",n:"Blog",p:"/blog"}]},
+    { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catálogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/347edc40-6372-443f-a2dd-ba22fc7f85b4"},{v:"v13",n:"Blog",p:"/blog"}]},
     { cat:"Usuario",items:[{v:"v9",n:"Splash",p:"/splash"},{v:"v5",n:"Onboarding",p:"/onboarding"},{v:"v10r",n:"Registro",p:"/registro"},{v:"v10l",n:"Login",p:"/login"},{v:"v4",n:"Perfil",p:"/perfil"},{v:"v14",n:"Editar",p:"/perfil/editar"},{v:"v15",n:"Verificar",p:"/perfil/verificar"},{v:"v8",n:"Ajustes",p:"/ajustes"}]},
     { cat:"Transacciones",items:[{v:"v3",n:"Subir",p:"/subir"},{v:"v12",n:"Treqes",p:"/treqes"},{v:"v23",n:"Pago",p:"/pago/demo/demo"},{v:"v7",n:"Seguimiento",p:"/seguimiento/demo"},{v:"v24",n:"Disputa",p:"/disputa/demo/demo"}]},
     { cat:"Social",items:[{v:"v11",n:"Avisos",p:"/avisos"},{v:"v13f",n:"Favoritos",p:"/favoritos"},{v:"v17m",n:"Solicitudes",p:"/mis-solicitudes"}]},
