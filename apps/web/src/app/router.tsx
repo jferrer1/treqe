@@ -12,6 +12,7 @@ import { MibPage } from "@/components/layout/MibPage";
 function HubPage() {
   const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v11","v12"]);
   const notes: Record<string,string> = {
+    "v1": "Pendiente: ordenar (bug stale closure), filtrar (necesita backend + chips MIB), link blog",
     "v2": "Pendiente: modal trueque (seleccionar producto), wish/trade persistir a API, miniaturas responsive",
     "v3": "Pendiente: subida de imágenes real (ahora placeholder), validación de categorías",
     "v4": "Pendiente: datos reales cuando API conectada, editar perfil funcional",
