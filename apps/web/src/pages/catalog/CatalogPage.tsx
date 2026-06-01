@@ -75,7 +75,17 @@ export function CatalogPage() {
         e.stopPropagation();
         document.querySelectorAll(".sort-option").forEach(o => o.classList.remove("active"));
         sortOption.classList.add("active");
+        const sortBy = (sortOption as HTMLElement).dataset.sort;
+        if (sortBy) sortAndRender(sortBy);
         document.getElementById("sortDropdown")!.style.display = "none";
+        return;
+      }
+      // Close filter modal on Apply
+      const applyBtn = target.closest("button");
+      const text2 = (applyBtn as HTMLElement)?.textContent || "";
+      if (text2.includes("plicar") || text2.includes("Aplicar")) {
+        e.stopPropagation();
+        document.getElementById("filterModal")?.classList.remove("visible");
         return;
       }
       // Close dropdown when clicking outside
@@ -85,6 +95,16 @@ export function CatalogPage() {
       }
     });
   }, [html]);
+
+  // Sort products and re-render
+  const sortAndRender = (type: string) => {
+    const sorted = [...products];
+    if (type === "price-asc") sorted.sort((a, b) => a.price - b.price);
+    else if (type === "price-desc") sorted.sort((a, b) => b.price - a.price);
+    else if (type === "name") sorted.sort((a, b) => a.title.localeCompare(b.title));
+    // relevance = default order
+    setProducts(sorted);
+  };
 
   // Inject product data
   useEffect(() => {
