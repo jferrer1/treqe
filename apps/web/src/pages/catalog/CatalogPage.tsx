@@ -32,8 +32,27 @@ function getTitle(el: Element): string {
 
 function applyFilterDOM() {
   const sel = (document.getElementById("categorySelect") as HTMLSelectElement)?.value || "";
+  const activePrice = document.querySelector(".filter-quick-btn.active") as HTMLElement | null;
+  const activeCond = document.querySelector("#filterModal .filter-chip.active") as HTMLElement | null;
   const cards = document.querySelectorAll(".item-card");
-  cards.forEach((c: any) => { c.style.display = sel && c.dataset.category !== sel ? "none" : "" });
+  
+  let minPrice = 0, maxPrice = Infinity;
+  if (activePrice) {
+    const d = activePrice.dataset;
+    if (d.min) minPrice = parseFloat(d.min);
+    if (d.max) maxPrice = parseFloat(d.max) || Infinity;
+  }
+  const condFilter = activeCond?.dataset.condition || "";
+  
+  cards.forEach((c: any) => {
+    const cat = c.dataset.category || "";
+    const price = getPrice(c);
+    const cond = c.dataset.condition || "";
+    const catMatch = !sel || cat === sel;
+    const priceMatch = price >= minPrice && price <= maxPrice;
+    const condMatch = !condFilter || condFilter === "any" || cond === condFilter;
+    c.style.display = catMatch && priceMatch && condMatch ? "" : "none";
+  });
   // Show/hide chip
   const ex = document.getElementById("filter-chip");
   if (ex) ex.remove();
@@ -133,7 +152,29 @@ export function CatalogPage() {
           return;
         }
       }
-      // Close sort dropdown on outside click
+      // Quick price buttons in filter
+      const priceBtn = target.closest(".filter-quick-btn");
+      if (priceBtn) {
+        e.stopPropagation();
+        document.querySelectorAll(".filter-quick-btn").forEach((b: any) => b.classList.remove("active"));
+        priceBtn.classList.add("active");
+        return;
+      }
+      // Condition chips in filter
+      const condChip = target.closest(".filter-chip");
+      if (condChip && !condChip.closest("#filter-chip")) {
+        e.stopPropagation();
+        document.querySelectorAll("#filterModal .filter-chip").forEach((b: any) => b.classList.remove("active"));
+        condChip.classList.add("active");
+        return;
+      }
+      // Category select — show subcategories
+      if ((target as HTMLElement).id === "categorySelect") {
+        const subGroup = document.getElementById("subcategoryGroup");
+        const val = (target as HTMLSelectElement).value;
+        if (subGroup) subGroup.style.display = val ? "block" : "none";
+        return;
+      }
       if (!target.closest(".sort-wrapper")) {
         const dd = document.getElementById("sortDropdown");
         if (dd) dd.style.display = "none";
@@ -161,7 +202,7 @@ export function CatalogPage() {
           </div>`;
         } else {
           grid.innerHTML = products.map((p, i) => `
-            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}">
+            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
                 <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                 <i class="fas fa-box placeholder-icon white"></i>
