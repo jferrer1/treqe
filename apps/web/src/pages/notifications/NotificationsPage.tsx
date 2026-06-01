@@ -22,8 +22,12 @@ export function NotificationsPage() {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Remove hardcoded MIB notifs
-      b = b.replace(/<!-- ===== NOTIF LIST[\s\S]*?(?=<!-- ===== BOTTOM)/, '<div class="notif-list" id="notif-list"></div>\n');
+      // Remove hardcoded MIB notifs — use actual MIB comment structure
+      const notifStart = b.indexOf('<div class="notif-list">');
+      const bottomStart = b.indexOf('<nav class="bottom-nav">');
+      if (notifStart >= 0 && bottomStart > notifStart) {
+        b = b.substring(0, notifStart) + '<div class="notif-list" id="notif-list"></div>\n' + b.substring(bottomStart);
+      }
       b = rewriteMibLinks(b);
       setHtml(s + b);
     });
