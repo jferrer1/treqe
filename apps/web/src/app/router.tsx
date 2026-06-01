@@ -6,16 +6,17 @@ import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
 import { MatchesPage } from "@/pages/matches/MatchesPage";
 import { ProfilePage } from "@/pages/profile/ProfilePage";
+import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
-  const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v12"]);
+  const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v11","v12"]);
   const notes: Record<string,string> = {
     "v2": "Pendiente: modal trueque (seleccionar producto), wish/trade persistir a API, miniaturas responsive",
     "v3": "Pendiente: subida de imágenes real (ahora placeholder), validación de categorías",
     "v4": "Pendiente: datos reales cuando API conectada, editar perfil funcional",
     "v12": "Pendiente: matches reales (API ofertas→matches), timers, chat entre usuarios",
-    "v11": "Pendiente: notificaciones reales WebSocket",
+    "v11",
     "v13f": "Pendiente: favoritos persistidos a API",
   };
   const pages = [
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
   { path: "/seguimiento/:id", element: <MibPage page="v7-seguimiento" /> },
   { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
   { path: "/splash", element: <MibPage page="v9-splash" /> },
-  { path: "/avisos", element: <MibPage page="v11-notificaciones" /> },
+  { path: "/avisos", element: <NotificationsPage /> },
   { path: "/treqes", element: <MatchesPage /> },
   { path: "/blog", element: <MibPage page="v13-blog" /> },
   { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },
