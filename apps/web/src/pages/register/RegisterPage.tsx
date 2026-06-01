@@ -34,8 +34,11 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
 
   useEffect(() => {
     if (!html) return;
-    const t = setTimeout(() => {
+    let retries = 0;
+    const iv = setInterval(() => {
       const form = document.querySelector("form");
+      if (!form && retries < 20) { retries++; return; }
+      clearInterval(iv);
       if (!form) return;
       const nameGrp = form.querySelector(".form-group");
       const title = document.querySelector("h2");
@@ -73,8 +76,8 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
         }
         if (useAuthStore.getState().user) navigate("/catalogo");
       });
-    }, 200);
-    return () => clearTimeout(t);
+    }, 100);
+    return () => clearInterval(iv);
   }, [html, mode, login, register, navigate]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
