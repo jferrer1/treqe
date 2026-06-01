@@ -12,6 +12,45 @@ const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A
 
 const cl = (c: string) => ({ like_new:"Como nuevo",good:"Buen estado",new:"Nuevo",fair:"Aceptable" } as Record<string,string>)[c] || c;
 
+// Pure DOM sort — no React state
+function sortDOM(type: string) {
+  const grid = document.querySelector(".catalog");
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll(".item-card"));
+  if (type === "price-asc") cards.sort((a, b) => getPrice(a) - getPrice(b));
+  else if (type === "price-desc") cards.sort((a, b) => getPrice(b) - getPrice(a));
+  else if (type === "name") cards.sort((a, b) => getTitle(a).localeCompare(getTitle(b)));
+  cards.forEach(c => grid.appendChild(c));
+}
+function getPrice(el: Element): number {
+  const t = el.querySelector(".price-tag")?.textContent || "0";
+  return parseFloat(t.replace(/[^0-9,.]/g, "").replace(",", ".")) || 0;
+}
+function getTitle(el: Element): string {
+  return el.querySelector(".item-card__title")?.textContent || "";
+}
+
+function applyFilterDOM() {
+  const sel = (document.getElementById("categorySelect") as HTMLSelectElement)?.value || "";
+  const cards = document.querySelectorAll(".item-card");
+  cards.forEach((c: any) => { c.style.display = sel && c.dataset.category !== sel ? "none" : "" });
+  // Show/hide chip
+  const ex = document.getElementById("filter-chip");
+  if (ex) ex.remove();
+  if (sel) {
+    const tb = document.querySelector(".toolbar");
+    if (tb) {
+      const ch = document.createElement("div");
+      ch.id = "filter-chip";
+      ch.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;margin:4px 8px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
+      const onclickX = `this.parentElement.remove();document.querySelectorAll('.item-card').forEach(c=>c.style.display='');var s=document.getElementById('categorySelect');if(s)s.value='';`;
+      ch.innerHTML = `${sel} <span style="cursor:pointer;margin-left:2px" onclick="${onclickX}">\u00D7</span>`;
+      tb.after(ch);
+    }
+  }
+  document.getElementById("filterModal")?.classList.remove("visible");
+}
+
 export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
@@ -60,10 +99,48 @@ export function CatalogPage() {
     })();
   }, []);
 
-  // Wire interactive elements after DOM is ready
+  // Wire sort + filter using direct DOM manipulation
   useEffect(() => {
     if (!html) return;
-    // No JS wiring needed — filter button + modal wired via HTML onclick
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Sort dropdown toggle
+      const sortBtn = target.closest(".sort-wrapper .tool-btn");
+      if (sortBtn) {
+        e.stopPropagation();
+        const dd = document.getElementById("sortDropdown");
+        if (dd) dd.style.display = dd.style.display === "block" ? "none" : "block";
+        return;
+      }
+      // Sort option click — DOM sort
+      const sortOpt = target.closest(".sort-option");
+      if (sortOpt) {
+        e.stopPropagation();
+        document.querySelectorAll(".sort-option").forEach(o => o.classList.remove("active"));
+        sortOpt.classList.add("active");
+        const sb = (sortOpt as HTMLElement).dataset.sort;
+        if (sb) sortDOM(sb);
+        document.getElementById("sortDropdown")!.style.display = "none";
+        return;
+      }
+      // Apply filters
+      const btn = target.closest("button");
+      if (btn) {
+        const txt = (btn as HTMLElement).textContent || "";
+        if (txt.includes("plicar") || txt.includes("Aplicar")) {
+          e.stopPropagation();
+          applyFilterDOM();
+          return;
+        }
+      }
+      // Close sort dropdown on outside click
+      if (!target.closest(".sort-wrapper")) {
+        const dd = document.getElementById("sortDropdown");
+        if (dd) dd.style.display = "none";
+      }
+    };
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, [html]);
 
   // Inject product data
@@ -84,7 +161,7 @@ export function CatalogPage() {
           </div>`;
         } else {
           grid.innerHTML = products.map((p, i) => `
-            <a href="/articulo/${p.id}" class="item-card">
+            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
                 <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                 <i class="fas fa-box placeholder-icon white"></i>
