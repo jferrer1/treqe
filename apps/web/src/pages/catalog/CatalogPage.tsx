@@ -5,6 +5,7 @@ import { rewriteMibLinks } from "@/lib/mibLinks";
 interface Product {
   id: string; title: string; price: number; emoji: string;
   condition?: string; images?: string[]; photos?: string[];
+  category?: string;
 }
 
 const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A",
@@ -16,6 +17,7 @@ const cl = (c: string) => ({ like_new:"Como nuevo",good:"Buen estado",new:"Nuevo
 export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export function CatalogPage() {
     (async () => {
       try {
         const res: any = await api.get("/api/products/?limit=70");
+        setAllProducts((res.items || res || []).slice(0, 70));
         setProducts((res.items || res || []).slice(0, 70));
       } catch { /* no API */ }
       setLoaded(true);
@@ -85,7 +88,7 @@ export function CatalogPage() {
       const text2 = (applyBtn as HTMLElement)?.textContent || "";
       if (text2.includes("plicar") || text2.includes("Aplicar")) {
         e.stopPropagation();
-        document.getElementById("filterModal")?.classList.remove("visible");
+        applyFilter();
         return;
       }
       // Close dropdown when clicking outside
@@ -96,14 +99,36 @@ export function CatalogPage() {
     });
   }, [html]);
 
-  // Sort products and re-render
+  // Sort and filter
   const sortAndRender = (type: string) => {
     const sorted = [...products];
     if (type === "price-asc") sorted.sort((a, b) => a.price - b.price);
     else if (type === "price-desc") sorted.sort((a, b) => b.price - a.price);
     else if (type === "name") sorted.sort((a, b) => a.title.localeCompare(b.title));
-    // relevance = default order
     setProducts(sorted);
+  };
+
+  const applyFilter = () => {
+    const catSelect = document.getElementById("categorySelect") as HTMLSelectElement;
+    const selected = catSelect?.value || "";
+    if (selected) {
+      setProducts(allProducts.filter(p => p.category === selected || selected === ""));
+      // Show filter chip
+      const toolbar = document.querySelector(".toolbar");
+      if (toolbar) {
+        const existing = document.getElementById("filter-chip");
+        if (existing) existing.remove();
+        const chip = document.createElement("div");
+        chip.id = "filter-chip";
+        chip.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;margin:4px 8px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
+        chip.innerHTML = `${selected} <span onclick="document.getElementById('filter-chip').remove();var s=document.getElementById('categorySelect');if(s)s.value='';" style="cursor:pointer;margin-left:2px">×</span>`;
+        toolbar.after(chip);
+      }
+    } else {
+      setProducts([...allProducts]);
+      document.getElementById("filter-chip")?.remove();
+    }
+    document.getElementById("filterModal")?.classList.remove("visible");
   };
 
   // Inject product data
