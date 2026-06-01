@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { rewriteMibLinks } from "@/lib/mibLinks";
 
 interface Product {
   id: string; title: string; price: number; emoji: string;
-  condition?: string; images?: string[]; photos?: string[];
-  category?: string;
+  condition?: string; images?: string[];
 }
 
 const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A",
@@ -17,7 +15,6 @@ const cl = (c: string) => ({ like_new:"Como nuevo",good:"Buen estado",new:"Nuevo
 export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -35,14 +32,20 @@ export function CatalogPage() {
       b = b.replace(/<button[^>]*><i class="fas fa-times"><\/i><\/button>/g, '<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      b = rewriteMibLinks(b);
+      // Rewrite MIB links to SPA routes
+      const routeMap: Record<string,string> = {
+        "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
+        "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
+        "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
+        "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog",
+        "../v13-favoritos/":"/favoritos"
+      };
+      for (const [mib, spa] of Object.entries(routeMap)) {
+        b = b.split(mib).join(spa);
+      }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
-      // Add back sort dropdown toggle (AFTER strip)
-      b = b.replace(/<div class="sort-wrapper">/, '<div class="sort-wrapper" style="position:relative">');
-      b = b.replace(/class="sort-dropdown" id="sortDropdown"/, 'class="sort-dropdown" id="sortDropdown" style="display:none"');
-      // Wire sort dropdown via event delegation in JS
       setHtml(s + b);
     });
   }, []);
@@ -51,7 +54,6 @@ export function CatalogPage() {
     (async () => {
       try {
         const res: any = await api.get("/api/products/?limit=70");
-        setAllProducts((res.items || res || []).slice(0, 70));
         setProducts((res.items || res || []).slice(0, 70));
       } catch { /* no API */ }
       setLoaded(true);
@@ -61,75 +63,8 @@ export function CatalogPage() {
   // Wire interactive elements after DOM is ready
   useEffect(() => {
     if (!html) return;
-    // Sort dropdown toggle
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      const sortBtn = target.closest(".sort-wrapper .tool-btn");
-      if (sortBtn) {
-        e.stopPropagation();
-        const dropdown = document.getElementById("sortDropdown");
-        if (dropdown) {
-          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        }
-        return;
-      }
-      const sortOption = target.closest(".sort-option");
-      if (sortOption) {
-        e.stopPropagation();
-        document.querySelectorAll(".sort-option").forEach(o => o.classList.remove("active"));
-        sortOption.classList.add("active");
-        const sortBy = (sortOption as HTMLElement).dataset.sort;
-        if (sortBy) sortAndRender(sortBy);
-        document.getElementById("sortDropdown")!.style.display = "none";
-        return;
-      }
-      // Close filter modal on Apply
-      const applyBtn = target.closest("button");
-      const text2 = (applyBtn as HTMLElement)?.textContent || "";
-      if (text2.includes("plicar") || text2.includes("Aplicar")) {
-        e.stopPropagation();
-        applyFilter();
-        return;
-      }
-      // Close dropdown when clicking outside
-      if (!target.closest(".sort-wrapper")) {
-        const dd = document.getElementById("sortDropdown");
-        if (dd) dd.style.display = "none";
-      }
-    });
+    // No JS wiring needed — filter button + modal wired via HTML onclick
   }, [html]);
-
-  // Sort and filter
-  const sortAndRender = (type: string) => {
-    const sorted = [...products];
-    if (type === "price-asc") sorted.sort((a, b) => a.price - b.price);
-    else if (type === "price-desc") sorted.sort((a, b) => b.price - a.price);
-    else if (type === "name") sorted.sort((a, b) => a.title.localeCompare(b.title));
-    setProducts(sorted);
-  };
-
-  const applyFilter = () => {
-    const catSelect = document.getElementById("categorySelect") as HTMLSelectElement;
-    const selected = catSelect?.value || "";
-    if (selected) {
-      setProducts(allProducts.filter(p => p.category === selected || selected === ""));
-      // Show filter chip
-      const toolbar = document.querySelector(".toolbar");
-      if (toolbar) {
-        const existing = document.getElementById("filter-chip");
-        if (existing) existing.remove();
-        const chip = document.createElement("div");
-        chip.id = "filter-chip";
-        chip.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;margin:4px 8px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
-        chip.innerHTML = `${selected} <span onclick="document.getElementById('filter-chip').remove();var s=document.getElementById('categorySelect');if(s)s.value='';" style="cursor:pointer;margin-left:2px">×</span>`;
-        toolbar.after(chip);
-      }
-    } else {
-      setProducts([...allProducts]);
-      document.getElementById("filter-chip")?.remove();
-    }
-    document.getElementById("filterModal")?.classList.remove("visible");
-  };
 
   // Inject product data
   useEffect(() => {
@@ -148,24 +83,19 @@ export function CatalogPage() {
             No hay art\u00EDculos todav\u00EDa
           </div>`;
         } else {
-          grid.innerHTML = products.map((p, i) => {
-            const imgUrl = p.photos?.[0] || p.images?.[0] || "";
-            return `
+          grid.innerHTML = products.map((p, i) => `
             <a href="/articulo/${p.id}" class="item-card">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
-                <button class="like-btn" onclick="event.preventDefault();event.stopPropagation();var i=this.querySelector('i');var liked=i.classList.contains('fas');if(liked){i.classList.remove('fas');i.classList.add('far');this.classList.remove('liked')}else{i.classList.remove('far');i.classList.add('fas');this.classList.add('liked')}"><i class="far fa-heart"></i></button>
-                ${imgUrl 
-                  ? `<img src="${imgUrl}" style="position:absolute;inset:0;width:100%25;height:100%25;object-fit:cover" />`
-                  : `<i class="fas fa-box placeholder-icon white"></i>`
-                }
-                <span class="price-tag">&euro;${String(p.price).replace(".", ",")}</span>
-                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation();window.location.href=this.closest('a').getAttribute('href')+'?trade=open'"><i class="fas fa-exchange-alt"></i></button>
+                <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
+                <i class="fas fa-box placeholder-icon white"></i>
+                <span class="price-tag">&euro;${p.price}</span>
+                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
               </div>
               <div class="item-card__info">
                 <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
               </div>
             </a>
-          `}).join("");
+          `).join("");
         }
       }
       att++;
