@@ -14,6 +14,9 @@ const CONDITIONS: Record<string, string> = {
   new: "Nuevo", like_new: "Como nuevo", good: "Buen estado", fair: "Aceptable"
 };
 
+const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A"];
+function hash(s: string): number { let h = 0; for (let i = 0; i < s.length; i++) h = ((h << 5) - h) + s.charCodeAt(i); return Math.abs(h); }
+
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -57,8 +60,79 @@ export function ProductDetailPage() {
       if (!titleEl && att < 15) { att++; return; }
       clearInterval(iv);
 
-      // Title
-      if (titleEl) titleEl.textContent = product.title;
+      // Replace the hardcoded gallery slides with product photos
+      if (product.photos?.length) {
+        const slidesContainer = document.getElementById("gallerySlides");
+        const dotsContainer = document.querySelector(".gallery-dots");
+        const thumbsContainer = document.querySelector(".gallery-thumbs");
+        
+        if (slidesContainer) {
+          let current = 0;
+          const photos = product.photos;
+          
+          const goToSlide = (n: number) => {
+            slidesContainer.querySelectorAll(".gallery-slide").forEach((s, i) => s.classList.toggle("active", i === n));
+            dotsContainer?.querySelectorAll("span").forEach((d, i) => d.classList.toggle("active", i === n));
+            thumbsContainer?.querySelectorAll(".gallery-thumb").forEach((t, i) => t.classList.toggle("active", i === n));
+            current = n;
+          };
+
+          // Build slides
+          slidesContainer.innerHTML = photos.map((p, i) => 
+            `<div class="gallery-slide${i === 0 ? " active" : ""}" style="background:${BG[hash(String(i)) % BG.length]}">
+              <img src="${p}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+            </div>`
+          ).join("");
+
+          // Build dots
+          if (dotsContainer) {
+            dotsContainer.innerHTML = photos.map((_, i) => 
+              `<span class="${i === 0 ? "active" : ""}" style="cursor:pointer;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.35);display:inline-block;margin:0 3px;transition:all .3s"></span>`
+            ).join("");
+            dotsContainer.querySelectorAll("span").forEach((d, i) => d.addEventListener("click", () => goToSlide(i)));
+          }
+
+          // Build thumbs
+          if (thumbsContainer) {
+            thumbsContainer.innerHTML = photos.map((p, i) =>
+              `<div class="gallery-thumb${i === 0 ? " active" : ""}" style="cursor:pointer;width:48px;height:48px;border:1px solid var(--border);flex-shrink:0">
+                <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
+                <span class="thumb-label" style="position:absolute;bottom:1px;right:4px;font-family:var(--font-mono);font-size:.5rem;color:var(--text-dim)">${i + 1}</span>
+              </div>`
+            ).join("");
+            thumbsContainer.querySelectorAll(".gallery-thumb").forEach((t, i) => t.addEventListener("click", () => goToSlide(i)));
+          }
+
+          // Add left/right arrows
+          const gallery = document.getElementById("gallery");
+          if (gallery) {
+            gallery.style.position = "relative";
+            // Left arrow
+            const left = document.createElement("button");
+            left.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            left.style.cssText = "position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#1C1915";
+            left.addEventListener("click", (e) => { e.stopPropagation(); goToSlide((current - 1 + photos.length) % photos.length); });
+            // Right arrow
+            const right = document.createElement("button");
+            right.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            right.style.cssText = "position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#1C1915";
+            right.addEventListener("click", (e) => { e.stopPropagation(); goToSlide((current + 1) % photos.length); });
+            gallery.appendChild(left);
+            gallery.appendChild(right);
+
+            // Swipe support
+            let startX = 0;
+            gallery.addEventListener("touchstart", (e) => { startX = (e as TouchEvent).touches[0].clientX; });
+            gallery.addEventListener("touchend", (e) => {
+              const diff = startX - (e as TouchEvent).changedTouches[0].clientX;
+              if (Math.abs(diff) > 50) goToSlide((current + (diff > 0 ? 1 : -1) + photos.length) % photos.length);
+            });
+          }
+        }
+      }
+      // Also update other product info
+      const titleTextEl = document.querySelector(".product-title, h1");
+      if (titleTextEl) titleTextEl.textContent = product.title;
       // Price
       const priceEl = document.querySelector(".product-price, [class*='price']");
       if (priceEl) priceEl.innerHTML = `\u20AC${String(product.price).replace(".", ",")}`;
