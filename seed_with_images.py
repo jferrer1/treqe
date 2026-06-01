@@ -15,7 +15,7 @@ CAT_MAP = {"Tecnolog\u00EDa y electr\u00F3nica":"electronica","Moda y accesorios
            "Hogar y jard\u00EDn":"hogar","Deporte y aire libre":"deporte","Motor":"motor",
            "Libros, m\u00FAsica y cine":"libros","Coleccionismo":"coleccionismo"}
 
-API = "https://treqe-production-8518.up.railway.app"
+API = "http://localhost:8000"
 IMG_DIR_SRC = r"D:\TREQE_DATA\treqe_generated"
 IMG_DIR_DST = r"C:\Users\Shadow\.openclaw\workspace\projects\active\treqe\src\apps\web\public\images\products"
 os.makedirs(IMG_DIR_DST, exist_ok=True)

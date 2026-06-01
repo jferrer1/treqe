@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api": { target: "https://treqe-production-8518.up.railway.app", changeOrigin: true, secure: true },
+      "/api": "http://localhost:8000",
       "/ws": {
         target: "ws://localhost:8000",
         ws: true,

@@ -1,6 +1,6 @@
 import json, urllib.request, urllib.parse, os
 
-API = "https://treqe-production-8518.up.railway.app"
+API = "http://localhost:8000"
 IMG_DIR = r"C:\Users\Shadow\.openclaw\workspace\projects\active\treqe\src\apps\web\public\images\products"
 images = sorted(os.listdir(IMG_DIR))
 
