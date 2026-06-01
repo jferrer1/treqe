@@ -59,6 +59,13 @@ export function ProductDetailPage() {
   // Auth guard
   useEffect(() => {
     if (!html) return;
+    // Auto-open trade if ?trade=open in URL
+    if (window.location.search.includes('trade=open')) {
+      setTimeout(() => {
+        const btn = Array.from(document.querySelectorAll('button')).find(b => /trueque|intercambio|solicitar/i.test(b.textContent||''));
+        if (btn) { btn.scrollIntoView({behavior:'smooth',block:'center'}); btn.click(); }
+      }, 1000);
+    }
     const handler = (e: MouseEvent) => {
       const btn = (e.target as HTMLElement).closest("button");
       if (!btn) return;

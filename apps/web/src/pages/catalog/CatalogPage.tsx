@@ -114,7 +114,7 @@ export function CatalogPage() {
                   : `<i class="fas fa-box placeholder-icon white"></i>`
                 }
                 <span class="price-tag">&euro;${String(p.price).replace(".", ",")}</span>
-                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('active')"><i class="fas fa-exchange-alt"></i></button>
+                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation();window.location.href=this.closest('a').getAttribute('href')+'?trade=open'"><i class="fas fa-exchange-alt"></i></button>
               </div>
               <div class="item-card__info">
                 <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
