@@ -67,15 +67,20 @@ export function ProductDetailPage() {
         const thumbsContainer = document.querySelector(".gallery-thumbs");
         
         if (slidesContainer) {
+          (slidesContainer as HTMLElement).style.overflow = "hidden";
           let current = 0;
           const photos = product.photos;
           
           const goToSlide = (n: number) => {
+            (window as any).__current = n;
+            current = n;
             slidesContainer.querySelectorAll(".gallery-slide").forEach((s, i) => s.classList.toggle("active", i === n));
             dotsContainer?.querySelectorAll("span").forEach((d, i) => d.classList.toggle("active", i === n));
             thumbsContainer?.querySelectorAll(".gallery-thumb").forEach((t, i) => t.classList.toggle("active", i === n));
             current = n;
           };
+          (window as any).__goToSlide = goToSlide;
+          (window as any).__current = 0;
 
           // Build slides
           slidesContainer.innerHTML = photos.map((p, i) => 
@@ -104,19 +109,22 @@ export function ProductDetailPage() {
           }
 
           // Add left/right arrows
-          const gallery = document.getElementById("gallery");
+          const gallery = document.getElementById("gallery") as HTMLElement;
           if (gallery) {
+            gallery.style.overflow = "hidden";
             gallery.style.position = "relative";
-            // Left arrow
+            // Left arrow with inline onclick
             const left = document.createElement("button");
+            left.setAttribute("type", "button");
             left.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            left.setAttribute("onclick", "var c=(window.__current||0)-1;if(c<0)c="+(photos.length-1)+";window.__goToSlide(c);event.stopPropagation()");
             left.style.cssText = "position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#1C1915";
-            left.addEventListener("click", (e) => { e.stopPropagation(); goToSlide((current - 1 + photos.length) % photos.length); });
-            // Right arrow
+            // Right arrow with inline onclick
             const right = document.createElement("button");
+            right.setAttribute("type", "button");
             right.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            right.setAttribute("onclick", "window.__goToSlide(((window.__current||0)+1)%"+photos.length+");event.stopPropagation()");
             right.style.cssText = "position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#1C1915";
-            right.addEventListener("click", (e) => { e.stopPropagation(); goToSlide((current + 1) % photos.length); });
             gallery.appendChild(left);
             gallery.appendChild(right);
 
