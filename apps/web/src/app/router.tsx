@@ -9,6 +9,7 @@ import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
+  const completed = new Set(["v1","v2","v3","v4","v10r","v10l","v12"]);
   const pages = [
     { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catálogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/demo"},{v:"v13",n:"Blog",p:"/blog"}]},
     { cat:"Usuario",items:[{v:"v9",n:"Splash",p:"/splash"},{v:"v5",n:"Onboarding",p:"/onboarding"},{v:"v10r",n:"Registro",p:"/registro"},{v:"v10l",n:"Login",p:"/login"},{v:"v4",n:"Perfil",p:"/perfil"},{v:"v14",n:"Editar",p:"/perfil/editar"},{v:"v15",n:"Verificar",p:"/perfil/verificar"},{v:"v8",n:"Ajustes",p:"/ajustes"}]},
@@ -21,7 +22,7 @@ function HubPage() {
     <div style={{fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh",padding:20}}>
       <h1 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"1.2rem",fontWeight:600}}>Treqe — Índice</h1>
       <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:32}}>{pages.reduce((s,c)=>s+c.items.length,0)} páginas</p>
-      {pages.map(s=><div key={s.cat} style={{marginBottom:28}}><h2 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.65rem",fontWeight:600,textTransform:"uppercase",letterSpacing:1,color:"#8A8580",marginBottom:10}}>{s.cat}</h2><div style={{display:"flex",flexDirection:"column",gap:2}}>{s.items.map(p=><Link key={p.v} to={p.p} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:"#FFF",border:"1px solid #E5E0D8",textDecoration:"none",color:"#1C1915",fontSize:"0.85rem"}}><span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#8A8580",minWidth:28}}>{p.v}</span><span>{p.n}</span></Link>)}</div></div>)}
+      {pages.map(s=><div key={s.cat} style={{marginBottom:28}}><h2 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.65rem",fontWeight:600,textTransform:"uppercase",letterSpacing:1,color:"#8A8580",marginBottom:10}}>{s.cat}</h2><div style={{display:"flex",flexDirection:"column",gap:2}}>{s.items.map(p=><Link key={p.v} to={p.p} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:"#FFF",border:"1px solid #E5E0D8",textDecoration:"none",color:"#1C1915",fontSize:"0.85rem"}}><span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#8A8580",minWidth:28}}>{p.v}{completed.has(p.v) ? " ✅" : ""}</span><span>{p.n}</span></Link>)}</div></div>)}
     </div>
   );
 }
