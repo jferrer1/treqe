@@ -28,8 +28,8 @@ export function NotificationsPage() {
       if (notifStart >= 0 && bottomStart > notifStart) {
         b = b.substring(0, notifStart) + '<div class="notif-list" id="notif-list"></div>\n' + b.substring(bottomStart);
       }
-      // Hide badge dot by default
-      b = b.replace(/<span class="nav-badge"><\/span>/g, '<span class="nav-badge" style="display:none"></span>');
+      // Hide badge dot and remove counter placeholder
+      b = b.replace(/<span class="nav-badge"[^>]*>[^<]*<\/span>/g, '<span class="nav-badge" style="display:none"></span>');
       b = rewriteMibLinks(b);
       setHtml(s + b);
     });
