@@ -33,10 +33,10 @@ export function ProductDetailPage() {
       body = body.replace(/<script[\s\S]*?<\/script>/g, "");
       body = body.replace(/\s+on\w+="[^"]*"/g, "");
 
-      // Replace gallery
+      // Replace gallery — include wish + trade buttons
       if (photos.length > 0) {
         const gs = body.indexOf('<div class="gallery" id="gallery">');
-        const after = body.indexOf('<button class="gallery-wish"');
+        const after = body.indexOf('<button class="gallery-trade"');
         const info = body.indexOf('<div class="item-info"');
         const end = (after > gs ? after : 99999) < (info > gs ? info : 99999) ? after : info;
         if (gs >= 0 && end > gs) {
@@ -115,8 +115,10 @@ function buildGallery(photos: string[]): string {
   return `<div class="gallery" id="gallery" style="position:relative;overflow:hidden">
     <div class="gallery-slides" id="gallerySlides" style="position:relative;overflow:hidden">${slides}</div>
     <div class="gallery-dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10">${dots}</div>
+    <button class="gallery-wish" id="wishBtn" style="position:absolute;bottom:12px;right:12px;z-index:10;width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer"><i class="far fa-heart"></i></button>
+    <button class="gallery-trade" id="tradeBtn" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
+    <button type="button" onclick="event.stopPropagation();TreG.goTo((TreG.current-1+${photos.length})%${photos.length})" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-left"></i></button>
+    <button type="button" onclick="event.stopPropagation();TreG.goTo((TreG.current+1)%${photos.length})" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-right"></i></button>
     <div class="gallery-thumbs" style="display:flex;gap:6px;padding:8px 16px;overflow-x:auto">${thumbs}</div>
-    <button type="button" onclick="TreG.goTo((TreG.current-1+${photos.length})%${photos.length})" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-left"></i></button>
-    <button type="button" onclick="TreG.goTo((TreG.current+1)%${photos.length})" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-right"></i></button>
   </div>`;
 }
