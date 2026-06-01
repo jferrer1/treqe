@@ -84,11 +84,11 @@ function buildGallery(photos: string[]): string {
   ).join("");
 
   const dots = photos.map((_, i) =>
-    `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="TreG.goTo(${i})"></span>`
+    `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="var g=document.getElementById('gallery');g.dataset.slide=${i};g.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===${i})});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-thumb').forEach(function(t,n){t.classList.toggle('active',n===${i})})"></span>`
   ).join("");
 
   const thumbs = photos.map((p, i) =>
-    `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="TreG.goTo(${i})">
+    `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="var g=document.getElementById('gallery');g.dataset.slide=${i};g.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-thumb').forEach(function(t,n){t.classList.toggle('active',n===${i})})" style="cursor:pointer;width:48px;height:48px;border:1px solid var(--border);flex-shrink:0">
       <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
     </div>`
   ).join("");
