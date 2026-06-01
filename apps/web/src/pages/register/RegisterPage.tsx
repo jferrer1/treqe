@@ -51,16 +51,15 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
         if (title) title.textContent = "Iniciar sesión";
         if (sub) sub.textContent = "Accede a tu cuenta de Treqe.";
         if (submitBtn) submitBtn.innerHTML = 'Iniciar sesión <i class="fas fa-arrow-right"></i>';
-        // Keep Google/Apple visible on login too — just hide name+terms
+        if (nameGrp) { (nameGrp as HTMLElement).style.display = "none"; const ni = nameGrp.querySelector('input') as HTMLInputElement; if (ni) ni.removeAttribute('required'); }
+        if (termsDiv) { (termsDiv as HTMLElement).style.display = "none"; const cb = termsDiv.querySelector('input') as HTMLInputElement; if (cb) cb.removeAttribute('required'); }
       } else {
-        if (nameGrp) (nameGrp as HTMLElement).style.display = "block";
-        if (termsDiv) (termsDiv as HTMLElement).style.display = "block";
         if (title) title.textContent = "Crear cuenta";
         if (sub) sub.textContent = "Únete a la comunidad de intercambio circular.";
         if (submitBtn) submitBtn.innerHTML = 'Crear cuenta <i class="fas fa-arrow-right"></i>';
+        if (nameGrp) (nameGrp as HTMLElement).style.display = "block";
+        if (termsDiv) (termsDiv as HTMLElement).style.display = "block";
       }
-      if (mode === "login" && nameGrp) (nameGrp as HTMLElement).style.display = "none";
-      if (mode === "login" && termsDiv) (termsDiv as HTMLElement).style.display = "none";
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
