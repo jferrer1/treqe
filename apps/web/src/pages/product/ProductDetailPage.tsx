@@ -33,14 +33,12 @@ export function ProductDetailPage() {
       body = body.replace(/<script[\s\S]*?<\/script>/g, "");
       body = body.replace(/\s+on\w+="[^"]*"/g, "");
 
-      // Replace gallery — include wish + trade buttons
+      // Replace gallery + wish/trade buttons (everything before item-info)
       if (photos.length > 0) {
         const gs = body.indexOf('<div class="gallery" id="gallery">');
-        const after = body.indexOf('<button class="gallery-trade"');
         const info = body.indexOf('<div class="item-info"');
-        const end = (after > gs ? after : 99999) < (info > gs ? info : 99999) ? after : info;
-        if (gs >= 0 && end > gs) {
-          body = body.substring(0, gs) + buildGallery(photos) + body.substring(end);
+        if (gs >= 0 && info > gs) {
+          body = body.substring(0, gs) + buildGallery(photos) + body.substring(info);
         }
       }
 
