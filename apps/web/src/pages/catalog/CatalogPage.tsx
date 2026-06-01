@@ -108,13 +108,13 @@ export function CatalogPage() {
             return `
             <a href="/articulo/${p.id}" class="item-card">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
-                <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
+                <button class="like-btn" onclick="event.preventDefault();event.stopPropagation();var i=this.querySelector('i');var liked=i.classList.contains('fas');if(liked){i.classList.remove('fas');i.classList.add('far');this.classList.remove('liked')}else{i.classList.remove('far');i.classList.add('fas');this.classList.add('liked')}"><i class="far fa-heart"></i></button>
                 ${imgUrl 
                   ? `<img src="${imgUrl}" style="position:absolute;inset:0;width:100%25;height:100%25;object-fit:cover" />`
                   : `<i class="fas fa-box placeholder-icon white"></i>`
                 }
                 <span class="price-tag">&euro;${String(p.price).replace(".", ",")}</span>
-                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
+                <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('active')"><i class="fas fa-exchange-alt"></i></button>
               </div>
               <div class="item-card__info">
                 <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
