@@ -5,8 +5,8 @@ import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { UploadPage } from "@/pages/upload/UploadPage";
 import { MatchesPage } from "@/pages/matches/MatchesPage";
-import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
+import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
@@ -15,8 +15,8 @@ function HubPage() {
     "v2": "Pendiente: modal trueque (seleccionar producto), wish/trade persistir a API, miniaturas responsive",
     "v3": "Pendiente: subida de imágenes real (ahora placeholder), validación de categorías",
     "v4": "Pendiente: datos reales cuando API conectada, editar perfil funcional",
+    "v11": "Pendiente: notificaciones reales WebSocket",
     "v12": "Pendiente: matches reales (API ofertas→matches), timers, chat entre usuarios",
-    "v11",
     "v13f": "Pendiente: favoritos persistidos a API",
   };
   const pages = [
