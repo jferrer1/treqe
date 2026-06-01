@@ -80,7 +80,7 @@ export function ProductDetailPage() {
         // Trade/Comprar — show coming soon
         if (/trueque|intercambio|solicitar/i.test(text)) {
           document.querySelector('.gallery-trade')?.classList.toggle('requested');
-          alert("Solicitud de trueque enviada (demo)");
+          alert("Selecciona un producto de tu perfil para ofrecer a cambio.\n\nPróximamente: modal de selección de producto.");
           return;
         }
         alert("Funcionalidad de compra en desarrollo");
