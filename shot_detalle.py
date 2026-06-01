@@ -2,8 +2,7 @@ import asyncio, json, urllib.request
 from playwright.async_api import async_playwright
 
 async def shot():
-    # Get a real product ID
-    r = urllib.request.urlopen('https://treqe-production-8518.up.railway.app/api/products/?limit=1')
+    r = urllib.request.urlopen('http://localhost:8000/api/products/?limit=1')
     items = json.loads(r.read()).get('items', [])
     pid = items[0]['id'] if items else 'demo'
     print(f"Product: {pid}")
