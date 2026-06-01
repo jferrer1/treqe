@@ -56,23 +56,6 @@ export function ProductDetailPage() {
     })();
   }, [id]);
 
-  // Gallery controller on window
-  useEffect(() => {
-    if (!html) return;
-    (window as any).TreG = {
-      current: 0,
-      goTo(n: number) {
-        (window as any).TreG.current = n;
-        document.querySelectorAll(".gallery-slide").forEach((s: any, i: number) => s.classList.toggle("active", i === n));
-        document.querySelectorAll(".gallery-dot").forEach((d: any, i: number) => d.classList.toggle("active", i === n));
-        document.querySelectorAll(".gallery-thumb").forEach((t: any, i: number) => {
-          t.classList.toggle("active", i === n);
-          try { t.scrollIntoView({ inline: "nearest", behavior: "smooth" }); } catch {}
-        });
-      }
-    };
-  }, [html]);
-
   // Auth guard
   useEffect(() => {
     if (!html) return;
@@ -110,13 +93,13 @@ function buildGallery(photos: string[]): string {
     </div>`
   ).join("");
 
-  return `<div class="gallery" id="gallery" style="position:relative;overflow:hidden">
-    <div class="gallery-slides" id="gallerySlides" style="position:relative;overflow:hidden">${slides}</div>
+  return `<div class="gallery" id="gallery" style="position:relative;overflow:hidden;aspect-ratio:1">
+    <div class="gallery-slides" id="gallerySlides" style="position:relative;width:100%;height:100%;overflow:hidden">${slides}</div>
     <div class="gallery-dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10">${dots}</div>
-    <button class="gallery-wish" id="wishBtn" style="position:absolute;bottom:12px;right:12px;z-index:10;width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer"><i class="far fa-heart"></i></button>
-    <button class="gallery-trade" id="tradeBtn" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
-    <button type="button" onclick="event.stopPropagation();TreG.goTo((TreG.current-1+${photos.length})%${photos.length})" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-left"></i></button>
-    <button type="button" onclick="event.stopPropagation();TreG.goTo((TreG.current+1)%${photos.length})" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-chevron-right"></i></button>
-    <div class="gallery-thumbs" style="display:flex;gap:6px;padding:8px 16px;overflow-x:auto">${thumbs}</div>
+    <button class="gallery-wish" style="position:absolute;bottom:12px;right:12px;z-index:10;width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer"><i class="far fa-heart"></i></button>
+    <button class="gallery-trade" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
+    <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i-1+${photos.length})%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=this.parentElement.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-left"></i></button>
+    <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i+1)%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=this.parentElement.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-right"></i></button>
+    <div class="gallery-thumbs" style="display:flex;gap:6px;padding:8px 16px;overflow-x:auto;margin-top:4px">${thumbs}</div>
   </div>`;
 }
