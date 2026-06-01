@@ -53,22 +53,67 @@ function applyFilterDOM() {
     const condMatch = !condFilter || condFilter === "any" || cond === condFilter;
     c.style.display = catMatch && priceMatch && condMatch ? "" : "none";
   });
-  // Show/hide chip
-  const ex = document.getElementById("filter-chip");
-  if (ex) ex.remove();
-  if (sel) {
+  // Show/hide chips
+  const chipsDiv = document.getElementById("active-filters");
+  if (chipsDiv) chipsDiv.remove();
+  const activeFilters: string[] = [];
+  if (sel) activeFilters.push(sel);
+  const priceLabel = activePrice?.textContent?.trim();
+  if (priceLabel) activeFilters.push(priceLabel);
+  const condLabel = activeCond?.textContent?.trim();
+  if (condLabel && condLabel !== "Cualquiera") activeFilters.push(condLabel);
+  
+  if (activeFilters.length > 0) {
     const tb = document.querySelector(".toolbar");
     if (tb) {
-      const ch = document.createElement("div");
-      ch.id = "filter-chip";
-      ch.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;margin:4px 8px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
-      const onclickX = `this.parentElement.remove();document.querySelectorAll('.item-card').forEach(c=>c.style.display='');var s=document.getElementById('categorySelect');if(s)s.value='';`;
-      ch.innerHTML = `${sel} <span style="cursor:pointer;margin-left:2px" onclick="${onclickX}">\u00D7</span>`;
-      tb.after(ch);
+      const container = document.createElement("div");
+      container.id = "active-filters";
+      container.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:6px 0;align-items:center";
+      activeFilters.forEach(label => {
+        const ch = document.createElement("div");
+        ch.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
+        ch.innerHTML = `${label} <span style="cursor:pointer;margin-left:2px">\u00D7</span>`;
+        (ch.querySelector("span") as HTMLElement).addEventListener("click", () => {
+          const cards = document.querySelectorAll(".item-card");
+          cards.forEach((c: any) => { c.style.display = "" });
+          ch.remove();
+          const remaining = document.querySelectorAll("#active-filters > div");
+          if (remaining.length === 0) {
+            container.remove();
+            (document.getElementById("categorySelect") as HTMLSelectElement).value = "";
+            document.querySelectorAll(".filter-quick-btn").forEach((b: any) => b.classList.remove("active"));
+            document.querySelectorAll("#filterModal .filter-chip").forEach((b: any) => b.classList.remove("active"));
+            document.querySelector("#filterModal .filter-chip[data-condition=any]")?.classList.add("active");
+          }
+        });
+        container.appendChild(ch);
+      });
+      tb.after(container);
     }
   }
   document.getElementById("filterModal")?.classList.remove("visible");
 }
+
+// MIB subcategory mapping
+const SUBCATEGORIES: Record<string,string[]> = {
+  electronica: ["Móviles","Portátiles","Tablets","Cámaras","Audio","Consolas","Accesorios","TV y Proyectores","Smartwatches","Componentes PC","Periféricos"],
+  moda: ["Ropa hombre","Ropa mujer","Zapatos","Bolsos","Relojes","Joyería","Vintage","Accesorios","Belleza"],
+  deporte: ["Bicicletas","Fitness","Running","Natación","Fútbol","Padel","Camping","Montaña y Ski","Baloncesto","Golf","Yoga","Pesas","Patines"],
+  musica: ["Guitarras","Baterías","Teclados","Vinilos","Equipos DJ","Instrumentos viento","Micrófonos","Partituras"],
+  hogar: ["Muebles","Decoración","Electrodomésticos","Jardín","Bricolaje","Lámparas","Cocina","Baño","Textiles","Mascotas","Calefacción"],
+  libros: ["Novelas","Cómics","Académicos","Infantil","Idiomas","Arte","Revistas","Ensayo"],
+  motor: ["Coches","Motos","Recambios coche","Recambios moto","GPS","Herramientas","Neumáticos","Accesorios"],
+  inmuebles: ["Pisos","Casas","Garajes","Locales","Terrenos","Oficinas","Habitaciones"],
+  bicicletas: ["Bicis montaña","Bicis carretera","Bicis eléctricas","Cascos","Componentes","Accesorios","Ropa ciclismo"],
+  electrodomesticos: ["Cocina","Lavandería","Climatización","Pequeño electro","Aspiradoras","Recambios"],
+  bebes: ["Ropa bebé","Juguetes","Carritos","Sillas coche","Cunas","Alimentación","Seguridad","Maternidad"],
+  coleccionismo: ["Antigüedades","Monedas","Sellos","Cromos","Figuras","Pósters","Postales"],
+  construccion: ["Puertas","Ventanas","Suelos","Pintura","Ferretería","Andamios","Electricidad","Baños"],
+  industria: ["Agricultura","Maquinaria","Herramientas","Recambios","Tractores"],
+  empleo: ["Ofertas empleo","Busco empleo"],
+  servicios: ["Clases","Limpieza","Mudanzas","Reparaciones","Canguros","Terapias","Fontanería","Electricista"],
+  otros: ["Varios"]
+};
 
 export function CatalogPage() {
   const [html, setHtml] = useState("");
@@ -171,8 +216,14 @@ export function CatalogPage() {
       // Category select — show subcategories
       if ((target as HTMLElement).id === "categorySelect") {
         const subGroup = document.getElementById("subcategoryGroup");
+        const subSelect = document.getElementById("subcategorySelect") as HTMLSelectElement;
         const val = (target as HTMLSelectElement).value;
-        if (subGroup) subGroup.style.display = val ? "block" : "none";
+        if (subGroup && subSelect && SUBCATEGORIES[val]) {
+          subGroup.style.display = "block";
+          subSelect.innerHTML = '<option value="">Todas</option>' + SUBCATEGORIES[val].map(s => `<option value="${s.toLowerCase().replace(/ /g,"-")}">${s}</option>`).join("");
+        } else if (subGroup) {
+          subGroup.style.display = "none";
+        }
         return;
       }
       if (!target.closest(".sort-wrapper")) {
