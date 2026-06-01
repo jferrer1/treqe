@@ -47,6 +47,12 @@ export function NotificationsPage() {
       if (!list && att < 15) { att++; return; }
       clearInterval(iv);
       if (!list) return;
+      // Update header count and hide fake MIB notifs
+      const headerCount = document.querySelector(".treqe-header .count, .header-count, [class*='count']");
+      if (headerCount) headerCount.textContent = String(notifs.length);
+      // Hide bottom nav badge if no unread
+      const badge = document.querySelector(".nav-badge");
+      if (badge) (badge as HTMLElement).style.display = notifs.filter(n => !n.read).length > 0 ? "" : "none";
       if (notifs.length === 0) {
         list.innerHTML = `<div style="text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
           <i class="fas fa-bell-slash" style="font-size:2rem;display:block;margin-bottom:16px;opacity:.3"></i>
