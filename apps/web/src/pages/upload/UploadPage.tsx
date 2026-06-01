@@ -20,7 +20,7 @@ export function UploadPage() {
       b = rewriteMibLinks(b);
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       // Back button
-      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
+      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.location.href=&quot;/catalogo&quot;" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       b = rewriteMibLinks(b);
       // Hide preview initially
