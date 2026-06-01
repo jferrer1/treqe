@@ -22,12 +22,14 @@ export function NotificationsPage() {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
-      // Remove hardcoded MIB notifs — use actual MIB comment structure
+      // Remove hardcoded MIB notifs
       const notifStart = b.indexOf('<div class="notif-list">');
       const bottomStart = b.indexOf('<nav class="bottom-nav">');
       if (notifStart >= 0 && bottomStart > notifStart) {
         b = b.substring(0, notifStart) + '<div class="notif-list" id="notif-list"></div>\n' + b.substring(bottomStart);
       }
+      // Hide badge dot by default
+      b = b.replace(/<span class="nav-badge"><\/span>/g, '<span class="nav-badge" style="display:none"></span>');
       b = rewriteMibLinks(b);
       setHtml(s + b);
     });
@@ -51,10 +53,10 @@ export function NotificationsPage() {
       if (!list && att < 15) { att++; return; }
       clearInterval(iv);
       if (!list) return;
-      // Update header count and hide fake MIB notifs
-      const headerCount = document.querySelector(".treqe-header .count, .header-count, [class*='count']");
-      if (headerCount) headerCount.textContent = String(notifs.length);
-      // Hide bottom nav badge if no unread
+      // Update header title to show count
+      const headerTitle = document.querySelector(".treqe-header__title");
+      if (headerTitle) headerTitle.textContent = notifs.length > 0 ? `Avisos (${notifs.length})` : "Avisos";
+      // Show/hide badge based on unread
       const badge = document.querySelector(".nav-badge");
       if (badge) (badge as HTMLElement).style.display = notifs.filter(n => !n.read).length > 0 ? "" : "none";
       if (notifs.length === 0) {
