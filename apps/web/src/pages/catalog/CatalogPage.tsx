@@ -137,7 +137,7 @@ export function CatalogPage() {
     fetch("/mib/v1-catalogo.html").then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
-      const s = sm ? `<style>${sm[1]}</style>` : "";
+      let s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
@@ -167,7 +167,7 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
-      b = b.replace("</style>", ".item-card{display:flex;flex-direction:column}.item-card__info{flex:1}</style>");
+      s = s.replace("</style>", ".item-card{display:flex!important;flex-direction:column!important;height:100%!important}.item-card__info{flex:1!important;background:var(--surface)!important}</style>");
       setHtml(s + b);
     });
   }, []);
