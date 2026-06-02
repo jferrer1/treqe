@@ -4,7 +4,7 @@ import "@/lib/search";
 
 interface Product {
   id: string; title: string; price: number; emoji: string;
-  condition?: string; images?: string[];
+  condition?: string; images?: string[]; photos?: string[];
 }
 
 const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A",
@@ -182,7 +182,10 @@ export function CatalogPage() {
     (async () => {
       try {
         const res: any = await api.get("/api/products/?limit=70");
-        setProducts((res.items || res || []).slice(0, 70));
+        setProducts((res.items || res || []).slice(0, 10));
+        (window as any).__treqeOffset = 10;
+        (window as any).__treqeTotal = res.total || 0;
+        (window as any).__treqeLoading = false;
       } catch { /* no API */ }
       setLoaded(true);
     })();
@@ -342,6 +345,51 @@ export function CatalogPage() {
     }, 200);
     return () => clearInterval(iv);
   }, [html, loaded, products]);
+
+  // Infinite scroll
+  useEffect(() => {
+    const onScroll = () => {
+      if ((window as any).__treqeLoading) return;
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+        (window as any).__treqeLoading = true;
+        const offset = (window as any).__treqeOffset || 0;
+        const total = (window as any).__treqeTotal || 0;
+        if (offset >= total) return;
+        api.get(`/api/products/?limit=10&offset=${offset}`).then((res: any) => {
+          const newItems = (res.items || res || []);
+          if (newItems.length === 0) return;
+          (window as any).__treqeOffset = offset + newItems.length;
+          setProducts((prev: Product[]) => {
+            const updated = [...prev, ...newItems];
+            const grid = document.querySelector(".catalog");
+            if (grid) {
+              const existing = grid.querySelectorAll(".item-card").length;
+              const html = newItems.map((p: Product, i: number) => {
+                const idx = existing + i;
+                const img = p.photos?.[0] || p.images?.[0];
+                return `<a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}">
+                  <div class="item-card__image" style="background:${BG[idx % BG.length]}">
+                    <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
+                    ${img ? `<img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />` : `<i class="fas fa-box placeholder-icon white"></i>`}
+                    <span class="price-tag">&euro;${String(p.price).replace(".", ",")}</span>
+                    <button class="trade-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="fas fa-exchange-alt"></i></button>
+                  </div>
+                  <div class="item-card__info">
+                    <div class="item-card__title">${p.title} &middot; ${cl(p.condition || "")}</div>
+                  </div>
+                </a>`;
+              }).join("");
+              grid.insertAdjacentHTML("beforeend", html);
+            }
+            return updated;
+          });
+          (window as any).__treqeLoading = false;
+        }).catch(() => { (window as any).__treqeLoading = false; });
+      }
+    };
+    window.addEventListener("scroll", onScroll, {passive: true});
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
