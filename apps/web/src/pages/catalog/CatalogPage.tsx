@@ -165,7 +165,7 @@ export function CatalogPage() {
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
       b = b.replace(/href="[^"]*blog[^"]*"/g, 'href="/blog"');
-      b = b.replace("</style>", ".search-expand{position:absolute;top:100%;right:0;width:200px}.search-expand.open{display:flex}</style>");
+      b = b.replace("</style>", ".search-expand{display:none;align-items:center;margin-left:8px}.search-expand.open{display:flex}.search-expand input{border:1px solid var(--border);padding:4px 8px;font-family:inherit;font-size:.8rem;width:160px}</style>");
       }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
