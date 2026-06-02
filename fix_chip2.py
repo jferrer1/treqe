@@ -1,15 +1,34 @@
 f = r'C:\Users\Shadow\.openclaw\workspace\projects\active\treqe\src\apps\web\src\pages\catalog\CatalogPage.tsx'
 c = open(f, 'r', encoding='utf-8', newline='').read()
 
-# Put chip after toolbar, aligned to grid's content edge
-c = c.replace(
-    'const grid = document.querySelector(".catalog"); if (grid) { container.style.gridColumn = "1 / -1"; container.style.width = "100%"; container.style.marginBottom = "8px"; grid.prepend(container); } else if (sectionTitle) { sectionTitle.after(container); }',
-    'if (sectionTitle) { sectionTitle.after(container); const grid = document.querySelector(".catalog"); if (grid) { const gs = window.getComputedStyle(grid); container.style.paddingLeft = (grid.getBoundingClientRect().left + parseFloat(gs.paddingLeft || "0")) + "px"; } }'
-)
-c = c.replace(
-    'const grid2 = document.querySelector(".catalog"); if (grid2) { container.style.gridColumn = "1 / -1"; container.style.width = "100%"; container.style.marginBottom = "8px"; grid2.prepend(container); } else if (tb) { tb.after(container); }',
-    'if (tb) { tb.after(container); const grid2 = document.querySelector(".catalog"); if (grid2) { const gs2 = window.getComputedStyle(grid2); container.style.paddingLeft = (grid2.getBoundingClientRect().left + parseFloat(gs2.paddingLeft || "0")) + "px"; } }'
-)
+# Replace dynamic padding with CSS that re-calculates on resize
+old = 'if (sectionTitle) { sectionTitle.after(container); const grid = document.querySelector(".catalog"); if (grid) { const gs = window.getComputedStyle(grid); container.style.paddingLeft = (grid.getBoundingClientRect().left + parseFloat(gs.paddingLeft || "0")) + "px"; } }'
+new = '''if (sectionTitle) { sectionTitle.after(container);
+      const updateChipPos = () => {
+        const grid = document.querySelector(".catalog");
+        if (grid) {
+          const gs = window.getComputedStyle(grid);
+          container.style.paddingLeft = (grid.getBoundingClientRect().left + parseFloat(gs.paddingLeft || "0")) + "px";
+        }
+      };
+      updateChipPos();
+      window.addEventListener("resize", updateChipPos);
+    }'''
+c = c.replace(old, new)
+
+old2 = 'if (tb) { tb.after(container); const grid2 = document.querySelector(".catalog"); if (grid2) { const gs2 = window.getComputedStyle(grid2); container.style.paddingLeft = (grid2.getBoundingClientRect().left + parseFloat(gs2.paddingLeft || "0")) + "px"; } }'
+new2 = '''if (tb) { tb.after(container);
+      const updateChipPos2 = () => {
+        const grid2 = document.querySelector(".catalog");
+        if (grid2) {
+          const gs2 = window.getComputedStyle(grid2);
+          container.style.paddingLeft = (grid2.getBoundingClientRect().left + parseFloat(gs2.paddingLeft || "0")) + "px";
+        }
+      };
+      updateChipPos2();
+      window.addEventListener("resize", updateChipPos2);
+    }'''
+c = c.replace(old2, new2)
 
 open(f, 'w', encoding='utf-8', newline='').write(c)
-print("Chip between toolbar and section-title, aligned to grid")
+print("Resize listener added")
