@@ -38,9 +38,10 @@ function applyFilterDOM() {
   
   let minPrice = 0, maxPrice = Infinity;
   if (activePrice) {
-    const d = activePrice.dataset;
-    if (d.min) minPrice = parseFloat(d.min);
-    if (d.max) maxPrice = parseFloat(d.max) || Infinity;
+    const txt = activePrice.textContent?.trim() || '';
+    if (txt.startsWith('Hasta')) { minPrice = 0; maxPrice = parseFloat(txt.replace(/[^0-9]/g,'')) || 50; }
+    else if (txt.startsWith('+')) { minPrice = parseFloat(txt.replace(/[^0-9]/g,'')) || 500; maxPrice = Infinity; }
+    else { const parts = txt.split('-').map(s => parseFloat(s.replace(/[^0-9]/g,'')) || 0); minPrice = parts[0] || 0; maxPrice = parts[1] || Infinity; }
   }
   const condFilter = activeCond?.dataset.condition || "";
   
@@ -88,9 +89,9 @@ function applyFilterDOM() {
         });
         container.appendChild(ch);
       });
-      const sectionTitle = document.querySelector(".section-title");
+      const sectionTitle = document.querySelector(".toolbar");
       if (sectionTitle) sectionTitle.after(container);
-      else tb.after(container);
+      else { const tb = document.querySelector(".toolbar"); if (tb) tb.after(container); }
     }
   }
   document.getElementById("filterModal")?.classList.remove("visible");
