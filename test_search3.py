@@ -8,12 +8,22 @@ async def test():
         await page.goto("http://localhost:5173/catalogo", wait_until="networkidle", timeout=15000)
         await page.wait_for_timeout(3000)
         
-        transition = await page.evaluate("""() => {
-            const e = document.getElementById('searchExpand');
-            if (!e) return 'NOT FOUND';
-            return window.getComputedStyle(e).transition;
+        el = await page.evaluate("""()=>{
+            const e=document.getElementById('searchExpand');
+            if(!e)return'NOT FOUND';
+            return{style:e.getAttribute('style'), open:e.classList.contains('open')};
         }""")
-        print(f"Transition: {transition}")
+        print(el)
+        
+        await page.locator("#searchIcon").click()
+        await page.wait_for_timeout(500)
+        
+        cs = await page.evaluate("""()=>{
+            const e=document.getElementById('searchExpand');
+            const s=window.getComputedStyle(e);
+            return{display:s.display,position:s.position,width:s.width,open:e.classList.contains('open')};
+        }""")
+        print(cs)
         
         await b.close()
 

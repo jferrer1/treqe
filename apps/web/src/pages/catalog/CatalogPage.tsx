@@ -267,16 +267,19 @@ export function CatalogPage() {
   // Wire search
   useEffect(() => {
     if (!html) return;
+    // Clean stale inline styles from previous code
+    const expand = document.getElementById("searchExpand");
+    if (expand) expand.removeAttribute("style");
     let tries = 0;
     const iv = setInterval(() => {
       const icon = document.getElementById("searchIcon");
       const input = document.getElementById("searchInput") as HTMLInputElement | null;
       if ((icon || input) && tries < 20) {
         clearInterval(iv);
+        // Clean stale inline styles
+        const expand = document.getElementById("searchExpand");
+        if (expand) { expand.style.cssText = ""; }
         if (icon) {
-          // Set expand position inline
-          const expand = document.getElementById("searchExpand");
-          if (expand) expand.style.cssText = "position:fixed;top:24px;right:16px;height:38px;display:none;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px";
           icon.addEventListener("click", (e) => {
             e.stopPropagation();
             const expand = document.getElementById("searchExpand");
