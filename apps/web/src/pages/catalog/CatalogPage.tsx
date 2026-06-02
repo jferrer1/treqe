@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import "@/lib/search";
 
 interface Product {
   id: string; title: string; price: number; emoji: string;
@@ -164,7 +165,7 @@ export function CatalogPage() {
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
       b = b.replace(/href="[^"]*blog[^"]*"/g, 'href="/blog"');
-      
+      b = b.replace("</style>", ".search-expand{position:absolute;top:100%;right:0;width:200px}.search-expand.open{display:flex}</style>");
       }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
@@ -191,7 +192,9 @@ export function CatalogPage() {
       const target = e.target as HTMLElement;
       // Sort dropdown toggle
       // Search toggle
-      if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); const exp = document.getElementById("searchExpand"); if (exp) { exp.classList.toggle("open"); if (exp.classList.contains("open")) { setTimeout(() => (document.getElementById("searchInput") as HTMLInputElement)?.focus(), 100); } } return; }
+      if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); document.getElementById("searchExpand")?.classList.toggle("open"); return; }
+      // Search input
+      if (target.closest("#searchInput")) { const v = (document.getElementById("searchInput") as HTMLInputElement).value.toLowerCase().trim(); document.querySelectorAll(".item-card").forEach((c: any) => { const t = (c.querySelector(".item-card__title")?.textContent || "").toLowerCase(); c.style.display = !v || t.includes(v) ? "" : "none"; }); return; }
       const sortBtn = target.closest(".sort-wrapper .tool-btn");
       if (sortBtn) {
         e.stopPropagation();
@@ -256,6 +259,31 @@ export function CatalogPage() {
     };
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
+  }, [html]);
+
+  // Wire search
+  useEffect(() => {
+    if (!html) return;
+    let tries = 0;
+    const iv = setInterval(() => {
+      const icon = document.getElementById("searchIcon");
+      const input = document.getElementById("searchInput") as HTMLInputElement | null;
+      if ((icon || input) && tries < 20) {
+        clearInterval(iv);
+        if (icon) {
+          icon.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const expand = document.getElementById("searchExpand");
+            if (expand) { expand.classList.toggle("open"); if (expand.classList.contains("open")) input?.focus(); }
+          });
+        }
+        if (input) {
+          input.addEventListener("input", () => { (window as any).treqeSearch(input.value); });
+        }
+      }
+      tries++;
+    }, 200);
+    return () => clearInterval(iv);
   }, [html]);
 
   // Inject product data
