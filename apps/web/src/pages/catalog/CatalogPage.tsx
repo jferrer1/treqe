@@ -151,7 +151,10 @@ export function CatalogPage() {
       b = b.replace(/onclick="setPriceRange\(500[^)]*\)"/, 'data-min="500" data-max=""');
       b = b.replace('id="filterModal"', 'id="filterModal" onclick="if(event.target===this)this.classList.remove(\'visible\')"');
       // Make close X button in modal work
-      b = b.replace(/<button[^>]*><i class="fas fa-times"><\/i><\/button>/g, '<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
+      // Only fix filter modal X button, not search-close
+      b = b.replace(/(<div class="filter-modal__header">[^<]*)<button[^>]*><i class="fas fa-times"><\/i><\/button>/, '$1<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
+      // Wire search X button
+      b = b.replace(/class="search-close"/g, 'class="search-close" onclick="event.stopPropagation();document.getElementById(\'searchExpand\').classList.remove(\'open\')"');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Rewrite MIB links to SPA routes
@@ -266,7 +269,7 @@ export function CatalogPage() {
     if (!html) return;
     // Inject search CSS
     const style = document.createElement("style");
-    style.textContent = `.search-expand{position:fixed!important;top:5px!important;right:16px!important;display:none!important;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px;height:38px}.search-expand.open{display:flex!important}.search-expand input{border:none;font-family:inherit;font-size:.8rem;width:160px;background:transparent}`;
+    style.textContent = `.search-expand{position:fixed!important;top:26px!important;right:16px!important;display:none!important;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px;height:38px}.search-expand.open{display:flex!important}.search-expand input{border:none;font-family:inherit;font-size:.8rem;width:160px;background:transparent}`;
     document.body.appendChild(style);
     let tries = 0;
     const iv = setInterval(() => {
