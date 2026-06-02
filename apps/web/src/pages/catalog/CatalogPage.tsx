@@ -155,7 +155,7 @@ export function CatalogPage() {
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Rewrite MIB links to SPA routes
       const routeMap: Record<string,string> = {
-        "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
+        "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
         "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
         "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
         "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-blog/index.html":"/blog","../blogindex.html":"/blog",
@@ -164,6 +164,7 @@ export function CatalogPage() {
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
       b = b.replace(/href="[^"]*blog[^"]*"/g, 'href="/blog"');
+      b = b.replace("</style>", ".search-expand{position:absolute;top:100%;right:0;width:200px}.search-expand.open{display:flex}</style>");
       }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
