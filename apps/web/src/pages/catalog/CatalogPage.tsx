@@ -278,6 +278,9 @@ export function CatalogPage() {
       if ((icon || input) && tries < 20) {
         clearInterval(iv);
         if (icon) {
+          // Set expand position inline
+          const expand = document.getElementById("searchExpand");
+          if (expand) expand.style.cssText = "position:fixed;top:24px;right:16px;height:38px;display:none;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px";
           icon.addEventListener("click", (e) => {
             e.stopPropagation();
             const expand = document.getElementById("searchExpand");

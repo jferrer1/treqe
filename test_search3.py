@@ -6,25 +6,22 @@ async def test():
         b = await p.chromium.launch()
         page = await b.new_page(viewport={"width": 390, "height": 844})
         await page.goto("http://localhost:5173/catalogo", wait_until="networkidle", timeout=15000)
-        await page.wait_for_timeout(3000)
+        await page.wait_for_timeout(4000)
         
-        pos = await page.evaluate("""() => {
-            const icon = document.getElementById('searchIcon');
-            const blog = document.querySelector('.blog-link');
+        inline = await page.evaluate("() => document.getElementById('searchExpand')?.style.cssText")
+        print(f"Inline style: {inline}")
+        
+        # Force inline style
+        await page.evaluate("""() => {
             const el = document.getElementById('searchExpand');
-            if (!icon || !blog) return {error: 'MISSING'};
-            const iR = icon.getBoundingClientRect();
-            const bR = blog.getBoundingClientRect();
-            const eR = el?.getBoundingClientRect();
-            return {
-                icon: {top: Math.round(iR.top), left: Math.round(iR.left), bottom: Math.round(iR.bottom), height: Math.round(iR.height)},
-                blog: {top: Math.round(bR.top), left: Math.round(bR.left), bottom: Math.round(bR.bottom), height: Math.round(bR.height)},
-                expand: eR ? {top: Math.round(eR.top)} : null
-            };
+            if (el) el.style.cssText = 'position:fixed;top:24px;right:16px;height:38px;background:red;z-index:9999';
         }""")
-        for k,v in pos.items():
-            if v:
-                print(f"  {k}: top={v['top']}px, bottom={v.get('bottom','?')}px, height={v.get('height','?')}px, left={v.get('left','?')}px")
+        
+        await page.locator("#searchIcon").click()
+        await page.wait_for_timeout(500)
+        
+        cs = await page.evaluate("() => {const s=getComputedStyle(document.getElementById('searchExpand'));return {top:s.top,pos:s.position,bg:s.backgroundColor}}")
+        print(f"After force: {cs}")
         
         await b.close()
 
