@@ -8,34 +8,31 @@ async def test():
         await page.goto("http://localhost:5173/catalogo", wait_until="networkidle", timeout=15000)
         await page.wait_for_timeout(3000)
         
-        # Check for multiple searchInputs
-        count = await page.evaluate("() => document.querySelectorAll('#searchInput').length")
-        print(f"#searchInput count: {count}")
-        
-        # Check if treqeSearch exists
-        exists = await page.evaluate("() => typeof window.treqeSearch === 'function'")
-        print(f"treqeSearch exists: {exists}")
-        
-        # Open search and check
         await page.locator("#searchIcon").click()
         await page.wait_for_timeout(500)
         
-        # Type and check
-        await page.locator("#searchInput").fill("iphone")
-        await page.wait_for_timeout(500)
-        
-        # Check display on some cards
-        displays = await page.evaluate("""() => {
-            const cards = document.querySelectorAll('.item-card');
-            let styles = [];
-            for (let i = 0; i < 5; i++) {
-                styles.push({i, display: cards[i].style.display, computed: window.getComputedStyle(cards[i]).display});
-            }
-            return styles;
+        # Check positions
+        info = await page.evaluate("""() => {
+            const expand = document.getElementById('searchExpand');
+            const icon = document.getElementById('searchIcon');
+            const blog = document.querySelector('.blog-link');
+            if (!expand || !icon) return {error: 'NOT FOUND'};
+            const eR = expand.getBoundingClientRect();
+            const iR = icon.getBoundingClientRect();
+            const bR = blog?.getBoundingClientRect();
+            return {
+                expandTop: eR.top,
+                iconTop: iR.top,
+                expandHeight: eR.height,
+                iconHeight: iR.height,
+                coversIcon: eR.top <= iR.top && eR.bottom >= iR.bottom,
+                coversBlog: bR ? (eR.left <= bR.right) : false,
+            };
         }""")
-        for d in displays:
-            print(f"  Card {d['i']}: style={d['display']}, computed={d['computed']}")
+        for k,v in info.items():
+            print(f"  {k}: {v}")
         
+        await page.screenshot(path="screenshots/v1-catalog-search.png", full_page=False)
         await b.close()
 
 asyncio.run(test())
