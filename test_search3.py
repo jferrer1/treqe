@@ -7,32 +7,29 @@ async def test():
         page = await b.new_page(viewport={"width": 390, "height": 844})
         await page.goto("http://localhost:5173/catalogo", wait_until="networkidle", timeout=15000)
         await page.wait_for_timeout(3000)
-        
         await page.locator("#searchIcon").click()
         await page.wait_for_timeout(500)
         
-        # Check positions
-        info = await page.evaluate("""() => {
-            const expand = document.getElementById('searchExpand');
-            const icon = document.getElementById('searchIcon');
-            const blog = document.querySelector('.blog-link');
-            if (!expand || !icon) return {error: 'NOT FOUND'};
-            const eR = expand.getBoundingClientRect();
-            const iR = icon.getBoundingClientRect();
-            const bR = blog?.getBoundingClientRect();
-            return {
-                expandTop: eR.top,
-                iconTop: iR.top,
-                expandHeight: eR.height,
-                iconHeight: iR.height,
-                coversIcon: eR.top <= iR.top && eR.bottom >= iR.bottom,
-                coversBlog: bR ? (eR.left <= bR.right) : false,
-            };
+        cs = await page.evaluate("""() => {
+            const el = document.getElementById('searchExpand');
+            if (!el) return {};
+            const s = window.getComputedStyle(el);
+            return {top: s.top, right: s.right, bottom: s.bottom, height: s.height, display: s.display, position: s.position};
         }""")
-        for k,v in info.items():
+        for k,v in cs.items():
             print(f"  {k}: {v}")
         
-        await page.screenshot(path="screenshots/v1-catalog-search.png", full_page=False)
+        # Check covers icon
+        cov = await page.evaluate("""() => {
+            const e = document.getElementById('searchExpand');
+            const i = document.getElementById('searchIcon');
+            if (!e || !i) return false;
+            const eR = e.getBoundingClientRect();
+            const iR = i.getBoundingClientRect();
+            return eR.top <= iR.top && eR.bottom >= iR.bottom;
+        }""")
+        print(f"  coversIcon: {cov}")
+        
         await b.close()
 
 asyncio.run(test())
