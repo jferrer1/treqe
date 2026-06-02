@@ -154,7 +154,7 @@ export function CatalogPage() {
       // Only fix filter modal X button, not search-close
       b = b.replace(/(<div class="filter-modal__header">[^<]*)<button[^>]*><i class="fas fa-times"><\/i><\/button>/, '$1<button onclick="document.getElementById(\'filterModal\').classList.remove(\'visible\')"><i class="fas fa-times"></i></button>');
       // Wire search X button
-      b = b.replace(/class="search-close"/g, 'class="search-close" onclick="event.stopPropagation();var e=document.getElementById(\'searchExpand\');e.classList.remove(\'open\');var b=document.querySelector(\'.blog-link\');if(b)b.style.display=\'\';var i=document.getElementById(\'searchIcon\');if(i)i.style.display=\'\'"');
+      b = b.replace(/class="search-close"/g, 'class="search-close" onclick="event.stopPropagation();document.getElementById(\'searchExpand\').classList.remove(\'open\')"');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
       // Rewrite MIB links to SPA routes
@@ -284,12 +284,9 @@ export function CatalogPage() {
           icon.addEventListener("click", (e) => {
             e.stopPropagation();
             const expand = document.getElementById("searchExpand");
-            const blog = document.querySelector(".blog-link") as HTMLElement;
             if (expand) {
-              const isOpen = expand.classList.toggle("open");
-              if (blog) blog.style.display = isOpen ? "none" : "";
-              (icon as HTMLElement).style.display = isOpen ? "none" : "";
-              if (isOpen) input?.focus();
+              expand.classList.toggle("open");
+              if (expand.classList.contains("open")) input?.focus();
             }
           });
         }
