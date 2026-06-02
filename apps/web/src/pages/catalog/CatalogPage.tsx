@@ -167,7 +167,7 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
-      s = s.replace("</style>", ".item-card{display:flex!important;flex-direction:column!important;height:100%!important}.item-card__info{flex:1!important;background:var(--surface)!important}</style>");
+      s = s.replace("</style>", ".item-card{display:flex!important;flex-direction:column!important;height:100%!important}.item-card__info{flex:1!important;background:var(--bg)!important}</style>");
       setHtml(s + b);
     });
   }, []);
