@@ -1,17 +1,9 @@
 f = r'C:\Users\Shadow\.openclaw\workspace\projects\active\treqe\src\apps\web\src\pages\catalog\CatalogPage.tsx'
 c = open(f, 'r', encoding='utf-8', newline='').read()
-
-# Add import for search
+# Remove !important from card CSS
 c = c.replace(
-    'import { api } from "@/lib/api";',
-    'import { api } from "@/lib/api";\nimport "@/lib/search";'
+    '.item-card{display:flex!important;flex-direction:column!important;height:100%!important}.item-card__info{flex:1!important;background:var(--bg)!important}',
+    '.item-card{display:flex;flex-direction:column;height:100%}.item-card__info{flex:1;background:var(--bg)}'
 )
-
-# Add search onclick and oninput AFTER the global strip, where filter onclick is added
-c = c.replace(
-    'b = b.replace(/class="tool-btn"/,',
-    '// Add search handlers\n      b = b.replace(\'class="search-icon" id="searchIcon"\', \'class="search-icon" id="searchIcon" onclick="var e=document.getElementById(\\'searchExpand\\');e.classList.toggle(\\'open\\');if(e.classList.contains(\\'open\\')){document.getElementById(\\'searchInput\\').focus()};event.stopPropagation()"\');\n      b = b.replace(\'id="searchInput"\', \'id="searchInput" oninput="window.treqeSearch(this.value)"\');\n      b = b.replace(/class="tool-btn"/,'
-)
-
 open(f, 'w', encoding='utf-8', newline='').write(c)
-print("Search via window.treqeSearch")
+print("!important removed from card CSS")
