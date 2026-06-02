@@ -189,6 +189,10 @@ export function CatalogPage() {
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       // Sort dropdown toggle
+      // Search toggle
+      if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); document.getElementById("searchExpand")?.classList.toggle("open"); return; }
+      // Search input
+      if (target.closest("#searchInput")) { const v = (document.getElementById("searchInput") as HTMLInputElement).value.toLowerCase().trim(); document.querySelectorAll(".item-card").forEach((c: any) => { const t = (c.querySelector(".item-card__title")?.textContent || "").toLowerCase(); c.style.display = !v || t.includes(v) ? "" : "none"; }); return; }
       const sortBtn = target.closest(".sort-wrapper .tool-btn");
       if (sortBtn) {
         e.stopPropagation();
