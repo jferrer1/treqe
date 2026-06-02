@@ -269,7 +269,7 @@ export function CatalogPage() {
     if (!html) return;
     // Inject search CSS
     const style = document.createElement("style");
-    style.textContent = `.search-expand{position:fixed!important;top:26px!important;right:16px!important;display:none!important;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px;height:38px}.search-expand.open{display:flex!important}.search-expand input{border:none;font-family:inherit;font-size:.8rem;width:160px;background:transparent}`;
+    style.textContent = `.search-expand{position:fixed!important;top:24px!important;right:16px!important;display:none!important;align-items:center;background:var(--bg);border:1px solid var(--border);z-index:9999;padding:0 8px;height:38px}.search-expand.open{display:flex!important}.search-expand input{border:none;font-family:inherit;font-size:.8rem;width:160px;background:transparent}`;
     document.body.appendChild(style);
     let tries = 0;
     const iv = setInterval(() => {
