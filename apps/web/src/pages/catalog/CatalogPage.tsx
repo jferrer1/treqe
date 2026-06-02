@@ -69,7 +69,7 @@ function applyFilterDOM() {
     if (tb) {
       const container = document.createElement("div");
       container.id = "active-filters";
-      container.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;width:100%25;width:100%25;align-items:center";
+      container.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;flex-basis:100%25;flex-basis:100%25;align-items:center";
       activeFilters.forEach(label => {
         const ch = document.createElement("div");
         ch.style.cssText = "display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--text);color:var(--bg);font-family:var(--font-mono);font-size:.5rem;text-transform:uppercase;letter-spacing:.06em";
