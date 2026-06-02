@@ -158,7 +158,7 @@ export function CatalogPage() {
         "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
         "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
         "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
-        "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog",
+        "../v12-mis-matches/":"/treqes","../blogindex.html":"/blog",
         "../v13-favoritos/":"/favoritos"
       };
       for (const [mib, spa] of Object.entries(routeMap)) {
