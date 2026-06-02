@@ -90,7 +90,7 @@ function applyFilterDOM() {
         container.appendChild(ch);
       });
       const sectionTitle = document.querySelector(".toolbar");
-      if (sectionTitle) { sectionTitle.after(container); const grid = document.querySelector(".catalog"); if (grid) { const gridStyle = window.getComputedStyle(grid); const gridLeft = grid.getBoundingClientRect().left + parseFloat(gridStyle.paddingLeft || "0"); container.style.paddingLeft = gridLeft + "px"; } }
+      const grid = document.querySelector(".catalog"); if (grid) { container.style.gridColumn = "1 / -1"; container.style.width = "100%"; container.style.marginBottom = "8px"; grid.prepend(container); } else if (sectionTitle) { sectionTitle.after(container); }
       else { const tb = document.querySelector(".toolbar"); if (tb) { tb.after(container); tb.after(container); } }
     }
   }
