@@ -3,7 +3,7 @@ export function rewriteMibLinks(html: string): string {
     "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
     "../v3-subir/":"/subir","../v4-perfil/":"/perfil","../v5-onboarding/":"/onboarding",
     "../v8-ajustes/":"/ajustes","../v9-splash/":"/splash","../v10-registro/":"/registro",
-    "../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../blogindex.html":"/blog",
+    "../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-blog/index.html":"/blog","/blogindex.html":"/blog","../blogindex.html":"/blog",
     "../v13-favoritos/":"/favoritos","../v14-editar-perfil/":"/perfil/editar",
     "../v15-verificar-identidad/":"/perfil/verificar","../v16-portada/":"/",
     "../v17-mis-solicitudes/":"/mis-solicitudes","../v17-aviso-legal/":"/legal/aviso",

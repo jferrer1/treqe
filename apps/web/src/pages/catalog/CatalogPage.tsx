@@ -158,11 +158,12 @@ export function CatalogPage() {
         "../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
         "../v3-subir/":"/subir","../v4-perfil/":"/perfil",
         "../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos",
-        "../v12-mis-matches/":"/treqes","../blogindex.html":"/blog",
+        "../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-blog/index.html":"/blog","../blogindex.html":"/blog",
         "../v13-favoritos/":"/favoritos"
       };
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
+      b = b.replace(/href="[^"]*blog[^"]*"/g, 'href="/blog"');
       }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
