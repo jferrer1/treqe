@@ -164,7 +164,7 @@ export function CatalogPage() {
       for (const [mib, spa] of Object.entries(routeMap)) {
         b = b.split(mib).join(spa);
       b = b.replace(/href="[^"]*blog[^"]*"/g, 'href="/blog"');
-      b = b.replace("</style>", ".search-expand{position:absolute;top:100%;right:0;width:200px}.search-expand.open{display:flex}</style>");
+      
       }
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
@@ -191,9 +191,7 @@ export function CatalogPage() {
       const target = e.target as HTMLElement;
       // Sort dropdown toggle
       // Search toggle
-      if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); document.getElementById("searchExpand")?.classList.toggle("open"); return; }
-      // Search input
-      if (target.closest("#searchInput")) { const v = (document.getElementById("searchInput") as HTMLInputElement).value.toLowerCase().trim(); document.querySelectorAll(".item-card").forEach((c: any) => { const t = (c.querySelector(".item-card__title")?.textContent || "").toLowerCase(); c.style.display = !v || t.includes(v) ? "" : "none"; }); return; }
+      if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); const exp = document.getElementById("searchExpand"); if (exp) { exp.classList.toggle("open"); if (exp.classList.contains("open")) { setTimeout(() => (document.getElementById("searchInput") as HTMLInputElement)?.focus(), 100); } } return; }
       const sortBtn = target.closest(".sort-wrapper .tool-btn");
       if (sortBtn) {
         e.stopPropagation();
