@@ -8,22 +8,12 @@ async def test():
         await page.goto("http://localhost:5173/catalogo", wait_until="networkidle", timeout=15000)
         await page.wait_for_timeout(3000)
         
-        rules = await page.evaluate("""() => {
-            const sheets = document.styleSheets;
-            let matches = [];
-            for (const sheet of sheets) {
-                try {
-                    for (const rule of sheet.cssRules) {
-                        if (rule.selectorText && rule.selectorText.includes('search-expand')) {
-                            matches.push({sel: rule.selectorText, css: rule.style.cssText.substring(0, 150)});
-                        }
-                    }
-                } catch(e) {}
-            }
-            return matches;
+        transition = await page.evaluate("""() => {
+            const e = document.getElementById('searchExpand');
+            if (!e) return 'NOT FOUND';
+            return window.getComputedStyle(e).transition;
         }""")
-        for r in rules:
-            print(f"  {r['sel']}: {r['css']}")
+        print(f"Transition: {transition}")
         
         await b.close()
 
