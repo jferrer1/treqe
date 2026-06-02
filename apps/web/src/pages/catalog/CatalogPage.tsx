@@ -167,6 +167,7 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
+      b = b.replace("</style>", ".item-card{display:flex;flex-direction:column}.item-card__info{flex:1}</style>");
       setHtml(s + b);
     });
   }, []);
