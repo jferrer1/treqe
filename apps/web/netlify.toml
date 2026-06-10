@@ -1,0 +1,6 @@
+[build]
+  command = "pnpm build --filter=@treqe/web"
+  publish = "dist"
+
+# Redirects se generan dinámicamente en dist/_redirects via scripts/post-deploy.mjs
+# No definir aquí para evitar conflictos
