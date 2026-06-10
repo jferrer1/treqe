@@ -20,6 +20,8 @@ const ROUTE_MAP: Record<string, string> = {
   "../v29-eliminar-cuenta/":"/perfil/eliminar","../v30-sobre-treqe/":"/sobre",
 };
 
+const BASE = import.meta.env.BASE_URL;
+
 const CACHE: Record<string, string> = {};
 
 export function MibPage({ page, noBottomNav }: Props) {
@@ -28,14 +30,14 @@ export function MibPage({ page, noBottomNav }: Props) {
 
   useEffect(() => {
     if (CACHE[page]) { setHtml(CACHE[page]); return; }
-    fetch(`/mib/${page}.html`).then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/${page}.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       let s = sm ? `<style>${sm[1]}</style>` : "";
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       if (noBottomNav) b = b.replace(/<nav class="bottom-nav"[\s\S]*?<\/nav>/g, '');
       CACHE[page] = s + b;
       setHtml(CACHE[page]);
