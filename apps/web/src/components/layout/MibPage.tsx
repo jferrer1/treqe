@@ -38,6 +38,7 @@ export function MibPage({ page, noBottomNav }: Props) {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
+      b = b.replace(/src="\/treqe-logo\.png"/g, `src="${BASE}treqe-logo.png"`);
       if (noBottomNav) b = b.replace(/<nav class="bottom-nav"[\s\S]*?<\/nav>/g, '');
       CACHE[page] = s + b;
       setHtml(CACHE[page]);
