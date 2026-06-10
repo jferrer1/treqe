@@ -1,0 +1,28 @@
+plugins = []
+headers = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "C:\\Users\\Shadow\\.openclaw\\workspace\\projects\\active\\Treqe\\src\\apps\\web\\apps\\web\\dist"
+publishOrigin = "ui"
+commandOrigin = "ui"
+base = "C:\\Users\\Shadow\\.openclaw\\workspace\\projects\\active\\Treqe\\src\\apps\\web"
+command = "turbo run build --filter @treqe/web"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]

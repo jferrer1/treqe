@@ -2,38 +2,44 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
 import { rewriteMibLinks } from "@/lib/mibLinks";
+import { TradeModal } from "@/components/match/TradeModal";
+import { PurchaseModal } from "@/components/payment/PurchaseModal";
 
 interface ProductDetail {
   id: string; title: string; description: string | null;
   price: number; category: string; condition: string;
-  photos: string[]; status: string;
+  photos: string[]; status: string; weight: number | null;
 }
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [html, setHtml] = useState("");
+  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [tradeOpen, setTradeOpen] = useState(false);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
   const hasToken = !!localStorage.getItem("treqe-token");
 
   useEffect(() => {
     (async () => {
-      let product: ProductDetail | null = null;
+      let productData: ProductDetail | null = null;
       if (id && id !== "demo") {
-        try { product = await api.get(`/api/products/${id}`); } catch {}
+        try { productData = await api.get(`/api/products/${id}`); } catch {}
       }
+      setProduct(productData);
       const raw = await fetch("/mib/v2-detalle.html").then(r => r.text());
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       const style = sm ? `<style>${sm[1]}</style>` : "";
       let body = bm ? bm[1] : "";
 
-      const photos = product?.photos?.length ? product.photos : [];
+      const photos = productData?.photos?.length ? productData.photos : [];
 
       // Clean scripts and onclicks
       body = body.replace(/<script[\s\S]*?<\/script>/g, "");
       body = body.replace(/\s+on\w+="[^"]*"/g, "");
 
-      // Replace gallery + wish/trade buttons (everything before item-info)
+      // Replace gallery + wish/trade buttons
       if (photos.length > 0) {
         const gs = body.indexOf('<div class="gallery" id="gallery">');
         const info = body.indexOf('<div class="item-info"');
@@ -42,13 +48,13 @@ export function ProductDetailPage() {
         }
       }
 
-      // Back button — navigate to catalog
+      // Back button
       body = body.replace(/(<button class="back-btn")/, '$1 onclick="window.location.href=&quot;/catalogo&quot;"');
 
       // Product data
-      if (product) {
-        body = body.replace(/€[0-9,.]+/g, `\u20AC${String(product.price).replace(".", ",")}`);
-        body = body.replace(/Fender Stratocaster/g, product.title);
+      if (productData) {
+        body = body.replace(/€[0-9,.]+/g, `\u20AC${String(productData.price).replace(".", ",")}`);
+        body = body.replace(/Fender Stratocaster/g, productData.title);
       }
 
       body = rewriteMibLinks(body);
@@ -56,10 +62,9 @@ export function ProductDetailPage() {
     })();
   }, [id]);
 
-  // Auth guard
+  // Auth guard + trade/compra handler
   useEffect(() => {
     if (!html) return;
-    // Auto-open trade if ?trade=open in URL
     if (window.location.search.includes('trade=open')) {
       setTimeout(() => {
         const btn = Array.from(document.querySelectorAll('button')).find(b => /trueque|intercambio|solicitar/i.test(b.textContent||''));
@@ -77,13 +82,14 @@ export function ProductDetailPage() {
           alert("Consulta enviada (demo)");
           return;
         }
-        // Trade/Comprar — show coming soon
+        // Trade → show trade modal
         if (/trueque|intercambio|solicitar/i.test(text)) {
           document.querySelector('.gallery-trade')?.classList.toggle('requested');
-          alert("Selecciona un producto de tu perfil para ofrecer a cambio.\n\nPróximamente: modal de selección de producto.");
+          setTradeOpen(true);
           return;
         }
-        alert("Funcionalidad de compra en desarrollo");
+        // Purchase → show purchase modal
+        setPurchaseOpen(true);
       }
     };
     document.addEventListener("click", handler, true);
@@ -91,7 +97,31 @@ export function ProductDetailPage() {
   }, [html, hasToken, navigate]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return <div dangerouslySetInnerHTML={{__html: html}} />;
+  return (
+    <>
+      {tradeOpen && (
+        <TradeModal
+          wantedProductId={id || ""}
+          wantedTitle={product?.title || "este artículo"}
+          wantedPrice={product?.price || 0}
+          onClose={() => {
+            setTradeOpen(false);
+            document.querySelector('.gallery-trade')?.classList.remove('requested');
+          }}
+        />
+      )}
+      {purchaseOpen && (
+        <PurchaseModal
+          productTitle={product?.title || "este artículo"}
+          productPrice={product?.price || 0}
+          productId={id || ""}
+          productWeight={product?.weight ?? null}
+          onClose={() => setPurchaseOpen(false)}
+        />
+      )}
+      <div dangerouslySetInnerHTML={{__html: html}} />
+    </>
+  );
 }
 
 function buildGallery(photos: string[]): string {

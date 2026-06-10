@@ -52,6 +52,12 @@ async def create_payment_intent(
     return {"payment_id": payment.id, "client_secret": client_secret, "amount": amount / 100}
 
 
+@router.get("/config")
+async def stripe_config():
+    """Exponer clave pública de Stripe (segura para el frontend)."""
+    return {"publishable_key": settings.STRIPE_PUBLISHABLE_KEY}
+
+
 @router.get("/escrow/{payment_id}")
 async def escrow_status(payment_id: str, current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     """Consultar estado del escrow."""

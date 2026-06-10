@@ -46,14 +46,15 @@ function applyFilterDOM() {
   }
   const condFilter = activeCond?.dataset.condition || "";
   
+  const selLower = sel.toLowerCase();
   cards.forEach((c: any) => {
-    const cat = c.dataset.category || "";
+    const cat = (c.dataset.category || "").toLowerCase();
     const price = getPrice(c);
     const cond = c.dataset.condition || "";
-    const catMatch = !sel || cat === sel;
+    const catMatch = !selLower || cat === selLower;
     const priceMatch = price >= minPrice && price <= maxPrice;
     const condMatch = !condFilter || condFilter === "any" || cond === condFilter;
-    c.style.display = catMatch && priceMatch && condMatch ? "" : "none";
+    c.style.setProperty("display", catMatch && priceMatch && condMatch ? "" : "none", "important");
   });
   // Show/hide chips
   const chipsDiv = document.getElementById("active-filters");
@@ -142,13 +143,8 @@ export function CatalogPage() {
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
-      // Add back filter button + modal close (AFTER strip)
+      // Wire filter button + modal close
       b = b.replace(/class="tool-btn"/, 'class="tool-btn" onclick="document.getElementById(\'filterModal\').classList.add(\'visible\')"');
-      // Add data-min/max to price quick buttons
-      b = b.replace(/onclick="setPriceRange\(0, 50[^)]*\)"/, 'data-min="0" data-max="50"');
-      b = b.replace(/onclick="setPriceRange\(50, 200[^)]*\)"/, 'data-min="50" data-max="200"');
-      b = b.replace(/onclick="setPriceRange\(200, 500[^)]*\)"/, 'data-min="200" data-max="500"');
-      b = b.replace(/onclick="setPriceRange\(500[^)]*\)"/, 'data-min="500" data-max=""');
       b = b.replace('id="filterModal"', 'id="filterModal" onclick="if(event.target===this)this.classList.remove(\'visible\')"');
       // Make close X button in modal work
       // Only fix filter modal X button, not search-close
@@ -196,11 +192,8 @@ export function CatalogPage() {
     if (!html) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Sort dropdown toggle
-      // Search toggle
+      // Search toggle (handled by wire search useEffect, keep only toggle logic)
       if (target.closest("#searchIcon") || target.closest("#searchIcon *")) { e.stopPropagation(); document.getElementById("searchExpand")?.classList.toggle("open"); return; }
-      // Search input
-      if (target.closest("#searchInput")) { const v = (document.getElementById("searchInput") as HTMLInputElement).value.toLowerCase().trim(); document.querySelectorAll(".item-card").forEach((c: any) => { const t = (c.querySelector(".item-card__title")?.textContent || "").toLowerCase(); c.style.display = !v || t.includes(v) ? "" : "none"; }); return; }
       const sortBtn = target.closest(".sort-wrapper .tool-btn");
       if (sortBtn) {
         e.stopPropagation();
@@ -380,6 +373,12 @@ export function CatalogPage() {
                 </a>`;
               }).join("");
               grid.insertAdjacentHTML("beforeend", html);
+              // Re-apply active sort if any
+              const activeSort = document.querySelector(".sort-option.active") as HTMLElement | null;
+              if (activeSort?.dataset.sort) sortDOM(activeSort.dataset.sort);
+              // Re-apply search filter if active
+              const si = document.getElementById("searchInput") as HTMLInputElement | null;
+              if (si?.value && (window as any).treqeSearch) (window as any).treqeSearch(si.value);
             }
             return updated;
           });

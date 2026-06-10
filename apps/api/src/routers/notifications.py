@@ -54,6 +54,15 @@ async def mark_all_read(current_user=Depends(get_current_user), db: AsyncSession
     return {"ok": True}
 
 
+@router.put("/read-all")
+async def mark_all_read(current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Marcar todas las notificaciones como leídas."""
+    await db.execute(
+        update(Notification).where(Notification.user_id == current_user.id).values(read=True)
+    )
+    await db.commit()
+    return {"ok": True}
+
 # ─── WebSocket ───
 
 @router.websocket("/ws")

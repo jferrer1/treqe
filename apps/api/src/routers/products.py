@@ -10,10 +10,10 @@ from ..dependencies import get_current_user
 router = APIRouter(prefix="/api/products", tags=["products"])
 
 CATEGORIES = [
-    "Electrónica", "Móviles", "Consolas", "Hogar", "Deporte",
-    "Moda", "Libros", "Música", "Coleccionismo", "Motor",
-    "Niños", "Herramientas", "Decoración", "Jardín", "Informática",
-    "Cámaras", "Bicicletas", "Instrumentos", "Juguetes", "Otros",
+    "Electrónica", "Moda", "Deporte", "Música", "Hogar",
+    "Libros", "Motor", "Inmuebles", "Bicicletas", "Electrodomésticos",
+    "Bebés", "Coleccionismo", "Construcción", "Industria", "Empleo",
+    "Servicios", "Otros",
 ]
 
 
@@ -30,6 +30,7 @@ async def list_products(
     price_max: float | None = Query(None),
     condition: str | None = Query(None),
     sort: str = Query("newest"),
+    offset: int = Query(0, ge=0),
     page: int = Query(1, ge=1),
     limit: int = Query(20, le=100),
     db: AsyncSession = Depends(get_db),
@@ -38,7 +39,15 @@ async def list_products(
     if search:
         query = query.where(or_(Product.title.ilike(f"%{search}%"), Product.description.ilike(f"%{search}%")))
     if category:
-        query = query.where(Product.category == category)
+        # Strip accents for accent-insensitive matching
+        import unicodedata
+        normalized = unicodedata.normalize('NFKD', category.lower())
+        normalized = ''.join(c for c in normalized if not unicodedata.combining(c))
+        # Strip accents from DB value too (SQLite LOWER preserves them)
+        db_cat = func.lower(Product.category)
+        for a, r in [('á','a'),('é','e'),('í','i'),('ó','o'),('ú','u')]:
+            db_cat = func.replace(db_cat, a, r)
+        query = query.where(db_cat == normalized)
     if price_min is not None:
         query = query.where(Product.price >= price_min)
     if price_max is not None:
@@ -50,10 +59,23 @@ async def list_products(
 
     count_q = select(func.count()).select_from(query.subquery())
     total = (await db.execute(count_q)).scalar() or 0
-    query = query.offset((page - 1) * limit).limit(limit)
+    effective_offset = offset if offset > 0 else (page - 1) * limit
+    query = query.offset(effective_offset).limit(limit)
     result = await db.execute(query)
     products = result.scalars().all()
-    return {"items": [p.to_dict() for p in products], "total": total, "page": page, "pages": max(1, (total + limit - 1) // limit)}
+    safe_limit = max(1, limit)
+    return {"items": [p.to_dict() for p in products], "total": total, "page": page, "pages": max(1, (total + safe_limit - 1) // safe_limit)}
+
+
+@router.get("/mine")
+async def list_my_products(current_user=Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """List user's own active products (for trade modal)."""
+    result = await db.execute(
+        select(Product).where(Product.user_id == current_user.id, Product.status == "active")
+        .order_by(Product.created_at.desc())
+    )
+    products = result.scalars().all()
+    return {"items": [p.to_dict() for p in products], "total": len(products)}
 
 
 @router.get("/{product_id}")

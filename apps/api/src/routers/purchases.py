@@ -53,6 +53,23 @@ async def create_purchase(
     db.add(purchase)
     await db.commit()
     await db.refresh(purchase)
+
+    # Create notifications for both parties
+    try:
+        from ..models.notification import Notification
+        buyer_name = current_user.name or current_user.email or "Comprador"
+        seller = (await db.execute(select(User).where(User.id == product.user_id))).scalar_one_or_none()
+        seller_name = seller.name if seller else "Vendedor"
+        n1 = Notification(user_id=current_user.id, type="purchase_buyer",
+            title=f"Has comprado {product.title}", body=f"Total: {total:.2f} €", action_url="/treqes", read=False)
+        n2 = Notification(user_id=product.user_id, type="purchase_seller",
+            title=f"{buyer_name} ha comprado {product.title}", body=f"Total: {total:.2f} €", action_url="/treqes", read=False)
+        db.add(n1)
+        db.add(n2)
+        await db.commit()
+    except Exception:
+        pass  # Notification failure shouldn't block purchase
+
     return purchase.to_dict()
 
 

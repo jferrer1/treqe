@@ -15,7 +15,8 @@ print(f"[treqe] DB: {settings.DATABASE_URL[:30]}... DEBUG={settings.DEBUG}", fil
 
 from .database import engine, Base
 print(f"[treqe] DB engine created", file=sys.stderr)
-
+from . import models  # Registrar todos los modelos para relaciones
+print(f"[treqe] Models registered", file=sys.stderr)
 
 # Redis listener (solo si hay Redis disponible)
 from .services import redis_listener as rl
