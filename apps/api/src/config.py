@@ -12,7 +12,12 @@ class Settings(BaseSettings):
     JWT_EXPIRE_MINUTES: int = 60 * 24
 
     def model_post_init(self, _context):
-        """Auto-configurar JWT_SECRET si no está definido."""
+        """Auto-configurar JWT_SECRET y convertir DATABASE_URL para async."""
+        # Railway provides postgres:// but SQLAlchemy async needs postgresql+asyncpg://
+        if self.DATABASE_URL.startswith("postgres://"):
+            self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif self.DATABASE_URL.startswith("postgresql://"):
+            self.DATABASE_URL = self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
         if not self.JWT_SECRET:
             import secrets
             self.JWT_SECRET = secrets.token_hex(32)
