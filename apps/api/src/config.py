@@ -16,7 +16,12 @@ class Settings(BaseSettings):
         if not self.JWT_SECRET:
             import secrets
             self.JWT_SECRET = secrets.token_hex(32)
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "https://treqe.netlify.app", "https://treqe.es"]
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "https://treqe.netlify.app",
+        "https://treqe.es",
+        "https://jferrer1.github.io",
+    ]
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""
     SUPABASE_SERVICE_KEY: str = ""
@@ -24,6 +29,7 @@ class Settings(BaseSettings):
     SUPABASE_JWT_SECRET: str = ""
     RAILWAY_PROJECT_ID: str = ""
     STRIPE_SECRET_KEY: str = ""
+    STRIPE_PUBLISHABLE_KEY: str = ""
     CLOUDINARY_CLOUD_NAME: str = ""
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""
