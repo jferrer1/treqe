@@ -39,7 +39,7 @@ jobs:
       - name: Build frontend
         run: pnpm build --filter=@treqe/web
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_API_URL: https://treqe-production-8518.up.railway.app
           VITE_BASE: /treqe/
           DEPLOY_TARGET: github-pages
 
