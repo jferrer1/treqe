@@ -41,6 +41,12 @@ jobs:
           VITE_BASE: /treqe/
           DEPLOY_TARGET: github-pages
 
+      - name: Generate 404.html for SPA routing
+        run: cp apps/web/dist/index.html apps/web/dist/404.html
+
+      - name: Verify dist contents
+        run: ls -la apps/web/dist/ && echo "---" && ls apps/web/dist/assets/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
