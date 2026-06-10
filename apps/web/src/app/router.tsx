@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+﻿import { createHashRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
@@ -38,7 +38,7 @@ function HubPage() {
   );
 }
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   { path: "/", element: <MibPage page="v16-portada" /> },
   { path: "/hub", element: <HubPage /> },
   { path: "/catalogo", element: <CatalogPage /> },
@@ -73,6 +73,4 @@ export const router = createBrowserRouter([
   { path: "/contactar", element: <MibPage page="v28-contactar" /> },
   { path: "/perfil/eliminar", element: <MibPage page="v29-eliminar-cuenta" /> },
   { path: "/sobre", element: <MibPage page="v30-sobre-treqe" /> },
-], {
-  basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/",
-});
+]);
