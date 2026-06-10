@@ -1,24 +1,31 @@
 import { createHashRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { CatalogPage } from "@/pages/catalog/CatalogPage";
+import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
+import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
+import { UploadPage } from "@/pages/upload/UploadPage";
+import { MatchesPage } from "@/pages/matches/MatchesPage";
+import { FavoritesPage } from "@/pages/favorites/FavoritesPage";
+import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
+import { ProfilePage } from "@/pages/profile/ProfilePage";
 import { MibPage } from "@/components/layout/MibPage";
 
 function HubPage() {
   const pages = [
-    { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catálogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/demo"},{v:"v13",n:"Blog",p:"/blog"}]},
-    { cat:"Usuario",items:[{v:"v9",n:"Splash",p:"/splash"},{v:"v5",n:"Onboarding",p:"/onboarding"},{v:"v10",n:"Registro",p:"/registro"},{v:"v4",n:"Perfil",p:"/perfil"},{v:"v14",n:"Editar",p:"/perfil/editar"},{v:"v15",n:"Verificar",p:"/perfil/verificar"},{v:"v8",n:"Ajustes",p:"/ajustes"}]},
-    { cat:"Transacciones",items:[{v:"v3",n:"Subir",p:"/subir"},{v:"v12",n:"Treqes",p:"/treqes"},{v:"v6",n:"Match",p:"/match/demo"},{v:"v23",n:"Pago",p:"/pago/demo/demo"},{v:"v7",n:"Seguimiento",p:"/seguimiento/demo"},{v:"v24",n:"Disputa",p:"/disputa/demo/demo"}]},
-    { cat:"Social",items:[{v:"v11",n:"Avisos",p:"/avisos"},{v:"v13f",n:"Favoritos",p:"/favoritos"},{v:"v17m",n:"Solicitudes",p:"/mis-solicitudes"}]},
-    { cat:"Legales",items:[{v:"v17",n:"Aviso",p:"/legal/aviso"},{v:"v18",n:"Privacidad",p:"/legal/privacidad"},{v:"v19",n:"Términos",p:"/legal/terminos"},{v:"v20",n:"Cookies",p:"/legal/cookies"},{v:"v21",n:"Pagos",p:"/legal/pagos"},{v:"v22",n:"Envíos",p:"/legal/envios"}]},
-    { cat:"Más",items:[{v:"v25",n:"Dirección",p:"/perfil/direccion"},{v:"v26",n:"Métodos pago",p:"/perfil/pagos"},{v:"v27",n:"FAQ",p:"/faq"},{v:"v28",n:"Contactar",p:"/contactar"},{v:"v29",n:"Eliminar cuenta",p:"/perfil/eliminar"},{v:"v30",n:"Sobre Treqe",p:"/sobre"}]},
+    { cat:"Core",items:[{v:"v16",n:"Portada",p:"/"},{v:"v1",n:"Catalogo",p:"/catalogo"},{v:"v2",n:"Detalle",p:"/articulo/demo"},{v:"v13",n:"Blog",p:"/blog"}]},
+    { cat:"Usuario",items:[{v:"v10",n:"Registro",p:"/registro"},{v:"v10",n:"Login",p:"/login"},{v:"v4",n:"Perfil",p:"/perfil"},{v:"v14",n:"Editar",p:"/perfil/editar"},{v:"v15",n:"Verificar",p:"/perfil/verificar"},{v:"v8",n:"Ajustes",p:"/ajustes"}]},
+    { cat:"Transacciones",items:[{v:"v3",n:"Subir",p:"/subir"},{v:"v12",n:"Treqes",p:"/treqes"},{v:"v6",n:"Match",p:"/match/demo"},{v:"v11",n:"Avisos",p:"/avisos"},{v:"v13f",n:"Favoritos",p:"/favoritos"}]},
+    { cat:"Legales",items:[{v:"v17",n:"Aviso",p:"/legal/aviso"},{v:"v18",n:"Privacidad",p:"/legal/privacidad"},{v:"v19",n:"Terminos",p:"/legal/terminos"},{v:"v20",n:"Cookies",p:"/legal/cookies"},{v:"v21",n:"Pagos",p:"/legal/pagos"},{v:"v22",n:"Envios",p:"/legal/envios"}]},
+    { cat:"Mas",items:[{v:"v27",n:"FAQ",p:"/faq"},{v:"v28",n:"Contactar",p:"/contactar"},{v:"v30",n:"Sobre Treqe",p:"/sobre"}]},
   ];
   return (
     <div style={{fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh",padding:20}}>
-      <h1 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"1.2rem",fontWeight:600}}>treqe — Índice de páginas</h1>
-      <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:32}}>33 páginas · Diseño completo</p>
+      <h1 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"1.2rem",fontWeight:600}}>treqe — Indice</h1>
+      <p style={{color:"#8A8580",fontSize:"0.85rem",marginBottom:32}}>Paginas con backend real + MIB design</p>
       {pages.map(s=><div key={s.cat} style={{marginBottom:28}}>
         <h2 style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.65rem",fontWeight:600,textTransform:"uppercase",letterSpacing:1,color:"#8A8580",marginBottom:10}}>{s.cat}</h2>
         <div style={{display:"flex",flexDirection:"column",gap:2}}>
-          {s.items.map(p=><Link key={p.v} to={p.p} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:"#FFF",border:"1px solid #E5E0D8",borderRadius:4,textDecoration:"none",color:"#1C1915",fontSize:"0.85rem"}}>
+          {s.items.map((p,i)=><Link key={p.v+i} to={p.p} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",background:"#FFF",border:"1px solid #E5E0D8",borderRadius:4,textDecoration:"none",color:"#1C1915",fontSize:"0.85rem"}}>
             <span style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:"0.6rem",color:"#8A8580",minWidth:28}}>{p.v}</span>
             <span>{p.n}</span>
           </Link>)}
@@ -29,38 +36,35 @@ function HubPage() {
 }
 
 export const router = createHashRouter([
-  // Portada
+  // === PORTADA (MIB design) ===
   { path: "/", element: <MibPage page="v16-portada" /> },
-  // Hub (índice de todas las páginas)
   { path: "/hub", element: <HubPage /> },
-  // Core app
-  { path: "/catalogo", element: <MibPage page="v1-catalogo" /> },
-  { path: "/articulo/:id", element: <MibPage page="v2-detalle" /> },
-  { path: "/subir", element: <MibPage page="v3-subir" /> },
-  { path: "/perfil", element: <MibPage page="v4-perfil" /> },
-  // Auth
-  { path: "/registro", element: <MibPage page="v10-registro" /> },
-  { path: "/login", element: <MibPage page="v10-registro" /> },
-  // Onboarding / Splash
+
+  // === CONECTADOS AL BACKEND REAL ===
+  { path: "/catalogo", element: <CatalogPage /> },
+  { path: "/articulo/:id", element: <ProductDetailPage /> },
+  { path: "/registro", element: <RegisterPage /> },
+  { path: "/login", element: <LoginPage /> },
+  { path: "/subir", element: <UploadPage /> },
+  { path: "/perfil", element: <ProfilePage /> },
+  { path: "/avisos", element: <NotificationsPage /> },
+  { path: "/treqes", element: <MatchesPage /> },
+  { path: "/favoritos", element: <FavoritesPage /> },
+
+  // === MIB PAGES (diseno completo, datos demo) ===
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },
-  { path: "/splash", element: <MibPage page="v9-splash" /> },
-  // Transacciones
-  { path: "/treqes", element: <MibPage page="v12-mis-matches" /> },
   { path: "/match/:id", element: <MibPage page="v6-match-notification" /> },
   { path: "/seguimiento/:id", element: <MibPage page="v7-seguimiento" /> },
-  { path: "/pago/:refType/:id", element: <MibPage page="v23-pago" /> },
-  { path: "/disputa/:refType/:id", element: <MibPage page="v24-disputa" /> },
-  // Social
-  { path: "/avisos", element: <MibPage page="v11-notificaciones" /> },
-  { path: "/favoritos", element: <MibPage page="v13-favoritos" /> },
-  { path: "/mis-solicitudes", element: <MibPage page="v17-mis-solicitudes" /> },
-  // Perfil
+  { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
+  { path: "/splash", element: <MibPage page="v9-splash" /> },
   { path: "/perfil/editar", element: <MibPage page="v14-editar-perfil" noBottomNav /> },
   { path: "/perfil/verificar", element: <MibPage page="v15-verificar-identidad" noBottomNav /> },
+  { path: "/mis-solicitudes", element: <MibPage page="v17-mis-solicitudes" /> },
+  { path: "/pago/:refType/:id", element: <MibPage page="v23-pago" /> },
+  { path: "/disputa/:refType/:id", element: <MibPage page="v24-disputa" /> },
   { path: "/perfil/direccion", element: <MibPage page="v25-direccion-envio" /> },
   { path: "/perfil/pagos", element: <MibPage page="v26-metodos-pago" /> },
   { path: "/perfil/eliminar", element: <MibPage page="v29-eliminar-cuenta" /> },
-  { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
   // Blog
   { path: "/blog", element: <MibPage page="v13-blog" /> },
   { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },
