@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
+  base: process.env.VITE_BASE || "/",
   plugins: [react()],
   resolve: {
     alias: {
@@ -12,9 +13,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api": "http://localhost:8000",
+      "/api": "http://localhost:8001",
       "/ws": {
-        target: "ws://localhost:8000",
+        target: "ws://localhost:8001",
         ws: true,
       },
     },

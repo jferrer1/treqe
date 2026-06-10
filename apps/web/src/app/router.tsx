@@ -73,4 +73,6 @@ export const router = createBrowserRouter([
   { path: "/contactar", element: <MibPage page="v28-contactar" /> },
   { path: "/perfil/eliminar", element: <MibPage page="v29-eliminar-cuenta" /> },
   { path: "/sobre", element: <MibPage page="v30-sobre-treqe" /> },
-]);
+], {
+  basename: import.meta.env.BASE_URL.replace(/\/$/, "") || "/",
+});
