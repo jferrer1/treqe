@@ -4,6 +4,7 @@ import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
 import { MibPage } from "@/components/layout/MibPage";
+import { RootLayout } from "@/components/layout/RootLayout";
 
 function HubPage() {
   const pages = [
@@ -73,6 +74,7 @@ function HubPage() {
 }
 
 export const router = createHashRouter([
+  { element: <RootLayout />, children: [
   // === PORTADA ===
   { path: "/", element: <MibPage page="v16-portada" /> },
   { path: "/hub", element: <HubPage /> },
@@ -116,4 +118,5 @@ export const router = createHashRouter([
   { path: "/faq", element: <MibPage page="v27-faq" /> },
   { path: "/contactar", element: <MibPage page="v28-contactar" /> },
   { path: "/sobre", element: <MibPage page="v30-sobre-treqe" /> },
+  ]},
 ]);
