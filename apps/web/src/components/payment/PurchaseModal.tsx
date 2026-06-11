@@ -71,7 +71,7 @@ export function PurchaseModal({ productTitle, productPrice, productId, productWe
       });
       if (result.error) { setError(result.error.message); }
       else if (result.paymentIntent?.status === "succeeded") {
-        await api.post(`/api/purchases/?product_id=${productId}&shipping=${sh}&insurance=${insurance}`);
+        // Purchase already created in goToPayment — just mark as done
         setDone(true);
       }
     } catch(e:any) { setError(e.message||"Error al confirmar el pago"); }
