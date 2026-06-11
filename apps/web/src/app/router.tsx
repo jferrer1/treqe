@@ -8,6 +8,17 @@ import { UploadPage } from "@/pages/upload/UploadPage";
 import { MatchesPage } from "@/pages/matches/MatchesPage";
 import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
 import { FavoritesPage } from "@/pages/favorites/FavoritesPage";
+import { SettingsPage } from "@/pages/settings/SettingsPage";
+import { EditProfilePage } from "@/pages/editprofile/EditProfilePage";
+import { VerifyPage } from "@/pages/verify/VerifyPage";
+import { AddressPage } from "@/pages/address/AddressPage";
+import { PayMethodsPage } from "@/pages/paymethods/PayMethodsPage";
+import { DeleteAccountPage } from "@/pages/deleteaccount/DeleteAccountPage";
+import { MatchPage } from "@/pages/match/MatchPage";
+import { TrackingPage } from "@/pages/tracking/TrackingPage";
+import { PaymentPage } from "@/pages/payment/PaymentPage";
+import { DisputePage } from "@/pages/dispute/DisputePage";
+import { RequestsPage } from "@/pages/requests/RequestsPage";
 import { MibPage } from "@/components/layout/MibPage";
 import { RootLayout } from "@/components/layout/RootLayout";
 
@@ -97,18 +108,18 @@ export const router = createHashRouter([
   { path: "/avisos", element: <NotificationsPage /> },
   { path: "/favoritos", element: <FavoritesPage /> },
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },
-  { path: "/match/:id", element: <MibPage page="v6-match-notification" /> },
-  { path: "/seguimiento/:id", element: <MibPage page="v7-seguimiento" /> },
-  { path: "/ajustes", element: <MibPage page="v8-ajustes" /> },
+  { path: "/match/:id", element: <MatchPage /> },
+  { path: "/seguimiento/:id", element: <TrackingPage /> },
+  { path: "/ajustes", element: <SettingsPage /> },
   { path: "/splash", element: <MibPage page="v9-splash" /> },
-  { path: "/mis-solicitudes", element: <MibPage page="v17-mis-solicitudes" /> },
-  { path: "/perfil/editar", element: <MibPage page="v14-editar-perfil" noBottomNav /> },
-  { path: "/perfil/verificar", element: <MibPage page="v15-verificar-identidad" noBottomNav /> },
-  { path: "/pago/:refType/:id", element: <MibPage page="v23-pago" /> },
-  { path: "/disputa/:refType/:id", element: <MibPage page="v24-disputa" /> },
-  { path: "/perfil/direccion", element: <MibPage page="v25-direccion-envio" /> },
-  { path: "/perfil/pagos", element: <MibPage page="v26-metodos-pago" /> },
-  { path: "/perfil/eliminar", element: <MibPage page="v29-eliminar-cuenta" /> },
+  { path: "/mis-solicitudes", element: <RequestsPage /> },
+  { path: "/perfil/editar", element: <EditProfilePage /> },
+  { path: "/perfil/verificar", element: <VerifyPage /> },
+  { path: "/pago/:refType/:id", element: <PaymentPage /> },
+  { path: "/disputa/:refType/:id", element: <DisputePage /> },
+  { path: "/perfil/direccion", element: <AddressPage /> },
+  { path: "/perfil/pagos", element: <PayMethodsPage /> },
+  { path: "/perfil/eliminar", element: <DeleteAccountPage /> },
   // Blog
   { path: "/blog", element: <MibPage page="v13-blog" /> },
   { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },

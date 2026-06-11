@@ -1,117 +1,71 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "@/lib/api";
+
+interface Offer { id:string; product_id:string; product_title?:string; status:string; type:string; price?:number; created_at?:string; }
 
 export function RequestsPage() {
+  const navigate = useNavigate();
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!localStorage.getItem("treqe-token")) { setLoading(false); return; }
+    api.get<{items:Offer[]}>("/api/offers/mine").then(r => setOffers(r.items || r as any)).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const handleCancel = async (id: string) => {
+    try { await api.delete(`/api/offers/${id}`); setOffers(offers.filter(o => o.id !== id)); } catch {}
+  };
+
+  if (!localStorage.getItem("treqe-token")) return <div style={{padding:60,textAlign:"center"}}><p>Necesitas iniciar sesion</p><a href="/login">Iniciar sesion</a></div>;
+
+  const statusBadge = (s:string) => ({
+    pending:{bg:"#fef3c7",color:"#d97706",label:"Pendiente"},
+    accepted:{bg:"#dcfce7",color:"#22c55e",label:"Aceptada"},
+    rejected:{bg:"#fee2e2",color:"#DC2626",label:"Rechazada"},
+  }[s] || {bg:"#f3f4f6",color:"#8A8580",label:s});
+
   return (
-    <>
-      <div className="treqe-header">
- <div className="treqe-header__left">
- <button className="treqe-header__back" aria-label="Atras"><i className="fas fa-chevron-left"></i></button>
- <span className="treqe-header__title">Solicitudes</span>
- </div>
- <div className="treqe-header__right">
- 
- </div>
- </div>
+    <div style={{fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh"}}>
+      <div className="treqe-header"><div className="treqe-header__left">
+        <button className="treqe-header__back" onClick={() => navigate(-1)}><i className="fas fa-chevron-left"></i></button>
+        <span className="treqe-header__title">Mis solicitudes</span>
+      </div></div>
+      <div style={{padding:"20px 16px",maxWidth:480,margin:"0 auto"}}>
+        {loading ? <p style={{textAlign:"center",color:"#8A8580"}}>Cargando...</p> :
+         offers.length === 0 ? (
+          <div style={{textAlign:"center",padding:"40px 20px",color:"#8A8580",fontSize:".85rem"}}>
+            <i className="fas fa-paper-plane" style={{fontSize:"2rem",display:"block",marginBottom:12,opacity:.3}}></i>
+            No has enviado solicitudes todavia
+          </div>
+        ) : offers.map(o => {
+          const b = statusBadge(o.status);
+          return (
+            <div key={o.id} style={{background:"#FFF",border:"1px solid #E5E0D8",borderRadius:4,padding:14,marginBottom:8}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                <span style={{fontSize:".85rem",fontWeight:500}}>{o.product_title || "Articulo"}</span>
+                <span style={{fontSize:".65rem",padding:"2px 8px",borderRadius:99,background:b.bg,color:b.color,fontWeight:600}}>{b.label}</span>
+              </div>
+              <div style={{fontSize:".7rem",color:"#8A8580",marginBottom:8}}>
+                {o.type === "trade" ? "Intercambio" : "Compra"}{o.price ? ` - ${o.price} EUR` : ""}
+              </div>
+              <div style={{display:"flex",gap:8}}>
+                <Link to={`/articulo/${o.product_id}`} style={{fontSize:".75rem",color:"#1C1915",textDecoration:"underline"}}>Ver articulo</Link>
+                {o.status === "pending" && <button onClick={() => handleCancel(o.id)} style={{fontSize:".75rem",color:"#DC2626",background:"none",border:"none",cursor:"pointer",textDecoration:"underline"}}>Cancelar</button>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
- 
- <div className="section-title">
- <h2>Solicitudes de trueque</h2>
- <span id="articleCount">8 solicitudes</span>
- </div>
-
- 
- <div className="catalog" id="catalog">
- 
- <div className="item-card" data-price="580">
- <div className="item-card__image" style={{ background: '#2D2D2D' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-guitar placeholder-icon white"></i>
- <span className="price-tag">€580</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Fender Stratocaster · Muy buen estado</div>
- </div>
- </div>
- <div className="item-card" data-price="890">
- <div className="item-card__image" style={{ background: '#1A2A3A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-mobile-alt placeholder-icon white"></i>
- <span className="price-tag">€890</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">iPhone 15 Pro · 256GB · Titanio natural</div>
- </div>
- </div>
- <div className="item-card" data-price="650">
- <div className="item-card__image" style={{ background: '#1A3A2A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-camera placeholder-icon white"></i>
- <span className="price-tag">€650</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Canon EOS R · Objetivo 24-70mm · Como nueva</div>
- </div>
- </div>
- <div className="item-card" data-price="420">
- <div className="item-card__image" style={{ background: '#3A2A3A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-bicycle placeholder-icon white"></i>
- <span className="price-tag">€420</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Trek Marlin 7 · Mtb · Talla L · 2023</div>
- </div>
- </div>
- <div className="item-card" data-price="380">
- <div className="item-card__image" style={{ background: '#1A1A2A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-headphones placeholder-icon white"></i>
- <span className="price-tag">€380</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">AirPods Max · Azul cielo · Como nuevos</div>
- </div>
- </div>
- <div className="item-card" data-price="250">
- <div className="item-card__image" style={{ background: '#3A2A1A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-clock placeholder-icon white"></i>
- <span className="price-tag">€250</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">G-SHOCK Mudmaster · Edición limitada</div>
- </div>
- </div>
- <div className="item-card" data-price="720">
- <div className="item-card__image" style={{ background: '#3A1A1A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-mobile-alt placeholder-icon white"></i>
- <span className="price-tag">€720</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Samsung Galaxy S25 Ultra · 512GB · Titanium</div>
- </div>
- </div>
- <div className="item-card" data-price="550">
- <div className="item-card__image" style={{ background: '#1A3A3A' }}>
- <span className="like-btn liked"><i className="fas fa-exchange-alt"></i></span>
- <i className="fas fa-apple-alt placeholder-icon white"></i>
- <span className="price-tag">€550</span>
- </div>
- <div className="item-card__info">
- <div className="item-card__title">Apple Watch Ultra 2 · Naranja · 49mm</div>
- </div>
- </div>
- </div>
-
- 
- <nav className="bottom-nav">
- <Link to="/catalogo" className="nav-item"><i className="fas fa-search"></i><span>Buscar</span></Link>
- <Link to="/treqes" className="nav-item"><i className="fas fa-exchange-alt"></i><span>treqes</span></Link>
- <Link to="/subir" className="nav-item nav-add"><div className="nav-add-btn"><i className="fas fa-plus"></i></div></Link>
- <Link to="/avisos" className="nav-item"><i className="fas fa-bell"></i><span>Avisos</span><span className="nav-badge"></span></Link>
- <Link to="/perfil" className="nav-item active"><i className="fas fa-user"></i><span>Perfil</span></Link>
- </nav>
-    </>
+      <nav className="bottom-nav">
+        <Link to="/catalogo" className="nav-item"><i className="fas fa-search"></i><span>Buscar</span></Link>
+        <Link to="/treqes" className="nav-item"><i className="fas fa-exchange-alt"></i><span>Treqes</span></Link>
+        <Link to="/subir" className="nav-item"><div className="nav-add-btn"><i className="fas fa-plus"></i></div></Link>
+        <Link to="/avisos" className="nav-item"><i className="fas fa-bell"></i><span>Avisos</span></Link>
+        <Link to="/perfil" className="nav-item"><i className="fas fa-user"></i><span>Perfil</span></Link>
+      </nav>
+    </div>
   );
 }
