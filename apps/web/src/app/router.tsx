@@ -8,6 +8,7 @@ import { UploadPage } from "@/pages/upload/UploadPage";
 import { MatchesPage } from "@/pages/matches/MatchesPage";
 import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
 import { FavoritesPage } from "@/pages/favorites/FavoritesPage";
+import { BlogPage } from "@/pages/blog/BlogPage";
 import { SettingsPage } from "@/pages/settings/SettingsPage";
 import { EditProfilePage } from "@/pages/editprofile/EditProfilePage";
 import { VerifyPage } from "@/pages/verify/VerifyPage";
@@ -121,8 +122,8 @@ export const router = createHashRouter([
   { path: "/perfil/pagos", element: <PayMethodsPage /> },
   { path: "/perfil/eliminar", element: <DeleteAccountPage /> },
   // Blog
-  { path: "/blog", element: <MibPage page="v13-blog" /> },
-  { path: "/blog/:slug", element: <MibPage page="v13-blog" /> },
+  { path: "/blog", element: <BlogPage /> },
+  { path: "/blog/:slug", element: <BlogPage /> },
   // Legal
   { path: "/legal/aviso", element: <MibPage page="v17-aviso-legal" /> },
   { path: "/legal/privacidad", element: <MibPage page="v18-privacidad" /> },
