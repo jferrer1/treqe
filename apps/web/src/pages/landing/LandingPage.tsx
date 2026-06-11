@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 
+const BASE = import.meta.env.BASE_URL;
+
 export function LandingPage() {
   return (
     <>
       <div className="header">
- <Link to="/" className="logo-link"><img className="treqe-logo" src="/treqe-logo.png" alt="treqe" /></Link>
+ <Link to="/" className="logo-link"><img className="treqe-logo" src={`${BASE}treqe-logo.png`} alt="treqe" /></Link>
  <div className="header-right">
  
  <Link to="#" className="blog-link"><i className="fas fa-book-open"></i>Blog</Link>

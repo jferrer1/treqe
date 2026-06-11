@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 
+const BASE = import.meta.env.BASE_URL;
+
 export function SplashPage() {
   return (
     <>
       <div className="splash">
 
  <div className="top-bar">
- <img src="/treqe-logo.png" alt="treqe" />
+ <img src={`${BASE}treqe-logo.png`} alt="treqe" />
  </div>
 
  <div className="slides-wrap" id="wrap">

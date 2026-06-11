@@ -7,6 +7,7 @@ interface Match {id:string;match_id:string;status:string;my_item?:any;other_item
 const EM=["🎸","📱","🎮","📷","⌚","🎧","🚲","💻","📚","🎯","🖥️","🎹"];
 function hs(s:string):number{let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return Math.abs(h)}
 function bg(id:string):string{const c=["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A","#2A1A1A"];return c[hs(id)%c.length]}
+const BASE = import.meta.env.BASE_URL;
 const KEYS=["active","pending","in_progress","completed"] as const;
 const LABELS=["Activos","Pendientes","En curso","Completados"];
 const BADGE:Record<string,string>={active:'<i class="fas fa-star"></i> Match encontrado',requested:'<i class="fas fa-shopping-cart"></i> Solicitud de compra',pending:'<i class="fas fa-shopping-cart"></i> Solicitud de compra',in_progress:'<i class="fas fa-truck"></i> En camino',completed:'<i class="fas fa-check-circle"></i> Completado'};
@@ -28,7 +29,7 @@ export function MatchesPage(){
   const hasToken=!!localStorage.getItem("treqe-token");
 
   // Extract only styles + bottom nav from MIB, discard all content
-  useEffect(()=>{fetch("/mib/v12-mis-matches.html").then(r=>r.text()).then(raw=>{
+  useEffect(()=>{fetch(`${BASE}mib/v12-mis-matches.html`).then(r=>r.text()).then(raw=>{
     const sm=raw.match(/<style>([\s\S]*?)<\/style>/);
     const bm=raw.match(/<body>([\s\S]*?)<\/body>/);
     setStyles(sm?`<style>${sm[1]}</style>`:"");
@@ -38,7 +39,7 @@ export function MatchesPage(){
       let nav=body.substring(bn);
       const navEnd=nav.indexOf('</nav>');
       if(navEnd>0) nav=nav.substring(0,navEnd+6);
-      nav=nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g,'src="/treqe-logo.png"');
+      nav=nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g,`src="${BASE}treqe-logo.png"`);
       // Convert MIB nav links to SPA routes
       const map:Record<string,string>={"../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo","../v3-subir/":"/subir","../v4-perfil/":"/perfil","../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-favoritos/":"/favoritos"};
       for(const[k,v]of Object.entries(map))nav=nav.split(k).join(v);

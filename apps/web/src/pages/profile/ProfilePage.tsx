@@ -4,6 +4,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
 import { rewriteMibLinks } from "@/lib/mibLinks";
 
+const BASE = import.meta.env.BASE_URL;
+
 interface Product {
   id: string; title: string; price: number; emoji: string; color: string;
   status: "active" | "pending" | "accepted" | "rejected";
@@ -54,7 +56,7 @@ export function ProfilePage() {
 
   // Fetch MIB HTML
   useEffect(() => {
-    fetch("/mib/v4-perfil.html").then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v4-perfil.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       const s = sm ? `<style>${sm[1]}</style>` : "";
@@ -71,7 +73,7 @@ export function ProfilePage() {
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       // Restore dark mode toggle (stripped above)
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       b = rewriteMibLinks(b);
 
       setHtml(s + b);

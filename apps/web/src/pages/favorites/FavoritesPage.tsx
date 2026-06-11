@@ -7,6 +7,7 @@ interface FavoriteItem {
   condition?: string;
 }
 
+const BASE = import.meta.env.BASE_URL;
 const BG = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A"];
 
 export function FavoritesPage() {
@@ -15,7 +16,7 @@ export function FavoritesPage() {
   const hasToken = !!localStorage.getItem("treqe-token");
 
   useEffect(() => {
-    fetch("/mib/v13-favoritos.html").then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v13-favoritos.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       const s = sm ? `<style>${sm[1]}</style>` : "";
@@ -23,7 +24,7 @@ export function FavoritesPage() {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.location.href=&quot;/catalogo&quot;" class="treqe-header__back" aria-label=');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       // Replace MIB hardcoded items with placeholder
       const listStart = b.indexOf('<div class="my-items"');
       const bottomStart = b.indexOf('<nav class="bottom-nav"');

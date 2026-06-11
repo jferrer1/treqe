@@ -4,6 +4,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { rewriteMibLinks } from "@/lib/mibLinks";
 import { api } from "@/lib/api";
 
+const BASE = import.meta.env.BASE_URL;
+
 export function UploadPage() {
   const navigate = useNavigate();
   const user = useAuthStore(s => s.user);
@@ -11,7 +13,7 @@ export function UploadPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/mib/v3-subir.html").then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v3-subir.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       let s = sm ? `<style>${sm[1]}</style>` : "";
@@ -21,7 +23,7 @@ export function UploadPage() {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       // Back button
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.location.href=&quot;/catalogo&quot;" class="treqe-header__back" aria-label=');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       b = rewriteMibLinks(b);
       // Hide preview initially
       b = b.replace(/class="([^"]*preview[^"]*)"/g, 'class="$1" style="display:none"');

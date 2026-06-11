@@ -5,11 +5,13 @@ interface Notif {id:string;type:string;title:string;body:string|null;action_url:
 const ICONS:Record<string,string>={purchase_buyer:"fa-shopping-cart",purchase_seller:"fa-tag",match_found:"fa-handshake",match_accepted:"fa-check-circle",match_rejected:"fa-times-circle",offer_received:"fa-exchange-alt",payment:"fa-credit-card",shipping:"fa-truck",review:"fa-star",system:"fa-bell"};
 const COLORS:Record<string,string>={purchase_buyer:"#1C1915",purchase_seller:"#1C1915",match_found:"#1C1915",match_accepted:"#1C1915",match_rejected:"#DC2626",offer_received:"#1C1915",payment:"#1C1915",shipping:"#1C1915",review:"#1C1915",system:"#8A8580"};
 
+const BASE = import.meta.env.BASE_URL;
+
 export function NotificationsPage(){
   const[styles,setStyles]=useState("");const[bottomNav,setBottomNav]=useState("");
   const[notifs,setNotifs]=useState<Notif[]>([]);const hasToken=!!localStorage.getItem("treqe-token");
 
-  useEffect(()=>{fetch("/mib/v11-notificaciones.html").then(r=>r.text()).then(raw=>{
+  useEffect(()=>{fetch(`${BASE}mib/v11-notificaciones.html`).then(r=>r.text()).then(raw=>{
     const sm=raw.match(/<style>([\s\S]*?)<\/style>/);
     const bm=raw.match(/<body>([\s\S]*?)<\/body>/);
     setStyles(sm?`<style>${sm[1]}</style>`:"");
@@ -19,7 +21,7 @@ export function NotificationsPage(){
       let nav=body.substring(bn);
       const navEnd=nav.indexOf('</nav>');
       if(navEnd>0) nav=nav.substring(0,navEnd+6);
-      nav=nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g,'src="/treqe-logo.png"');
+      nav=nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g,`src="${BASE}treqe-logo.png"`);
       const map:Record<string,string>={"../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo","../v3-subir/":"/subir","../v4-perfil/":"/perfil","../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-favoritos/":"/favoritos"};
       for(const[k,v]of Object.entries(map))nav=nav.split(k).join(v);
       nav=nav.replace(/\s+on\w+="[^"]*"/g,'');
