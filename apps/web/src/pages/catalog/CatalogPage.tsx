@@ -155,6 +155,7 @@ export function CatalogPage() {
       b = b.replace(/class="search-close"/g, 'class="search-close" onclick="event.stopPropagation();document.getElementById(\'searchExpand\').classList.remove(\'open\')"');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
+      b = b.replace(/src="\/treqe-logo\.png"/g, `src="${BASE}treqe-logo.png"`);
       // Rewrite MIB links to SPA routes
       const routeMap: Record<string,string> = {
         "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",
