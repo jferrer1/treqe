@@ -130,13 +130,15 @@ const SUBCATEGORIES: Record<string,string[]> = {
   otros: ["Varios"]
 };
 
+const BASE = import.meta.env.BASE_URL;
+
 export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    fetch("/mib/v1-catalogo.html").then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v1-catalogo.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       let s = sm ? `<style>${sm[1]}</style>` : "";
@@ -152,7 +154,7 @@ export function CatalogPage() {
       // Wire search X button
       b = b.replace(/class="search-close"/g, 'class="search-close" onclick="event.stopPropagation();document.getElementById(\'searchExpand\').classList.remove(\'open\')"');
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       // Rewrite MIB links to SPA routes
       const routeMap: Record<string,string> = {
         "../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo",

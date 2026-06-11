@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 
+const BASE = import.meta.env.BASE_URL;
+
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
   const { login, register, user } = useAuthStore();
@@ -11,7 +13,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   useEffect(() => { if (user) navigate("/catalogo", { replace: true }); }, [user, navigate]);
 
   useEffect(() => {
-    fetch("/mib/v10-registro.html").then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v10-registro.html`).then(r => r.text()).then(raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       let s = sm ? `<style>${sm[1]}</style>` : "";
@@ -20,7 +22,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       // Re-add back button behavior
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, 'src="/treqe-logo.png"');
+      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       // Fix toggle link
       // Replace toggle link — only the one that exists in the original HTML
       if (mode === "login") {

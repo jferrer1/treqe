@@ -5,6 +5,8 @@ import { rewriteMibLinks } from "@/lib/mibLinks";
 import { TradeModal } from "@/components/match/TradeModal";
 import { PurchaseModal } from "@/components/payment/PurchaseModal";
 
+const BASE = import.meta.env.BASE_URL;
+
 interface ProductDetail {
   id: string; title: string; description: string | null;
   price: number; category: string; condition: string;
@@ -27,7 +29,7 @@ export function ProductDetailPage() {
         try { productData = await api.get(`/api/products/${id}`); } catch {}
       }
       setProduct(productData);
-      const raw = await fetch("/mib/v2-detalle.html").then(r => r.text());
+      const raw = await fetch(`${BASE}mib/v2-detalle.html`).then(r => r.text());
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       const style = sm ? `<style>${sm[1]}</style>` : "";
