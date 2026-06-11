@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import { CatalogPage } from "@/pages/catalog/CatalogPage";
 import { ProductDetailPage } from "@/pages/product/ProductDetailPage";
 import { RegisterPage, LoginPage } from "@/pages/register/RegisterPage";
+import { ProfilePage } from "@/pages/profile/ProfilePage";
+import { UploadPage } from "@/pages/upload/UploadPage";
+import { MatchesPage } from "@/pages/matches/MatchesPage";
+import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
+import { FavoritesPage } from "@/pages/favorites/FavoritesPage";
 import { MibPage } from "@/components/layout/MibPage";
 import { RootLayout } from "@/components/layout/RootLayout";
 
@@ -85,12 +90,12 @@ export const router = createHashRouter([
   { path: "/registro", element: <RegisterPage /> },
   { path: "/login", element: <LoginPage /> },
 
-  // === MIB PAGES (diseno completo, no requieren auth) ===
-  { path: "/perfil", element: <MibPage page="v4-perfil" /> },
-  { path: "/subir", element: <MibPage page="v3-subir" /> },
-  { path: "/treqes", element: <MibPage page="v12-mis-matches" /> },
-  { path: "/avisos", element: <MibPage page="v11-notificaciones" /> },
-  { path: "/favoritos", element: <MibPage page="v13-favoritos" /> },
+  // === BACKEND REAL (requieren auth) ===
+  { path: "/perfil", element: <ProfilePage /> },
+  { path: "/subir", element: <UploadPage /> },
+  { path: "/treqes", element: <MatchesPage /> },
+  { path: "/avisos", element: <NotificationsPage /> },
+  { path: "/favoritos", element: <FavoritesPage /> },
   { path: "/onboarding", element: <MibPage page="v5-onboarding" /> },
   { path: "/match/:id", element: <MibPage page="v6-match-notification" /> },
   { path: "/seguimiento/:id", element: <MibPage page="v7-seguimiento" /> },
