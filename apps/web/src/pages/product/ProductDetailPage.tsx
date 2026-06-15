@@ -41,13 +41,11 @@ export function ProductDetailPage() {
       body = body.replace(/<script[\s\S]*?<\/script>/g, "");
       body = body.replace(/\s+on\w+="[^"]*"/g, "");
 
-      // Replace gallery + wish/trade buttons
-      if (photos.length > 0) {
-        const gs = body.indexOf('<div class="gallery" id="gallery">');
-        const info = body.indexOf('<div class="item-info"');
-        if (gs >= 0 && info > gs) {
-          body = body.substring(0, gs) + buildGallery(photos) + body.substring(info);
-        }
+      // Replace gallery — always use new gallery (with placeholders if no photos)
+      const gs = body.indexOf('<div class="gallery" id="gallery">');
+      const info = body.indexOf('<div class="item-info"');
+      if (gs >= 0 && info > gs) {
+        body = body.substring(0, gs) + buildGallery(photos) + body.substring(info);
       }
 
       // Back button
@@ -60,6 +58,14 @@ export function ProductDetailPage() {
       }
 
       body = rewriteMibLinks(body);
+      // Always fix gallery: no scrollbars
+      style += `<style>
+.gallery{overflow:hidden!important;cursor:default!important}
+.gallery-slides{overflow:hidden!important}
+.gallery::-webkit-scrollbar,.gallery-slides::-webkit-scrollbar{display:none}
+.gallery-thumbs::-webkit-scrollbar{display:none}
+.gallery-thumbs{-ms-overflow-style:none;scrollbar-width:none}
+</style>`;
       // Ensure back arrow is always visible (template may hide it on desktop)
       style += "<style>.detail-header{display:flex!important}</style>";
       setHtml(style + body);
@@ -129,36 +135,48 @@ export function ProductDetailPage() {
 }
 
 function buildGallery(photos: string[]): string {
-  const n = photos.length;
+  const n = photos.length || 6; // 6 placeholder slides if no photos
+  const placeholders = ["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A"];
+  const icons = ["fa-guitar","fa-music","fa-play-circle","fa-camera","fa-headphones","fa-gamepad"];
 
-  const slides = photos.map((p, i) =>
-    `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})">
-      <img src="${p}" style="width:100%;height:100%;object-fit:contain;display:block" />
-    </div>`
-  ).join("");
+  const slides = Array.from({length: n}, (_, i) => {
+    if (photos[i]) {
+      return `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})">
+        <img src="${photos[i]}" style="width:100%;height:100%;object-fit:contain;display:block" />
+      </div>`;
+    }
+    return `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})" style="background:${placeholders[i % 6]};display:flex;align-items:center;justify-content:center">
+      <i class="fas ${icons[i % 6]}" style="font-size:4rem;color:rgba(255,255,255,.15)"></i>
+    </div>`;
+  }).join("");
 
-  const dots = photos.map((_, i) =>
+  const dots = Array.from({length: n}, (_, i) =>
     `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="goToSlide(${i})"></span>`
   ).join("");
 
-  const thumbs = photos.map((p, i) =>
-    `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="goToSlide(${i})" style="cursor:pointer;width:56px;height:56px;border:2px solid var(--border);flex-shrink:0;border-radius:4px;overflow:hidden">
-      <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
-    </div>`
-  ).join("");
+  const thumbs = Array.from({length: n}, (_, i) => {
+    const img = photos[i] ? `<img src="${photos[i]}" style="width:100%;height:100%;object-fit:cover" />` : `<div style="width:100%;height:100%;background:${placeholders[i % 6]};display:flex;align-items:center;justify-content:center"><i class="fas ${icons[i % 6]}" style="font-size:.7rem;color:rgba(255,255,255,.3)"></i></div>`;
+    return `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="goToSlide(${i})" style="cursor:pointer;width:56px;height:56px;border:2px solid var(--border);flex-shrink:0;border-radius:4px;overflow:hidden">
+      ${img}
+    </div>`;
+  }).join("");
 
   // Modal slides for fullscreen viewer
-  const modalSlides = photos.map((p, i) =>
-    `<div class="gallery-modal-slide${i === 0 ? " active" : ""}" style="position:absolute;inset:80px 48px 120px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none">
-      <img src="${p}" style="max-width:100%;max-height:100%;object-fit:contain" />
-    </div>`
-  ).join("");
+  const modalSlides = Array.from({length: n}, (_, i) => {
+    const content = photos[i]
+      ? `<img src="${photos[i]}" style="max-width:100%;max-height:100%;object-fit:contain" />`
+      : `<div style="display:flex;align-items:center;justify-content:center;width:70vw;height:60vh;background:${placeholders[i % 6]};border-radius:4px"><i class="fas ${icons[i % 6]}" style="font-size:5rem;color:rgba(255,255,255,.15)"></i></div>`;
+    return `<div class="gallery-modal-slide${i === 0 ? " active" : ""}" style="position:absolute;inset:80px 48px 120px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none">
+      ${content}
+    </div>`;
+  }).join("");
 
-  const modalThumbs = photos.map((p, i) =>
-    `<div class="gallery-modal-thumb${i === 0 ? " active" : ""}" onclick="goToModalSlide(${i})" style="cursor:pointer;width:48px;height:48px;border:2px solid rgba(255,255,255,.25);flex-shrink:0;border-radius:4px;overflow:hidden">
-      <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
-    </div>`
-  ).join("");
+  const modalThumbs = Array.from({length: n}, (_, i) => {
+    const img = photos[i] ? `<img src="${photos[i]}" style="width:100%;height:100%;object-fit:cover" />` : `<div style="width:100%;height:100%;background:${placeholders[i % 6]}"></div>`;
+    return `<div class="gallery-modal-thumb${i === 0 ? " active" : ""}" onclick="goToModalSlide(${i})" style="cursor:pointer;width:48px;height:48px;border:2px solid rgba(255,255,255,.25);flex-shrink:0;border-radius:4px;overflow:hidden">
+      ${img}
+    </div>`;
+  }).join("");
 
   return `<style>
 body{overflow-y:auto!important;overscroll-behavior:auto!important}
