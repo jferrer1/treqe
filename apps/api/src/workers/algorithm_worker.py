@@ -135,7 +135,7 @@ def _run_matching_sync():
                     
                     item_id = str(__import__('uuid').uuid4())
                     conn.execute(text(
-                        "INSERT INTO match_items (id, match_id, user_id, product_id, receives_from, cash_diff, status) "
+                        "INSERT INTO match_participants (id, match_id, user_id, product_id, receives_from, cash_diff, status) "
                         "VALUES (:id, :mid, :uid, :pid, :rfrom, :diff, 'pending')"
                     ), {
                         "id": item_id, "mid": match_id, "uid": uid, "pid": aid,
@@ -146,14 +146,14 @@ def _run_matching_sync():
                 for uid in user_ids:
                     notif_id = str(__import__('uuid').uuid4())
                     conn.execute(text(
-                        "INSERT INTO notifications (id, user_id, type, title, body, action_url, reference_id, created_at, read) "
-                        "VALUES (:id, :uid, 'new_match', :title, :msg, :url, :ref, :now, false)"
+                        "INSERT INTO notifications (id, user_id, type, title, body, action_url, created_at, read) "
+                        "VALUES (:id, :uid, 'new_match', :title, :msg, :url, :now, false)"
                     ), {
                         "id": notif_id, "uid": uid,
                         "title": "Nuevo intercambio encontrado!",
                         "msg": f"Se encontro un circulo de {len(article_ids)} articulos. Revisa tus Treqes!",
                         "url": "/treqes",
-                        "ref": match_id, "now": datetime.utcnow()
+                        "now": datetime.utcnow()
                     })
                 
                 # Update offer statuses to matched (mark related offers)
