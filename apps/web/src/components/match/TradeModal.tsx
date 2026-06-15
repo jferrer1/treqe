@@ -112,8 +112,8 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
           ) : done ? (
             <div style={{textAlign:"center",padding:"48px 20px"}}>
               <div style={{fontSize:"2.5rem",marginBottom:16}}>✅</div>
-              <div style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:"1rem",fontWeight:600,color:"var(--text,#1C1915)",marginBottom:8}}>¡Oferta enviada!</div>
-              <p style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".8rem",color:"var(--text-sub,#55504B)",lineHeight:1.5}}>El vendedor recibirá tu propuesta de intercambio.</p>
+              <div style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:"1rem",fontWeight:600,color:"var(--text,#1C1915)",marginBottom:8}}>¡Trueque ofrecido!</div>
+              <p style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".8rem",color:"var(--text-sub,#55504B)",lineHeight:1.5}}>Ahora nos toca a nosotros hacer nuestra magia.<br/>¡Te notificaremos!</p>
             </div>
           ) : myProducts.length === 0 ? (
             /* No products — MIB CTA */
