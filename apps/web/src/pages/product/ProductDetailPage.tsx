@@ -32,7 +32,7 @@ export function ProductDetailPage() {
       const raw = await fetch(`${BASE}mib/v2-detalle.html`).then(r => r.text());
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
-      const style = sm ? `<style>${sm[1]}</style>` : "";
+      let style = sm ? `<style>${sm[1]}</style>` : "";
       let body = bm ? bm[1] : "";
 
       const photos = productData?.photos?.length ? productData.photos : [];
