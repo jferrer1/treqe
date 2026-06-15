@@ -72,6 +72,56 @@ export function ProductDetailPage() {
     })();
   }, [id]);
 
+  // Register gallery navigation functions on window (innerHTML scripts don't execute)
+  useEffect(() => {
+    (window as any).goToSlide = (i: number) => {
+      const g = document.getElementById('gallery');
+      if (!g) return;
+      g.dataset.slide = String(i);
+      g.querySelectorAll('.gallery-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
+      g.querySelectorAll('.gallery-dot').forEach((d: any, n: number) => d.classList.toggle('active', n === i));
+      document.querySelectorAll('.gallery-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+    };
+    (window as any).openGalleryModal = (i: number) => {
+      const m = document.getElementById('galleryModal');
+      if (!m) return;
+      m.style.display = 'flex';
+      m.dataset.slide = String(i);
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+      document.body.style.overflow = 'hidden';
+    };
+    (window as any).closeGalleryModal = (e?: MouseEvent) => {
+      if (e && e.target !== document.getElementById('galleryModal')) return;
+      const m = document.getElementById('galleryModal');
+      if (m) { m.style.display = 'none'; }
+      document.body.style.overflow = '';
+    };
+    (window as any).goToModalSlide = (i: number) => {
+      const m = document.getElementById('galleryModal');
+      if (!m) return;
+      m.dataset.slide = String(i);
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+    };
+    (window as any).modalPrev = () => {
+      const m = document.getElementById('galleryModal');
+      if (!m) return;
+      const i = parseInt(m.dataset.slide || '0');
+      const slides = m.querySelectorAll('.gallery-modal-slide');
+      const next = (i - 1 + slides.length) % slides.length;
+      (window as any).goToModalSlide(next);
+    };
+    (window as any).modalNext = () => {
+      const m = document.getElementById('galleryModal');
+      if (!m) return;
+      const i = parseInt(m.dataset.slide || '0');
+      const slides = m.querySelectorAll('.gallery-modal-slide');
+      const next = (i + 1) % slides.length;
+      (window as any).goToModalSlide(next);
+    };
+  }, []);
+
   // Auth guard + trade/compra handler
   useEffect(() => {
     if (!html) return;
