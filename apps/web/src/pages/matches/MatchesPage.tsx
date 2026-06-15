@@ -3,68 +3,257 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
 
-interface Match {id:string;match_id:string;status:string;my_item?:any;other_item?:any;other_user?:any;timer_end?:string;type?:string;price?:number}
-const EM=["🎸","📱","🎮","📷","⌚","🎧","🚲","💻","📚","🎯","🖥️","🎹"];
+interface Match {id:string;match_id:string;status:string;my_item?:any;other_item?:any;other_user?:any;timer_end?:string;type?:string;price?:number;participants?:any[];circular_id?:string;cash_diff?:number}
+
+const EM=["🎸","📱","🎮","📷","⌚","🎧","🚲","💻","📚","🎯","🖥️","🎹","🏍️","🎾","🛋️","☕","👟","👜","🎻","📦"];
 function hs(s:string):number{let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return Math.abs(h)}
 function bg(id:string):string{const c=["#2D2D2D","#3A2A1A","#1A2A3A","#2A1A2A","#1A3A2A","#3A3A1A","#2A2A3A","#2A1A1A"];return c[hs(id)%c.length]}
-const BASE = import.meta.env.BASE_URL;
-const KEYS=["active","pending","in_progress","completed"] as const;
-const LABELS=["Activos","Pendientes","En curso","Completados"];
-const BADGE:Record<string,string>={active:'<i class="fas fa-star"></i> Match encontrado',requested:'<i class="fas fa-shopping-cart"></i> Solicitud de compra',pending:'<i class="fas fa-shopping-cart"></i> Solicitud de compra',in_progress:'<i class="fas fa-truck"></i> En camino',completed:'<i class="fas fa-check-circle"></i> Completado'};
+function em(id:string):string{return EM[hs(id)%EM.length]}
 
-function renderPurchase(m:Match):string{
-  const e=m.my_item?.emoji||EM[hs(m.my_item?.id||"0")%EM.length];
-  const seller=m.other_user?.name||"Vendedor";const loc=m.other_user?.location||"";const price=m.my_item?.price||m.price||0;
-  return `<div class="match-card" style="border-left:3px solid var(--text)"><div class="match-card__header"><span class="match-card__id">#ORD-${(m.id||"").slice(-6)}</span><span class="match-card__status pending-status">${BADGE[m.status]||BADGE.requested}</span></div><div class="item-compare"><div class="item-compare__item" style="grid-column:1/-1;text-align:left"><div style="display:flex;align-items:center;gap:14px"><div style="width:50px;height:50px;background:${bg(m.my_item?.id||"0")};border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.3rem">${e}</div><div style="flex:1"><div style="font-size:.85rem;font-weight:500">${m.my_item?.title||"Artículo"}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:#A09A94;margin-top:2px">de ${seller}${loc?" · "+loc:""}${price?" · "+price+"€":""}</div></div></div></div></div><div class="progress-bar-wrap"><span style="font-weight:600"><i class="fas fa-clock"></i> Esperando respuesta del vendedor</span></div><div class="action-buttons"><button class="action-btn action-btn--secondary" style="flex:1" data-action="cancel" data-match-id="${m.id}">Cancelar</button></div></div>`;
+function timeLeft(dateStr: string|null): string {
+  if (!dateStr) return "";
+  const d = new Date(dateStr).getTime() - Date.now();
+  if (d <= 0) return "Expirado";
+  const h = Math.floor(d/3600000);
+  const m = Math.floor((d%3600000)/60000);
+  return h>0 ? `Quedan ${h}h ${m}min` : `Quedan ${m}min`;
 }
-function renderMatch(m:Match):string{
-  const me=m.my_item?.emoji||EM[hs(m.my_item?.id||"0")%EM.length];const oe=m.other_item?.emoji||EM[hs(m.other_item?.id||"1")%EM.length];
-  return `<div class="match-card" style="border-left:3px solid var(--text)"><div class="match-card__header"><span class="match-card__id">#TRX-${(m.match_id||m.id||"").slice(-6)}</span><span class="match-card__status ${m.status==="active"?"active-status":"pending-status"}">${BADGE[m.status]||m.status}</span></div><div class="item-compare"><div class="item-compare__item"><div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;background:${bg(m.my_item?.id||"0")};border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">${me}</div><div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.my_item?.title||"Mi artículo"}</div><div style="font-family:var(--font-mono);font-size:.48rem;color:var(--text-dim)">${m.my_item?.price?"\u20AC"+m.my_item.price:""}</div></div></div></div><div class="item-compare__arrow"><i class="fas fa-exchange-alt"></i></div><div class="item-compare__item"><div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;background:${bg(m.other_item?.id||"1")};border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">${oe}</div><div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.other_item?.title||"Otro artículo"}</div><div style="font-family:var(--font-mono);font-size:.48rem;color:var(--text-dim)">${m.other_user?.name||""}${m.other_user?.location?" · "+m.other_user.location:""}${m.other_item?.price?" · \u20AC"+m.other_item.price:""}</div></div></div></div></div>${m.status==="active"?`<div class="action-buttons"><button class="action-btn action-btn--primary" data-action="accept" data-match-id="${m.id||m.match_id}">Aceptar</button><button class="action-btn action-btn--secondary" data-action="reject" data-match-id="${m.id||m.match_id}">Rechazar</button></div>`:m.status==="in_progress"?`<div class="progress-bar-wrap"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>`:""}</div>`;
+
+const BASE = import.meta.env.BASE_URL;
+const KEYS = ["active","pending","in_progress","completed"] as const;
+const LABELS = ["Activos","Pendientes","En curso","Completados"];
+const BADGE:Record<string,{html:string;cls:string}> = {
+  active: {html:'<i class="fas fa-star"></i> Match encontrado', cls:"badge-active"},
+  pending: {html:'<i class="fas fa-clock"></i> Pendiente', cls:"badge-pending"},
+  in_progress: {html:'<i class="fas fa-truck"></i> En camino', cls:"badge-progress"},
+  completed: {html:'<i class="fas fa-check-circle"></i> Completado', cls:"badge-done"},
+};
+
+function renderMatchCard(m: Match, participants?: any[]): string {
+  const badge = BADGE[m.status] || BADGE.pending;
+  const id = (m.match_id || m.id || "").slice(-6);
+  const myEmoji = m.my_item?.photos?.[0] ? `<img src="${m.my_item.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(m.my_item?.id||"0")}</span>`;
+  const myTitle = m.my_item?.title || "Mi artículo";
+  const myPrice = m.my_item?.price ? `€${m.my_item.price}` : "";
+  const t = timeLeft(m.timer_end || null);
+
+  if (m.type === "purchase") {
+    // Purchase card
+    return `<div class="match-card" style="border-left:3px solid var(--text,#1C1915)">
+      <div class="match-card__header">
+        <span class="match-card__id">#ORD-${id}</span>
+        <span class="match-card__badge ${badge.cls}">${badge.html}</span>
+      </div>
+      <div class="match-card__item">
+        <div class="match-card__img" style="background:${bg(m.my_item?.id||"0")}">${myEmoji}</div>
+        <div class="match-card__info">
+          <div class="match-card__title">${myTitle}</div>
+          <div class="match-card__meta">de ${m.other_user?.name||"Vendedor"}${m.other_user?.location?" · "+m.other_user.location:""} · ${myPrice}</div>
+        </div>
+      </div>
+      <div class="match-card__progress">
+        <span><i class="fas fa-clock"></i> Esperando respuesta del vendedor</span>
+        ${t ? `<span class="match-card__timer">${t}</span>` : ''}
+      </div>
+      <div class="match-card__actions">
+        <button class="action-btn action-btn--secondary" data-action="cancel" data-match-id="${m.id}">Cancelar</button>
+      </div>
+    </div>`;
+  }
+
+  // Trade/match card with circle visualization
+  const parts = participants || [];
+  const circleHtml = parts.length > 0 ? parts.map((p: any, i: number) => {
+    const isMe = p.user_id === (m.my_item?.user_id || "");
+    const pEmoji = p.product?.photos?.[0] ? `<img src="${p.product.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(p.product_id||String(i))}</span>`;
+    return `<div class="circle-step${isMe ? " circle-step--me" : ""}">
+      <div class="circle-step__img" style="background:${bg(p.product_id||String(i))}">${pEmoji}</div>
+      <div class="circle-step__label">${p.product?.title || "Artículo "+(i+1)}</div>
+      <div class="circle-step__user">${isMe ? "Tú" : (p.user?.name || "Usuario")}</div>
+      <div class="circle-step__status">${p.status==="accepted"?'<i class="fas fa-check" style="color:#22c55e"></i> Aceptado':p.status==="rejected"?'<i class="fas fa-times" style="color:#DC2626"></i> Rechazado':'<i class="fas fa-clock" style="color:#f59e0b"></i> Decidir'}</div>
+    </div>`;
+  }).join('<div class="circle-arrow"><i class="fas fa-arrow-right"></i></div>') : '';
+
+  const otherEmoji = m.other_item?.photos?.[0] ? `<img src="${m.other_item.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(m.other_item?.id||"1")}</span>`;
+
+  return `<div class="match-card" style="border-left:3px solid var(--text,#1C1915)">
+    <div class="match-card__header">
+      <span class="match-card__id">#TRX-${id}</span>
+      <span class="match-card__badge ${badge.cls}">${badge.html}</span>
+      ${t ? `<span class="match-card__timer">${t}</span>` : ''}
+    </div>
+    ${(m.status==="active"||m.status==="pending") && circleHtml ? `<div class="match-card__circle">${circleHtml}</div>` : ''}
+    <div class="trade-compare">
+      <div class="trade-compare__side">
+        <div class="trade-compare__img" style="background:${bg(m.other_item?.id||"1")}">${otherEmoji}</div>
+        <div class="trade-compare__label">RECIBES</div>
+        <div class="trade-compare__title">${m.other_item?.title||"Otro artículo"}</div>
+        <div class="trade-compare__user">de ${m.other_user?.name||"Usuario"}</div>
+        <div class="trade-compare__price">${m.other_item?.price?"€"+m.other_item.price:""}</div>
+      </div>
+      <div class="trade-compare__icon"><i class="fas fa-exchange-alt"></i></div>
+      <div class="trade-compare__side">
+        <div class="trade-compare__img" style="background:${bg(m.my_item?.id||"0")}">${myEmoji}</div>
+        <div class="trade-compare__label">DAS TÚ</div>
+        <div class="trade-compare__title">${myTitle}</div>
+        <div class="trade-compare__user">de ti</div>
+        <div class="trade-compare__price">${myPrice}</div>
+      </div>
+    </div>
+    ${m.cash_diff && m.cash_diff !== 0 ? `<div class="trade-diff"><span>DIFERENCIA</span><span>${m.cash_diff > 0 ? `Pagas €${m.cash_diff.toFixed(2)}` : `Recibes €${Math.abs(m.cash_diff).toFixed(2)}`}</span></div>` : ''}
+    ${m.status==="active" ? `<div class="match-card__actions">
+      <button class="action-btn action-btn--primary" data-action="accept" data-match-id="${m.id||m.match_id}">Aceptar</button>
+      <button class="action-btn action-btn--secondary" data-action="reject" data-match-id="${m.id||m.match_id}">Rechazar</button>
+    </div>` : m.status==="in_progress" ? `<div class="match-card__progress"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>` : ''}
+  </div>`;
 }
 
 export function MatchesPage(){
-  const nav=useNavigate();const user=useAuthStore(s=>s.user);
-  const [styles,setStyles]=useState("");const [bottomNav,setBottomNav]=useState("");
-  const [matches,setMatches]=useState<Match[]>([]);const [tab,setTab]=useState("active");
-  const hasToken=!!localStorage.getItem("treqe-token");
+  const nav = useNavigate();
+  const user = useAuthStore(s => s.user);
+  const [styles, setStyles] = useState("");
+  const [bottomNav, setBottomNav] = useState("");
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [tab, setTab] = useState("active");
+  const hasToken = !!localStorage.getItem("treqe-token");
 
-  // Extract only styles + bottom nav from MIB, discard all content
+  // MIB styles
   useEffect(()=>{fetch(`${BASE}mib/v12-mis-matches.html`).then(r=>r.text()).then(raw=>{
-    const sm=raw.match(/<style>([\s\S]*?)<\/style>/);
-    const bm=raw.match(/<body>([\s\S]*?)<\/body>/);
-    setStyles(sm?`<style>${sm[1]}</style>`:"");
-    let body=bm?bm[1]:"";
-    const bn=body.indexOf('<nav class="bottom-nav">');
-    if(bn>0){
-      let nav=body.substring(bn);
-      const navEnd=nav.indexOf('</nav>');
-      if(navEnd>0) nav=nav.substring(0,navEnd+6);
-      nav=nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g,`src="${BASE}treqe-logo.png"`);
-      // Convert MIB nav links to SPA routes
-      const map:Record<string,string>={"../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo","../v3-subir/":"/subir","../v4-perfil/":"/perfil","../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-favoritos/":"/favoritos"};
-      for(const[k,v]of Object.entries(map))nav=nav.split(k).join(v);
-      nav=nav.replace(/onclick="[^"]*switchTab[^"]*"/g,'');
-      nav=nav.replace(/\s+on\w+="[^"]*"/g,'');
-      nav=nav.replace(/<script[\s\S]*?<\/script>/g,'');
+    const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
+    const extraCSS = `
+      .tabs { display: flex; gap: 8px; padding: 12px 16px; background: var(--bg,#F9F7F2); overflow-x: auto; scrollbar-width: none; }
+      .tab { flex-shrink: 0; padding: 8px 16px; font-family: 'IBM Plex Mono', monospace; font-size: .52rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; border: 1px solid var(--border,#E5E0D8); cursor: pointer; transition: all .2s; background: #FFF; color: #55504B; }
+      .tab.active { background: #1C1915; color: #F9F7F2; border-color: #1C1915; }
+      .tab .count { font-size: .45rem; opacity: .7; margin-left: 4px; }
+      .match-card { background: var(--surface,#FFF); margin: 8px 16px; border: 1px solid var(--border,#E5E0D8); overflow: hidden; }
+      .match-card__header { display: flex; align-items: center; gap: 8px; padding: 14px 16px 10px; flex-wrap: wrap; }
+      .match-card__id { font-family: 'IBM Plex Mono', monospace; font-size: .55rem; font-weight: 600; color: var(--text,#1C1915); letter-spacing: .04em; }
+      .match-card__badge { font-size: .6rem; font-weight: 500; padding: 2px 0; display: flex; align-items: center; gap: 5px; }
+      .badge-active { color: #1C1915; } .badge-pending { color: #f59e0b; } .badge-progress { color: #3b82f6; } .badge-done { color: #22c55e; }
+      .match-card__timer { font-family: 'IBM Plex Mono', monospace; font-size: .48rem; color: var(--text-dim,#8A8580); margin-left: auto; }
+      .match-card__item { display: flex; align-items: center; gap: 14px; padding: 0 16px 14px; }
+      .match-card__img { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border: 1px solid var(--border,#E5E0D8); flex-shrink: 0; overflow: hidden; }
+      .match-card__info { flex: 1; min-width: 0; }
+      .match-card__title { font-size: .85rem; font-weight: 500; color: var(--text,#1C1915); }
+      .match-card__meta { font-family: 'IBM Plex Mono', monospace; font-size: .5rem; color: var(--text-dim,#8A8580); margin-top: 3px; }
+      .match-card__progress { padding: 10px 16px; background: var(--bg,#F9F7F2); font-size: .6rem; color: var(--text-sub,#55504B); display: flex; align-items: center; gap: 6px; justify-content: space-between; }
+      .match-card__actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border,#E5E0D8); }
+      .action-btn { flex: 1; padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: .55rem; font-weight: 500; text-transform: uppercase; letter-spacing: .1em; cursor: pointer; border: none; }
+      .action-btn--primary { background: #1C1915; color: #F9F7F2; }
+      .action-btn--secondary { background: #FFF; color: #55504B; border: 1px solid var(--border,#E5E0D8); }
+      .match-card__circle { display: flex; align-items: center; padding: 12px 16px; overflow-x: auto; gap: 0; scrollbar-width: none; }
+      .circle-step { text-align: center; flex-shrink: 0; width: 90px; }
+      .circle-step__img { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin: 0 auto 4px; border: 1px solid var(--border,#E5E0D8); overflow: hidden; }
+      .circle-step--me .circle-step__img { border: 2px solid #1C1915; }
+      .circle-step__label { font-size: .6rem; font-weight: 500; color: var(--text,#1C1915); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .circle-step__user { font-size: .5rem; color: var(--text-dim,#8A8580); }
+      .circle-step__status { font-size: .45rem; margin-top: 2px; }
+      .circle-arrow { color: var(--text-dim,#8A8580); font-size: .5rem; padding: 0 4px; }
+      .trade-compare { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+      .trade-compare__side { flex: 1; text-align: center; }
+      .trade-compare__img { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 6px; border: 1px solid var(--border,#E5E0D8); overflow: hidden; }
+      .trade-compare__label { font-family: 'IBM Plex Mono', monospace; font-size: .45rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim,#8A8580); margin-bottom: 2px; }
+      .trade-compare__title { font-size: .75rem; font-weight: 500; color: var(--text,#1C1915); }
+      .trade-compare__user { font-size: .55rem; color: var(--text-dim,#8A8580); }
+      .trade-compare__price { font-family: 'IBM Plex Mono', monospace; font-size: .65rem; font-weight: 600; color: var(--text,#1C1915); margin-top: 2px; }
+      .trade-compare__icon { color: var(--text-dim,#8A8580); font-size: .8rem; }
+      .trade-diff { display: flex; justify-content: space-between; padding: 10px 16px; background: var(--bg,#F9F7F2); border-top: 1px dashed var(--border,#E5E0D8); border-bottom: 1px dashed var(--border,#E5E0D8); font-family: 'IBM Plex Mono', monospace; font-size: .5rem; text-transform: uppercase; letter-spacing: .06em; }
+      .notif-empty { text-align: center; padding: 80px 20px; }
+      .notif-empty i { font-size: 2.4rem; display: block; margin-bottom: 16px; opacity: .2; color: var(--text-dim,#8A8580); }
+    `;
+    setStyles(sm ? `<style>${sm[1]}${extraCSS}</style>` : `<style>${extraCSS}</style>`);
+    
+    const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
+    let body = bm ? bm[1] : "";
+    const bn = body.indexOf('<nav class="bottom-nav">');
+    if (bn > 0) {
+      let nav = body.substring(bn);
+      const navEnd = nav.indexOf('</nav>');
+      if (navEnd > 0) nav = nav.substring(0, navEnd + 6);
+      nav = nav.replace(/src="..\/..\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
+      const map: Record<string,string> = {"../v16-portada/":"/","../v1-catalogo/":"/catalogo","../v2-detalle/":"/articulo/demo","../v3-subir/":"/subir","../v4-perfil/":"/perfil","../v8-ajustes/":"/ajustes","../v11-notificaciones/":"/avisos","../v12-mis-matches/":"/treqes","../v13-blog/":"/blog","../v13-favoritos/":"/favoritos"};
+      for (const [k,v] of Object.entries(map)) nav = nav.split(k).join(v);
+      nav = nav.replace(/\s+on\w+="[^"]*"/g, '');
+      nav = nav.replace(/<script[\s\S]*?<\/script>/g, '');
       setBottomNav(nav);
     }
-  })},[]);
+  })}, []);
 
-  useEffect(()=>{if(!hasToken)return;(async()=>{try{const[mr,pr]=await Promise.all([api.get("/api/matches/"),api.get("/api/purchases/")]);const trades=((mr as any).items||mr||[]).map((m:any)=>({...m,type:"trade"}));const seen=new Set<string>();const purchases=((pr as any).items||pr||[]).filter((p:any)=>!seen.has(p.id)&&seen.add(p.id)).map((p:any)=>({...p,type:"purchase",id:p.id,match_id:p.id,my_item:p.product||{title:p.product?.title||"Artículo",price:p.price},other_item:{title:"Compra directa",price:p.price},other_user:p.seller||{name:"Vendedor"},status:p.status==="requested"?"pending":p.status==="accepted"?"in_progress":p.status}));setMatches([...trades,...purchases])}catch{}})()},[hasToken]);
+  useEffect(()=>{
+    if (!hasToken) return;
+    (async()=>{
+      try {
+        const [mr, pr] = await Promise.all([
+          api.get("/api/matches/"),
+          api.get("/api/purchases/")
+        ]);
+        const trades = ((mr as any).items || mr || []).map((m: any) => ({...m, type: "trade"}));
+        const seen = new Set<string>();
+        const purchases = ((pr as any).items || pr || []).filter((p: any) => !seen.has(p.id) && seen.add(p.id)).map((p: any) => ({
+          ...p, type: "purchase", id: p.id, match_id: p.id,
+          my_item: p.product || {title: p.product?.title || "Artículo", price: p.price},
+          other_item: {title: "Compra directa", price: p.price},
+          other_user: p.seller || {name: "Vendedor"},
+          status: p.status === "requested" ? "pending" : p.status === "accepted" ? "in_progress" : p.status
+        }));
+        setMatches([...trades, ...purchases]);
+      } catch {}
+    })();
+  }, [hasToken]);
 
-  useEffect(()=>{const h=(e:MouseEvent)=>{const btn=(e.target as HTMLElement).closest("[data-action]") as HTMLElement|null;if(!btn)return;e.preventDefault();e.stopPropagation();if(!user){nav("/login");return}const id=btn.dataset.matchId||"";if(btn.dataset.action==="cancel"){api.post(`/api/purchases/${id}/cancel`).then(()=>setMatches(prev=>prev.map(m=>m.id===id?{...m,status:"cancelled"}:m))).catch(console.error)}else{api.post(`/api/matches/${id}/${btn.dataset.action}`).then(()=>setMatches(prev=>prev.map(m=>(m.id===id||m.match_id===id)?{...m,status:btn.dataset.action==="accept"?"in_progress":"cancelled"}:m))).catch(console.error)}};document.addEventListener("click",h);return()=>document.removeEventListener("click",h)},[styles,user,nav]);
+  // Action handler
+  useEffect(()=>{
+    const h = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement).closest("[data-action]") as HTMLElement|null;
+      if (!btn) return;
+      e.preventDefault(); e.stopPropagation();
+      if (!user) { nav("/login"); return; }
+      const id = btn.dataset.matchId || "";
+      if (btn.dataset.action === "cancel") {
+        api.post(`/api/purchases/${id}/cancel`).then(() => setMatches(prev => prev.map(m => m.id === id ? {...m, status:"cancelled"} : m))).catch(()=>{});
+      } else {
+        api.post(`/api/matches/${id}/${btn.dataset.action}`).then(() => setMatches(prev => prev.map(m => (m.id===id||m.match_id===id) ? {...m, status: btn.dataset.action==="accept"?"in_progress":"cancelled"} : m))).catch(()=>{});
+      }
+    };
+    document.addEventListener("click", h);
+    return () => document.removeEventListener("click", h);
+  }, [styles, user, nav]);
 
-  const counts=[matches.filter(m=>(m.status==="active"||m.status==="requested")&&m.type!=="purchase").length,matches.filter(m=>m.status==="pending"||(m.status==="requested"&&m.type==="purchase")).length,matches.filter(m=>m.status==="in_progress"||m.status==="accepted").length,matches.filter(m=>m.status==="completed").length];
-  const filtered=matches.filter(m=>{if(tab==="active")return(m.status==="active"||m.status==="requested")&&m.type!=="purchase";if(tab==="pending")return m.status==="pending"||(m.status==="requested"&&m.type==="purchase");if(tab==="in_progress")return m.status==="in_progress"||m.status==="accepted";return m.status==="completed"});
-  const cards=filtered.length===0?`<div style="text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em"><i class="fas fa-exchange-alt" style="font-size:2rem;display:block;margin-bottom:16px;opacity:.3"></i>No hay treqes todavía<br><br><a href="/catalogo" style="font-family:var(--font-mono);font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">Explorar catálogo</a></div>`:filtered.map(m=>m.type==="purchase"?renderPurchase(m):renderMatch(m)).join("");
-  const tabsHtml=`<div class="tabs" style="display:flex;gap:6px;padding:12px 16px;background:var(--bg,#F9F7F2);overflow-x:auto;scrollbar-width:none">${KEYS.map((k,i)=>`<button class="tab${tab===k?" active":""}" style="flex-shrink:0;padding:8px 14px;font-family:'IBM Plex Mono',monospace;font-size:.5rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;background:${tab===k?"#1C1915":"#FFF"};border:1px solid ${tab===k?"#1C1915":"#E5E0D8"};color:${tab===k?"#F9F7F2":"#55504B"};transition:all .2s;cursor:pointer" id="treqes-tab-${i}">${LABELS[i]} <span class="count">${counts[i]}</span></button>`).join("")}</div><div id="treqes-content">${cards}</div>`;
+  // Tab wire
+  useEffect(()=>{
+    const h = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement).closest('#treqes-tab-0,#treqes-tab-1,#treqes-tab-2,#treqes-tab-3');
+      if (btn) { const i = parseInt((btn as HTMLElement).id.replace('treqes-tab-','')); setTab(KEYS[i]); }
+    };
+    document.addEventListener('click', h);
+    return () => document.removeEventListener('click', h);
+  }, []);
 
-  // Wire tab clicks via event delegation
-  useEffect(()=>{const h=(e:MouseEvent)=>{const btn=(e.target as HTMLElement).closest('#treqes-tab-0,#treqes-tab-1,#treqes-tab-2,#treqes-tab-3');if(btn){const i=parseInt((btn as HTMLElement).id.replace('treqes-tab-',''));setTab(KEYS[i])}};document.addEventListener('click',h);return()=>document.removeEventListener('click',h)},[]);
+  const counts = [
+    matches.filter(m => (m.status==="active"||m.status==="requested") && m.type!=="purchase").length,
+    matches.filter(m => m.status==="pending"||(m.status==="requested"&&m.type==="purchase")).length,
+    matches.filter(m => m.status==="in_progress"||m.status==="accepted").length,
+    matches.filter(m => m.status==="completed").length,
+  ];
 
-  const header=`<div class="treqe-header"><button class="treqe-header__back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button><span class="treqe-header__title">Treqes</span><span class="treqe-header__right"></span></div>`;
-  const cta=`<div style="text-align:center;padding:60px 20px"><div style="font-size:2rem;margin-bottom:12px;color:var(--text-dim)"><i class="fas fa-exchange-alt"></i></div><h2 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2><p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesión para ver tus intercambios</p><a href="/login" style="font-family:var(--font-mono);font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);border:none;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Iniciar sesión</a></div>`;
+  const filtered = matches.filter(m => {
+    if (tab==="active") return (m.status==="active"||m.status==="requested") && m.type!=="purchase";
+    if (tab==="pending") return m.status==="pending"||(m.status==="requested"&&m.type==="purchase");
+    if (tab==="in_progress") return m.status==="in_progress"||m.status==="accepted";
+    return m.status==="completed";
+  });
 
-  if(!styles)return<div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return<div dangerouslySetInnerHTML={{__html:`${styles}${header}${hasToken?`<div id="treqes-tabs">${tabsHtml}</div>`:cta}${bottomNav}`}}/>;
+  const tabsHtml = KEYS.map((k, i) =>
+    `<button class="tab${tab===k?" active":""}" id="treqes-tab-${i}">${LABELS[i]} <span class="count">${counts[i]}</span></button>`
+  ).join("");
+
+  const cards = filtered.length === 0
+    ? `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">No hay treqes todavía</p><br><a href="/catalogo" style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">Explorar catálogo</a></div>`
+    : filtered.map(m => renderMatchCard(m, m.participants)).join("");
+
+  const header = `<div class="treqe-header"><button class="treqe-header__back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button><span class="treqe-header__title">Mis Treqes</span><span class="treqe-header__right"></span></div>`;
+  const cta = `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><h2 style="font-family:'IBM Plex Sans',sans-serif;font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesión para ver tus intercambios</p><a href="/login" style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Iniciar sesión</a></div>`;
+
+  if (!styles) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+  return <div dangerouslySetInnerHTML={{__html:`${styles}${header}${hasToken ? `<div class="tabs">${tabsHtml}</div><div id="treqes-cards">${cards}</div>` : cta}${bottomNav}`}} />;
 }
