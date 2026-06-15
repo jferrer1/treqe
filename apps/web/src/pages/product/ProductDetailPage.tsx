@@ -216,7 +216,7 @@ function buildGallery(photos: string[]): string {
     const content = photos[i]
       ? `<img src="${photos[i]}" style="max-width:100%;max-height:100%;object-fit:contain" />`
       : `<div style="display:flex;align-items:center;justify-content:center;width:70vw;height:60vh;background:${placeholders[i % 6]};border-radius:4px"><i class="fas ${icons[i % 6]}" style="font-size:5rem;color:rgba(255,255,255,.15)"></i></div>`;
-    return `<div class="gallery-modal-slide${i === 0 ? " active" : ""}" style="position:absolute;inset:80px 48px 120px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none">
+    return `<div class="gallery-modal-slide${i === 0 ? " active" : ""}" style="position:absolute;inset:80px 48px 120px;display:flex;align-items:center;justify-content:center;transition:opacity .2s">
       ${content}
     </div>`;
   }).join("");
@@ -238,6 +238,7 @@ body{overflow-y:auto!important;overscroll-behavior:auto!important}
 .gallery-wish.liked{color:#E74C3C!important}
 .gallery-trade.requested{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important}
 .gallery-wish{width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:var(--text-dim)}
+.gallery-modal-slide{opacity:0;pointer-events:none}
 .gallery-modal-slide.active{opacity:1;pointer-events:auto}
 .gallery-modal-thumb.active{border-color:#FFF!important}
 @media(min-width:1024px){.detail-header{display:flex!important}.detail-layout{display:block!important}.gallery{max-width:500px;margin:0 auto}}
