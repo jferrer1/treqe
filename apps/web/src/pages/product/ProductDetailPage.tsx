@@ -185,6 +185,7 @@ export function ProductDetailPage() {
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
   return (
     <>
+      <div ref={containerRef} key="detail-content" />
       {tradeOpen && (
         <TradeModal
           wantedProductId={id || ""}
@@ -205,7 +206,6 @@ export function ProductDetailPage() {
           onClose={() => setPurchaseOpen(false)}
         />
       )}
-      <div ref={containerRef} />
     </>
   );
 }
