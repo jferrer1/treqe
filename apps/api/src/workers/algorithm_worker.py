@@ -104,7 +104,7 @@ def _run_matching_sync():
                 "users_with_offers": len(user_offers),
                 "wants_detail": {k[:8]: [x[:8] for x in list(v)[:3]] for k, v in list(wants.items())[:5]},
                 "sample_products": [{ "id": pid[:8], "user": p["user_id"][:8], "title": p["title"][:30]} 
-                    for pid, p in list(products.items())[:5]}
+                    for pid, p in list(products.items())[:5]]
             }
             
             # Find cycles (simple DFS)
