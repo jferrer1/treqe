@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
 import { rewriteMibLinks } from "@/lib/mibLinks";
@@ -20,6 +20,8 @@ export function ProductDetailPage() {
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [tradeOpen, setTradeOpen] = useState(false);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const htmlPushed = useRef(false);
   const hasToken = !!localStorage.getItem("treqe-token");
 
   useEffect(() => {
@@ -71,6 +73,14 @@ export function ProductDetailPage() {
       setHtml(style + body);
     })();
   }, [id]);
+
+  // Push HTML to DOM via ref — avoids React resetting innerHTML on re-renders
+  useEffect(() => {
+    if (containerRef.current && html && !htmlPushed.current) {
+      containerRef.current.innerHTML = html;
+      htmlPushed.current = true;
+    }
+  }, [html]);
 
   // Register gallery navigation functions on window (innerHTML scripts don't execute)
   useEffect(() => {
@@ -195,7 +205,7 @@ export function ProductDetailPage() {
           onClose={() => setPurchaseOpen(false)}
         />
       )}
-      <div dangerouslySetInnerHTML={{__html: html}} />
+      <div ref={containerRef} />
     </>
   );
 }
