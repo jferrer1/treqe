@@ -116,25 +116,43 @@ def _run_matching_sync():
                 article_ids = cycle["article_ids"]
                 user_ids = cycle["user_ids"]
                 score = cycle["score"]
+                n = len(article_ids)
                 
                 # Create match
                 match_id = str(__import__('uuid').uuid4())
                 conn.execute(text(
-                    "INSERT INTO matches (id, article_ids, user_ids, status, score, created_at) "
-                    "VALUES (:id, :aids, :uids, 'pending', :score, :now)"
-                ), {"id": match_id, "aids": json.dumps(article_ids), "uids": json.dumps(user_ids),
-                    "score": score, "now": datetime.utcnow()})
+                    "INSERT INTO matches (id, circular_id, status, created_at) "
+                    "VALUES (:id, :cid, 'pending', :now)"
+                ), {"id": match_id, "cid": match_id, "now": datetime.utcnow()})
+                
+                # Create match items for each article in the cycle
+                for i, aid in enumerate(article_ids):
+                    uid = products[aid]["user_id"]
+                    # Previous article's owner gives their product to this user
+                    prev_aid = article_ids[(i - 1 + n) % n]
+                    receives_from = products[prev_aid]["user_id"]
+                    price_diff = products[prev_aid]["price"] - products[aid]["price"]
+                    
+                    item_id = str(__import__('uuid').uuid4())
+                    conn.execute(text(
+                        "INSERT INTO match_items (id, match_id, user_id, product_id, receives_from, cash_diff, status) "
+                        "VALUES (:id, :mid, :uid, :pid, :rfrom, :diff, 'pending')"
+                    ), {
+                        "id": item_id, "mid": match_id, "uid": uid, "pid": aid,
+                        "rfrom": receives_from, "diff": price_diff
+                    })
                 
                 # Create notifications for each user in the cycle
                 for uid in user_ids:
                     notif_id = str(__import__('uuid').uuid4())
                     conn.execute(text(
-                        "INSERT INTO notifications (id, user_id, type, title, message, reference_id, created_at, is_read) "
-                        "VALUES (:id, :uid, 'new_match', :title, :msg, :ref, :now, false)"
+                        "INSERT INTO notifications (id, user_id, type, title, body, action_url, reference_id, created_at, read) "
+                        "VALUES (:id, :uid, 'new_match', :title, :msg, :url, :ref, :now, false)"
                     ), {
                         "id": notif_id, "uid": uid,
                         "title": "Nuevo intercambio encontrado!",
                         "msg": f"Se encontro un circulo de {len(article_ids)} articulos. Revisa tus Treqes!",
+                        "url": "/treqes",
                         "ref": match_id, "now": datetime.utcnow()
                     })
                 
