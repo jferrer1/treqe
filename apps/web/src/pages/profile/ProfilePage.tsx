@@ -75,6 +75,8 @@ export function ProfilePage() {
       b = b.replace(/(<button class="dm-toggle")>Dark<\/button>/, '$1 onclick="document.body.classList.toggle(&quot;dark&quot;);localStorage.setItem(&quot;treqe-darkmode&quot;,document.body.classList.contains(&quot;dark&quot;))">Dark</button>');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       b = rewriteMibLinks(b);
+      // Remove MIB dark toggle — rendered in React header/CTA instead
+      b = b.replace(/<button class="dm-toggle"[^>]*>[\s\S]*?<\/button>/g, '');
 
       setHtml(s + b);
     });
@@ -200,7 +202,8 @@ export function ProfilePage() {
       <h2 style="font-family:var(--font-sans);font-size:1.15rem;font-weight:500;color:var(--text);margin-bottom:8px">Tu perfil te espera</h2>
       <p style="font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);margin-bottom:28px;line-height:1.5;text-transform:uppercase;letter-spacing:.08em">Reg\u00EDstrate o inicia sesi\u00F3n<br>para ver tu perfil, scoring y art\u00EDculos.</p>
       <button onclick="window.location.href='/login'" style="display:block;width:100%;max-width:320px;margin:0 auto 10px;font-family:var(--font-mono);font-size:.6rem;font-weight:500;padding:12px 24px;background:var(--text);color:var(--bg);border:1px solid var(--text);cursor:pointer;letter-spacing:.1em;text-transform:uppercase">Iniciar sesi\u00F3n <i class="fas fa-arrow-right" style="margin-left:6px"></i></button>
-      <button onclick="window.location.href='/registro'" style="display:block;width:100%;max-width:320px;margin:0 auto;background:var(--bg);border:1px solid var(--border);font-family:var(--font-mono);font-size:.55rem;font-weight:400;color:var(--text-dim);cursor:pointer;padding:10px 24px;letter-spacing:.08em;text-transform:uppercase">Crear cuenta</button>
+      <button onclick="window.location.href='/registro'" style="display:block;width:100%;max-width:320px;margin:0 auto 10px;background:var(--bg);border:1px solid var(--border);font-family:var(--font-mono);font-size:.55rem;font-weight:400;color:var(--text-dim);cursor:pointer;padding:10px 24px;letter-spacing:.08em;text-transform:uppercase">Crear cuenta</button>
+      <button onclick="document.body.classList.toggle('dark');localStorage.setItem('treqe-darkmode',document.body.classList.contains('dark'))" style="display:block;width:100%;max-width:320px;margin:0 auto;background:var(--bg);border:1px solid var(--border);font-family:var(--font-mono);font-size:.5rem;color:var(--text-dim);cursor:pointer;padding:8px 16px;margin-top:24px">Dark</button>
     </div>`;
     const profileStart = html.indexOf('<div class="profile-wrap">');
     const bottomNavStart = html.indexOf('<!-- ===== BOTTOM');
@@ -218,7 +221,10 @@ export function ProfilePage() {
       {hasToken && (
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 16px",background:"#F9F7F2",borderBottom:"1px solid #E5E0D8",fontFamily:"var(--font-mono)",fontSize:"0.65rem",position:"sticky",top:0,zIndex:60}}>
           <span style={{color:"#8A8580"}}>{user?.email || user?.name || "Sesión activa"}</span>
-          <button onClick={() => { useAuthStore.getState().logout(); window.location.reload(); }} style={{background:"none",border:"1px solid #E74C3C",color:"#E74C3C",padding:"4px 12px",cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:"0.6rem"}}>Salir</button>
+          <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+            <button onClick={() => { document.body.classList.toggle("dark"); localStorage.setItem("treqe-darkmode",String(document.body.classList.contains("dark"))); }} style={{background:"none",border:"1px solid var(--border)",color:"var(--text)",padding:"4px 12px",cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:"0.6rem"}}>Dark</button>
+            <button onClick={() => { useAuthStore.getState().logout(); window.location.reload(); }} style={{background:"none",border:"1px solid #E74C3C",color:"#E74C3C",padding:"4px 12px",cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:"0.6rem"}}>Salir</button>
+          </div>
         </div>
       )}
       <div dangerouslySetInnerHTML={{ __html: html }} />
