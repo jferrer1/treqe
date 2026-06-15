@@ -60,6 +60,8 @@ export function ProductDetailPage() {
       }
 
       body = rewriteMibLinks(body);
+      // Ensure back arrow is always visible (template may hide it on desktop)
+      style += "<style>.detail-header{display:flex!important}</style>";
       setHtml(style + body);
     })();
   }, [id]);
