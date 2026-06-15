@@ -129,30 +129,81 @@ export function ProductDetailPage() {
 }
 
 function buildGallery(photos: string[]): string {
+  const n = photos.length;
+
   const slides = photos.map((p, i) =>
-    `<div class="gallery-slide${i === 0 ? " active" : ""}">
-      <img src="${p}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+    `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})">
+      <img src="${p}" style="width:100%;height:100%;object-fit:contain;display:block" />
     </div>`
   ).join("");
 
   const dots = photos.map((_, i) =>
-    `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="var g=document.getElementById('gallery');g.dataset.slide=${i};g.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===${i})});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-thumb').forEach(function(t,n){t.classList.toggle('active',n===${i})})"></span>`
+    `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="goToSlide(${i})"></span>`
   ).join("");
 
   const thumbs = photos.map((p, i) =>
-    `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="var g=document.getElementById('gallery');g.dataset.slide=${i};g.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===${i})});document.querySelectorAll('.gallery-thumb').forEach(function(t,n){t.classList.toggle('active',n===${i})})" style="cursor:pointer;width:48px;height:48px;border:1px solid var(--border);flex-shrink:0">
+    `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="goToSlide(${i})" style="cursor:pointer;width:56px;height:56px;border:2px solid var(--border);flex-shrink:0;border-radius:4px;overflow:hidden">
       <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
     </div>`
   ).join("");
 
-  return `<style>body{overflow-y:auto!important;overscroll-behavior:auto!important}.gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity .3s}.gallery-slide.active{opacity:1}.gallery-dot{cursor:pointer;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);display:inline-block;margin:0 3px;transition:all .3s}.gallery-dot.active{width:18px;background:#FFF}.gallery-thumb.active{border-color:#1C1915!important}.gallery-wish.liked{color:#E74C3C!important}.gallery-trade.requested{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important}.gallery-wish{width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:var(--text-dim)}@media(min-width:1024px){.detail-header{display:flex!important}.detail-layout{display:block!important}.gallery{max-width:500px;margin:0 auto}}</style><div style="max-width:500px;margin:0 auto"><div class="gallery" id="gallery" style="position:relative;overflow:hidden;aspect-ratio:1">
-    <div class="gallery-slides" id="gallerySlides" style="position:relative;width:100%;height:100%;overflow:hidden">${slides}</div>
-    <div class="gallery-dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10">${dots}</div>
-    <button class="gallery-wish" onclick="var i=this.querySelector('i');var liked=i.classList.contains('fas');if(liked){i.classList.remove('fas');i.classList.add('far');this.classList.remove('liked')}else{i.classList.remove('far');i.classList.add('fas');this.classList.add('liked')}" style="position:absolute;bottom:12px;right:12px;z-index:10"><i class="far fa-heart"></i></button>
-    <button class="gallery-trade" onclick="this.classList.toggle('requested');var btn=Array.from(document.querySelectorAll('button')).find(function(b){return /trueque|intercambio|solicitar/i.test(b.textContent)});if(btn){btn.scrollIntoView({behavior:'smooth',block:'center'});btn.click()}" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
-    <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i-1+${photos.length})%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=document.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;left:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-left"></i></button>
-    <button type="button" onclick="var i=parseInt(this.parentElement.dataset.slide||0);i=(i+1)%${photos.length};this.parentElement.dataset.slide=i;this.parentElement.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});this.parentElement.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});var t=document.querySelectorAll('.gallery-thumb');t.forEach(function(x,n){x.classList.toggle('active',n===i)});event.stopPropagation()" style="position:absolute;right:8px;top:40%;transform:translateY(-50%);z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;cursor:pointer"><i class="fas fa-chevron-right"></i></button>
-  </div>
-  <div style="display:flex;gap:6px;padding:8px 16px;overflow-x:auto;background:var(--bg)" class="gallery-thumbs">${thumbs}</div>
-  </div>`;
+  // Modal slides for fullscreen viewer
+  const modalSlides = photos.map((p, i) =>
+    `<div class="gallery-modal-slide${i === 0 ? " active" : ""}" style="position:absolute;inset:80px 48px 120px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;pointer-events:none">
+      <img src="${p}" style="max-width:100%;max-height:100%;object-fit:contain" />
+    </div>`
+  ).join("");
+
+  const modalThumbs = photos.map((p, i) =>
+    `<div class="gallery-modal-thumb${i === 0 ? " active" : ""}" onclick="goToModalSlide(${i})" style="cursor:pointer;width:48px;height:48px;border:2px solid rgba(255,255,255,.25);flex-shrink:0;border-radius:4px;overflow:hidden">
+      <img src="${p}" style="width:100%;height:100%;object-fit:cover" />
+    </div>`
+  ).join("");
+
+  return `<style>
+body{overflow-y:auto!important;overscroll-behavior:auto!important}
+.gallery-slide{position:absolute;inset:0;opacity:0;transition:opacity .3s;cursor:zoom-in}
+.gallery-slide.active{opacity:1}
+.gallery-dot{cursor:pointer;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);display:inline-block;margin:0 3px;transition:all .3s}
+.gallery-dot.active{width:18px;background:#FFF}
+.gallery-thumb.active{border-color:#1C1915!important}
+.gallery-wish.liked{color:#E74C3C!important}
+.gallery-trade.requested{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important}
+.gallery-wish{width:40px;height:40px;background:rgba(255,255,255,0.9);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:var(--text-dim)}
+.gallery-modal-slide.active{opacity:1;pointer-events:auto}
+.gallery-modal-thumb.active{border-color:#FFF!important}
+@media(min-width:1024px){.detail-header{display:flex!important}.detail-layout{display:block!important}.gallery{max-width:500px;margin:0 auto}}
+/* Hide scrollbars on thumb strip */
+.gallery-thumbs::-webkit-scrollbar{display:none}
+.gallery-thumbs{-ms-overflow-style:none;scrollbar-width:none}
+</style>
+
+<div style="max-width:500px;margin:0 auto">
+<div class="gallery" id="gallery" style="position:relative;overflow:hidden;aspect-ratio:1;background:#111;border-radius:2px">
+  <div class="gallery-slides" id="gallerySlides" style="position:relative;width:100%;height:100%">${slides}</div>
+  <div class="gallery-dots" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10">${dots}</div>
+  <button class="gallery-wish" onclick="var i=this.querySelector('i');var liked=i.classList.contains('fas');if(liked){i.classList.remove('fas');i.classList.add('far');this.classList.remove('liked')}else{i.classList.remove('far');i.classList.add('fas');this.classList.add('liked')}" style="position:absolute;bottom:12px;right:12px;z-index:10"><i class="far fa-heart"></i></button>
+  <button class="gallery-trade" onclick="this.classList.toggle('requested');var btn=Array.from(document.querySelectorAll('button')).find(function(b){return /trueque|intercambio|solicitar/i.test(b.textContent)});if(btn){btn.scrollIntoView({behavior:'smooth',block:'center'});btn.click()}" style="position:absolute;bottom:12px;left:12px;z-index:10;width:40px;height:40px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.3);color:#FFF;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer"><i class="fas fa-exchange-alt"></i></button>
+  <button type="button" onclick="var i=parseInt(document.getElementById('gallery').dataset.slide||0);i=(i-1+${n})%${n};goToSlide(i)" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:20;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15)"><i class="fas fa-chevron-left" style="font-size:1rem"></i></button>
+  <button type="button" onclick="var i=parseInt(document.getElementById('gallery').dataset.slide||0);i=(i+1)%${n};goToSlide(i)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:20;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15)"><i class="fas fa-chevron-right" style="font-size:1rem"></i></button>
+</div>
+<div style="display:flex;gap:8px;padding:10px 0;overflow-x:auto" class="gallery-thumbs">${thumbs}</div>
+</div>
+
+<!-- Fullscreen modal -->
+<div id="galleryModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999;flex-direction:column" onclick="closeGalleryModal(event)">
+  <button onclick="closeGalleryModal()" style="position:absolute;top:16px;right:16px;z-index:1000;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#FFF;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem"><i class="fas fa-times"></i></button>
+  <button onclick="modalPrev();event.stopPropagation()" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);z-index:1000;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#FFF;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem"><i class="fas fa-chevron-left"></i></button>
+  <button onclick="modalNext();event.stopPropagation()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:1000;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#FFF;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.3rem"><i class="fas fa-chevron-right"></i></button>
+  ${modalSlides}
+  <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:1000;overflow-x:auto;max-width:90vw;padding:0 8px" class="gallery-modal-thumbs">${modalThumbs}</div>
+</div>
+<script>
+window.goToSlide=function(i){var g=document.getElementById('gallery');g.dataset.slide=i;g.querySelectorAll('.gallery-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});g.querySelectorAll('.gallery-dot').forEach(function(d,n){d.classList.toggle('active',n===i)});document.querySelectorAll('.gallery-thumb').forEach(function(t,n){t.classList.toggle('active',n===i)})};
+window.openGalleryModal=function(i){var m=document.getElementById('galleryModal');m.style.display='flex';m.dataset.slide=i;m.querySelectorAll('.gallery-modal-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});m.querySelectorAll('.gallery-modal-thumb').forEach(function(t,n){t.classList.toggle('active',n===i)});document.body.style.overflow='hidden'};
+window.closeGalleryModal=function(e){if(e&&e.target!==document.getElementById('galleryModal'))return;var m=document.getElementById('galleryModal');m.style.display='none';document.body.style.overflow=''};
+window.goToModalSlide=function(i){var m=document.getElementById('galleryModal');m.dataset.slide=i;m.querySelectorAll('.gallery-modal-slide').forEach(function(s,n){s.classList.toggle('active',n===i)});m.querySelectorAll('.gallery-modal-thumb').forEach(function(t,n){t.classList.toggle('active',n===i)})};
+window.modalPrev=function(){var m=document.getElementById('galleryModal');var i=parseInt(m.dataset.slide||0);i=(i-1+${n})%${n};goToModalSlide(i)};
+window.modalNext=function(){var m=document.getElementById('galleryModal');var i=parseInt(m.dataset.slide||0);i=(i+1)%${n};goToModalSlide(i)};
+</script>`;
 }
