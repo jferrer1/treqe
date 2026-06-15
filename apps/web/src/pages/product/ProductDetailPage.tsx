@@ -76,6 +76,9 @@ export function ProductDetailPage() {
 
   // Push HTML to DOM via ref — avoids React resetting innerHTML on re-renders
   useEffect(() => {
+    htmlPushed.current = false; // reset on id/url change
+  }, [id]);
+  useEffect(() => {
     if (containerRef.current && html && !htmlPushed.current) {
       containerRef.current.innerHTML = html;
       htmlPushed.current = true;
