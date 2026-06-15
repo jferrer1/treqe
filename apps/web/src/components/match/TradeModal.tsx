@@ -35,32 +35,32 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
   const goToStep2 = () => {
     if (!selected) return;
     setTimeout(() => {
-      const rn = document.getElementById("receiveName"); if (rn) rn.textContent = wantedTitle;
-      const rp = document.getElementById("receivePrice"); if (rp) rp.textContent = `€${String(wantedPrice).replace(".", ",")}`;
-      const cn = document.getElementById("confirmName"); if (cn) cn.textContent = selected.title;
-      const cp = document.getElementById("confirmPrice"); if (cp) cp.textContent = `${String(selected.price).replace(".", ",")} €`;
+      const rn = document.getElementById("tm-receiveName"); if (rn) rn.textContent = wantedTitle;
+      const rp = document.getElementById("tm-receivePrice"); if (rp) rp.textContent = `€${String(wantedPrice).replace(".", ",")}`;
+      const cn = document.getElementById("tm-confirmName"); if (cn) cn.textContent = selected.title;
+      const cp = document.getElementById("tm-confirmPrice"); if (cp) cp.textContent = `${String(selected.price).replace(".", ",")} €`;
       const diff = wantedPrice - selected.price;
-      const dv = document.getElementById("diffValue"); if (dv) dv.textContent = diff > 0 ? `€${diff.toFixed(2)}` : "€0.00";
-      const dl = document.getElementById("diffLabel"); if (dl) dl.textContent = diff > 0 ? "DIFERENCIA A PAGAR" : diff < 0 ? "DIFERENCIA A RECIBIR" : "";
-      const dc = document.getElementById("diffContainer"); if (dc) dc.style.display = diff === 0 ? "none" : "";
+      const dv = document.getElementById("tm-diffValue"); if (dv) dv.textContent = diff > 0 ? `€${diff.toFixed(2)}` : "€0.00";
+      const dl = document.getElementById("tm-diffLabel"); if (dl) dl.textContent = diff > 0 ? "DIFERENCIA A PAGAR" : diff < 0 ? "DIFERENCIA A RECIBIR" : "";
+      const dc = document.getElementById("tm-diffContainer"); if (dc) dc.style.display = diff === 0 ? "none" : "";
     }, 50);
-    document.getElementById("step1Dot")?.classList.remove("active");
-    document.getElementById("step2Dot")?.classList.add("active");
-    document.getElementById("step1")?.classList.remove("visible");
-    document.getElementById("step2")?.classList.add("visible");
-    const bb = document.getElementById("backBtn"); if (bb) bb.style.display = "";
-    const nb = document.getElementById("nextBtn"); if (nb) nb.style.display = "none";
-    const sb = document.getElementById("sendBtn"); if (sb) sb.style.display = "";
+    document.getElementById("tm-step1Dot")?.classList.remove("active");
+    document.getElementById("tm-step2Dot")?.classList.add("active");
+    document.getElementById("tm-step1")?.classList.remove("visible");
+    document.getElementById("tm-step2")?.classList.add("visible");
+    const bb = document.getElementById("tm-backBtn"); if (bb) bb.style.display = "";
+    const nb = document.getElementById("tm-nextBtn"); if (nb) nb.style.display = "none";
+    const sb = document.getElementById("tm-sendBtn"); if (sb) sb.style.display = "";
   };
 
   const goToStep1 = () => {
-    document.getElementById("step1Dot")?.classList.add("active");
-    document.getElementById("step2Dot")?.classList.remove("active");
-    document.getElementById("step1")?.classList.add("visible");
-    document.getElementById("step2")?.classList.remove("visible");
-    const bb = document.getElementById("backBtn"); if (bb) bb.style.display = "none";
-    const nb = document.getElementById("nextBtn"); if (nb) nb.style.display = "";
-    const sb = document.getElementById("sendBtn"); if (sb) sb.style.display = "none";
+    document.getElementById("tm-step1Dot")?.classList.add("active");
+    document.getElementById("tm-step2Dot")?.classList.remove("active");
+    document.getElementById("tm-step1")?.classList.add("visible");
+    document.getElementById("tm-step2")?.classList.remove("visible");
+    const bb = document.getElementById("tm-backBtn"); if (bb) bb.style.display = "none";
+    const nb = document.getElementById("tm-nextBtn"); if (nb) nb.style.display = "";
+    const sb = document.getElementById("tm-sendBtn"); if (sb) sb.style.display = "none";
   };
 
   const submitTrade = async () => {
@@ -129,12 +129,12 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
             <>
               {/* Step indicator — pill-shaped active dot */}
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:24}}>
-                <div id="step1Dot" className="step-dot active" style={{width:24,height:8,background:"var(--accent,#1C1915)",transition:"all .3s"}}></div>
-                <div id="step2Dot" className="step-dot" style={{width:8,height:8,background:"var(--border,#E5E0D8)",transition:"all .3s"}}></div>
+                <div id="tm-step1Dot" className="step-dot active" style={{width:24,height:8,background:"var(--accent,#1C1915)",transition:"all .3s"}}></div>
+                <div id="tm-step2Dot" className="step-dot" style={{width:8,height:8,background:"var(--border,#E5E0D8)",transition:"all .3s"}}></div>
               </div>
 
               {/* Step 1 */}
-              <div id="step1" className="step-1 visible">
+              <div id="tm-step1" className="step-1 visible">
                 <div style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".85rem",fontWeight:500,color:"var(--text,#1C1915)",marginBottom:16,textAlign:"center"}}>
                   Selecciona qué artículo quieres treqear
                 </div>
@@ -145,7 +145,7 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
                       className={`your-item-card${selected?.id === p.id ? " selected" : ""}`}
                       onClick={() => {
                         setSelected(p);
-                        const nb = document.getElementById("nextBtn") as HTMLButtonElement;
+                        const nb = document.getElementById("tm-nextBtn") as HTMLButtonElement;
                         if (nb) nb.disabled = false;
                       }}
                       style={{
@@ -181,7 +181,7 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
               </div>
 
               {/* Step 2 */}
-              <div id="step2" className="step-2">
+              <div id="tm-step2" className="step-2">
                 <div style={{textAlign:"center",marginBottom:24}}>
                   <div style={{width:64,height:64,background:"var(--accent,#1C1915)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:"1.5rem",color:"#FFF"}}>
                     <i className="fas fa-handshake"></i>
@@ -197,8 +197,8 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
                         <i className="fas fa-box"></i>
                       </div>
                       <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".55rem",fontWeight:500,textTransform:"uppercase",letterSpacing:"1px",color:"var(--text-dim,#8A8580)",marginBottom:4}}>RECIBES</div>
-                      <div id="receiveName" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".75rem",fontWeight:500,color:"var(--text,#1C1915)",marginBottom:2}}>{wantedTitle}</div>
-                      <div id="receivePrice" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".85rem",fontWeight:500,color:"var(--text,#1C1915)"}}>€{String(wantedPrice).replace(".", ",")}</div>
+                      <div id="tm-receiveName" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".75rem",fontWeight:500,color:"var(--text,#1C1915)",marginBottom:2}}>{wantedTitle}</div>
+                      <div id="tm-receivePrice" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".85rem",fontWeight:500,color:"var(--text,#1C1915)"}}>€{String(wantedPrice).replace(".", ",")}</div>
                     </div>
                     <div style={{fontSize:"1rem",color:"var(--text-dim,#8A8580)"}}><i className="fas fa-exchange-alt"></i></div>
                     <div style={{flex:1,textAlign:"center"}}>
@@ -209,13 +209,13 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
                         }
                       </div>
                       <div style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".55rem",fontWeight:500,textTransform:"uppercase",letterSpacing:"1px",color:"var(--text-dim,#8A8580)",marginBottom:4}}>DAS</div>
-                      <div id="confirmName" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".75rem",fontWeight:500,color:"var(--text,#1C1915)",marginBottom:2}}>{selected?.title || "-"}</div>
-                      <div id="confirmPrice" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".85rem",fontWeight:500,color:"var(--text,#1C1915)"}}>{selected ? `${String(selected.price).replace(".",",")} €` : "- €"}</div>
+                      <div id="tm-confirmName" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:".75rem",fontWeight:500,color:"var(--text,#1C1915)",marginBottom:2}}>{selected?.title || "-"}</div>
+                      <div id="tm-confirmPrice" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".85rem",fontWeight:500,color:"var(--text,#1C1915)"}}>{selected ? `${String(selected.price).replace(".",",")} €` : "- €"}</div>
                     </div>
                   </div>
-                  <div id="diffContainer" style={{background:"var(--surface,#FFF)",padding:16,marginTop:16,textAlign:"center",border:"1px dashed var(--border,#E5E0D8)"}}>
-                    <div id="diffLabel" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".55rem",color:"var(--text-dim,#8A8580)",textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>Diferencia a pagar</div>
-                    <div id="diffValue" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:"1.3rem",fontWeight:600,color:"var(--text,#1C1915)"}}>
+                  <div id="tm-diffContainer" style={{background:"var(--surface,#FFF)",padding:16,marginTop:16,textAlign:"center",border:"1px dashed var(--border,#E5E0D8)"}}>
+                    <div id="tm-diffLabel" style={{fontFamily:"'IBM Plex Mono',monospace",fontSize:".55rem",color:"var(--text-dim,#8A8580)",textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>Diferencia a pagar</div>
+                    <div id="tm-diffValue" style={{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:"1.3rem",fontWeight:600,color:"var(--text,#1C1915)"}}>
                       €{selected ? (wantedPrice - selected.price).toFixed(2) : "0.00"}
                     </div>
                   </div>
@@ -228,11 +228,11 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
         {/* Footer */}
         {!loading && !done && myProducts.length > 0 && (
           <div style={{padding:"16px 24px 24px",borderTop:"1px solid var(--border,#E5E0D8)",display:"flex",gap:12}}>
-            <button id="backBtn" onClick={goToStep1} style={{
+            <button id="tm-backBtn" onClick={goToStep1} style={{
               flex:1,display:"none",padding:"14px 20px",fontFamily:"'IBM Plex Mono',monospace",fontSize:".6rem",fontWeight:500,
               textTransform:"uppercase",letterSpacing:"1px",border:"1px solid var(--border,#E5E0D8)",background:"var(--surface,#FFF)",color:"var(--text,#1C1915)",cursor:"pointer",
             }}>ATRÁS</button>
-            <button id="nextBtn" onClick={goToStep2} disabled={!selected} style={{
+            <button id="tm-nextBtn" onClick={goToStep2} disabled={!selected} style={{
               flex:1,padding:"14px 20px",fontFamily:"'IBM Plex Mono',monospace",fontSize:".6rem",fontWeight:500,
               textTransform:"uppercase",letterSpacing:"1px",
               background:selected ? "var(--accent,#1C1915)" : "var(--border,#E5E0D8)",
@@ -240,7 +240,7 @@ export function TradeModal({ wantedProductId, wantedTitle, wantedPrice = 0, onCl
               border:`1px solid ${selected ? "var(--accent,#1C1915)" : "var(--border,#E5E0D8)"}`,
               cursor:selected ? "pointer" : "not-allowed",
             }}>CONTINUAR</button>
-            <button id="sendBtn" onClick={submitTrade} disabled={submitting} style={{
+            <button id="tm-sendBtn" onClick={submitTrade} disabled={submitting} style={{
               flex:1,display:"none",padding:"14px 20px",fontFamily:"'IBM Plex Mono',monospace",fontSize:".6rem",fontWeight:500,
               textTransform:"uppercase",letterSpacing:"1px",
               background:submitting ? "var(--border,#E5E0D8)" : "var(--accent,#1C1915)",
