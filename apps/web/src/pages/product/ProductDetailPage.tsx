@@ -78,17 +78,29 @@ export function ProductDetailPage() {
       const g = document.getElementById('gallery');
       if (!g) return;
       g.dataset.slide = String(i);
-      g.querySelectorAll('.gallery-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
-      g.querySelectorAll('.gallery-dot').forEach((d: any, n: number) => { d.classList[n === i ? 'add' : 'remove']('active'); });
-      document.querySelectorAll('.gallery-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
+      g.querySelectorAll('.gallery-slide').forEach((s: any) => s.classList.remove('active'));
+      g.querySelectorAll('.gallery-dot').forEach((d: any) => d.classList.remove('active'));
+      document.querySelectorAll('.gallery-thumb').forEach((t: any) => t.classList.remove('active'));
+      const slides = g.querySelectorAll('.gallery-slide');
+      const dots = g.querySelectorAll('.gallery-dot');
+      const thumbs = document.querySelectorAll('.gallery-thumb');
+      if (slides[i]) slides[i].classList.add('active');
+      if (dots[i]) dots[i].classList.add('active');
+      if (thumbs[i]) thumbs[i].classList.add('active');
     };
     (window as any).openGalleryModal = (i: number) => {
       const m = document.getElementById('galleryModal');
       if (!m) return;
+      console.log('openGalleryModal called with index:', i, 'slides in DOM:', m.querySelectorAll('.gallery-modal-slide').length);
+      // Reset all slides first, then activate the target
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any) => { s.classList.remove('active'); });
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any) => { t.classList.remove('active'); });
+      const slides = m.querySelectorAll('.gallery-modal-slide');
+      const thumbs = m.querySelectorAll('.gallery-modal-thumb');
+      if (slides[i]) slides[i].classList.add('active');
+      if (thumbs[i]) thumbs[i].classList.add('active');
       m.style.display = 'flex';
       m.dataset.slide = String(i);
-      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
-      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
       document.body.style.overflow = 'hidden';
     };
     (window as any).closeGalleryModal = (e?: MouseEvent) => {
@@ -101,8 +113,12 @@ export function ProductDetailPage() {
       const m = document.getElementById('galleryModal');
       if (!m) return;
       m.dataset.slide = String(i);
-      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
-      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any) => s.classList.remove('active'));
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any) => t.classList.remove('active'));
+      const slides = m.querySelectorAll('.gallery-modal-slide');
+      const thumbs = m.querySelectorAll('.gallery-modal-thumb');
+      if (slides[i]) slides[i].classList.add('active');
+      if (thumbs[i]) thumbs[i].classList.add('active');
     };
     (window as any).modalPrev = () => {
       const m = document.getElementById('galleryModal');
