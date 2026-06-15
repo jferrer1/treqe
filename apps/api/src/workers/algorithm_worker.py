@@ -176,28 +176,13 @@ def _run_matching_sync():
 
 def find_cycles(products, wants):
     """
-    Busca ciclos en el grafo de intercambios.
-    
-    products: {id: {user_id, title, price, status}}
-    wants: {product_id_wants: {product_id_offers that want it}}
-    
-    Returns list of {article_ids, user_ids, score}
+    Busca ciclos en el grafo de intercambios para k=2 hasta max_k.
+    Usa DFS con backtracking para k>=4.
     """
     from collections import defaultdict
     
     cycles = []
     used = set()
-    
-    # Build adjacency: product -> products that want it
-    # For each product A, find products B where B's owner wants A
-    # i.e., B is offered in exchange for A
-    
-    # Build reverse: product_offered -> [products_wanted]
-    # This is the "gives" direction: user offers X to get Y
-    # In our wants dict: wants[Y] contains [X1, X2, ...] (X offered for Y)
-    # So the edge is X -> Y (offering X to get Y)
-    
-    # For k=2: find mutual wants A->B and B->A
     product_ids = list(products.keys())
     
     # Build outgoing edges: A -> B means someone offers A to get B
@@ -210,55 +195,68 @@ def find_cycles(products, wants):
                 outgoing[offered_pid].add(wanted_pid)
                 incoming[wanted_pid].add(offered_pid)
     
-    # k=2: direct swaps (A wants B, B wants A)
-    for a in product_ids:
-        if a in used:
-            continue
-        for b in outgoing.get(a, set()):
-            if b in used:
-                continue
-            if a in outgoing.get(b, set()):
-                # Mutual want!
-                ua = products[a]["user_id"]
-                ub = products[b]["user_id"]
-                if ua != ub:
-                    score = 10.0  # Base score
-                    cycles.append({
-                        "id": str(__import__('uuid').uuid4()),
-                        "article_ids": [a, b],
-                        "user_ids": [ua, ub],
-                        "size": 2,
-                        "score": score
-                    })
-                    used.add(a)
-                    used.add(b)
-                    break
+    def users_in_path(path):
+        return {products[aid]["user_id"] for aid in path}
     
-    # k=3: triangular cycles (A->B->C->A)
+    # k=2: direct swaps
     for a in product_ids:
         if a in used:
             continue
         for b in outgoing.get(a, set()):
             if b in used or b == a:
                 continue
-            b_out = outgoing.get(b, set())
-            a_in = incoming.get(a, set())
-            candidates = b_out & a_in
+            if a in outgoing.get(b, set()):
+                ua, ub = products[a]["user_id"], products[b]["user_id"]
+                if ua != ub:
+                    cycles.append({"id": str(__import__('uuid').uuid4()), "article_ids": [a, b], "user_ids": [ua, ub], "size": 2, "score": 10.0})
+                    used.update([a, b])
+                    break
+    
+    # k=3: triangular
+    for a in product_ids:
+        if a in used:
+            continue
+        for b in outgoing.get(a, set()):
+            if b in used or b == a:
+                continue
+            candidates = outgoing.get(b, set()) & incoming.get(a, set())
             for c in candidates:
                 if c in used or c == a or c == b:
                     continue
-                ua = products[a]["user_id"]
-                ub = products[b]["user_id"]
-                uc = products[c]["user_id"]
-                if len({ua, ub, uc}) == 3:  # All different users
-                    score = 15.0
-                    cycles.append({
-                        "id": str(__import__('uuid').uuid4()),
-                        "article_ids": [a, b, c],
-                        "user_ids": [ua, ub, uc],
-                        "size": 3,
-                        "score": score
-                    })
+                users = {products[a]["user_id"], products[b]["user_id"], products[c]["user_id"]}
+                if len(users) == 3:
+                    cycles.append({"id": str(__import__('uuid').uuid4()), "article_ids": [a, b, c], "user_ids": list(users), "size": 3, "score": 15.0})
                     used.update([a, b, c])
+                    break
+            if a in used:
+                break
+    
+    # k>=4: DFS with pruning
+    MAX_K = 8
+    for start in product_ids:
+        if start in used:
+            continue
+        stack = [(start, [start], {start})]
+        while stack:
+            current, path, visited = stack.pop()
+            k = len(path)
+            if k >= 4:
+                # Check if we can close the cycle back to start
+                if start in outgoing.get(current, set()):
+                    users = users_in_path(path)
+                    if len(users) == k:  # All different users
+                        cycles.append({"id": str(__import__('uuid').uuid4()), "article_ids": list(path), "user_ids": list(users), "size": k, "score": 10.0 + k * 2})
+                        used.update(path)
+                        break
+            if k >= MAX_K:
+                continue
+            for next_pid in outgoing.get(current, set()):
+                if next_pid in used or next_pid in visited:
+                    continue
+                # Prune: must be different user from all in path
+                next_user = products[next_pid]["user_id"]
+                if next_user in users_in_path(path):
+                    continue
+                stack.append((next_pid, path + [next_pid], visited | {next_pid}))
     
     return cycles
