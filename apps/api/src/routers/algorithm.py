@@ -11,8 +11,8 @@ async def trigger_algorithm(current_user=Depends(get_current_user), sync: bool =
     try:
         from ..workers.algorithm_worker import run_algorithm, _run_matching_sync
         if sync:
-            cycles = _run_matching_sync()
-            return {"status": "completed", "cycles_found": len(cycles), "cycles": cycles}
+            cycles, debug = _run_matching_sync()
+            return {"status": "completed", "cycles_found": len(cycles), "cycles": cycles, "debug": debug}
         task = run_algorithm.delay("manual")
         return {"status": "queued", "task_id": task.id}
     except Exception as e:

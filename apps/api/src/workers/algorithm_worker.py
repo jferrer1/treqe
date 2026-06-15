@@ -23,7 +23,7 @@ def run_algorithm(trigger: str = "scheduled"):
     print(f"[algorithm_worker] Running (trigger={trigger})")
 
     try:
-        cycles_found = _run_matching_sync()
+        cycles_found, _ = _run_matching_sync()
         
         # Notificar participantes via Redis Pub/Sub
         for cycle in cycles_found:
@@ -63,6 +63,7 @@ def _run_matching_sync():
         db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
     
     try:
+        debug = {}
         engine = sqlalchemy.create_engine(db_url)
         with engine.connect() as conn:
             # Load active products
@@ -94,7 +95,17 @@ def _run_matching_sync():
                     user_offers[from_uid] = []
                 user_offers[from_uid].append(oid)
             
-            print(f"[algorithm_worker] Loaded {len(products)} products, {len(wants)} wants")
+            print(f"[algorithm_worker] Loaded {len(products)} products, {len(wants)} wants, {len(user_offers)} users with offers")
+            
+            # Build debug info
+            debug = {
+                "products_loaded": len(products),
+                "wants_loaded": len(wants),
+                "users_with_offers": len(user_offers),
+                "wants_detail": {k[:8]: [x[:8] for x in list(v)[:3]] for k, v in list(wants.items())[:5]},
+                "sample_products": [{ "id": pid[:8], "user": p["user_id"][:8], "title": p["title"][:30]} 
+                    for pid, p in list(products.items())[:5]}
+            }
             
             # Find cycles (simple DFS)
             cycles = find_cycles(products, wants)
@@ -136,13 +147,13 @@ def _run_matching_sync():
             conn.commit()
             
         engine.dispose()
-        return cycles
+        return cycles, debug
         
     except Exception as e:
         print(f"[algorithm_worker] DB error: {e}", file=sys.stderr)
         import traceback
         traceback.print_exc(file=sys.stderr)
-        return []
+        return [], {"error": str(e)}
 
 
 def find_cycles(products, wants):
