@@ -51,7 +51,7 @@ export function ProductDetailPage() {
       }
 
       // Back button
-      body = body.replace(/(<button class="back-btn")/, '$1 onclick="window.location.href=&quot;/catalogo&quot;"');
+      body = body.replace(/(<button class="back-btn")/, '$1 onclick="window.location.hash=&apos;#/catalogo&apos;"');
 
       // Product data
       if (productData) {
