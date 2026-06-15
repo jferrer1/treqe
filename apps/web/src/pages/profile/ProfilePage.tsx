@@ -109,6 +109,20 @@ export function ProfilePage() {
     })();
   }, [user, html]);
 
+  // Wire Salir button — always runs, doesn't depend on .profile-action
+  useEffect(() => {
+    if (!html) return;
+    const check = () => {
+      const btn = document.querySelector(".salir-btn");
+      if (!btn) { setTimeout(check, 200); return; }
+      btn.addEventListener("click", () => {
+        useAuthStore.getState().logout();
+        window.location.reload();
+      });
+    };
+    check();
+  }, [html]);
+
   // Wire event handlers once HTML is in the DOM
   useEffect(() => {
     if (!html || wired) return;
@@ -163,12 +177,7 @@ export function ProfilePage() {
       navigate("/" + target.dataset.nav);
     });
 
-    // Salir button (injected into MIB header, next to dark toggle)
-    document.querySelector(".salir-btn")?.addEventListener("click", () => {
-      useAuthStore.getState().logout();
-      window.location.reload();
-    });
-
+    // Salir button now handled by its own useEffect above
     // View-all / Add buttons in section headers
     document.querySelectorAll(".section__action, .section__header button").forEach(el => {
       (el as HTMLElement).addEventListener("click", (e) => {
