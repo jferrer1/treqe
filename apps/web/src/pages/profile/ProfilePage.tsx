@@ -109,19 +109,18 @@ export function ProfilePage() {
     })();
   }, [user, html]);
 
-  // Wire Salir button — always runs, doesn't depend on .profile-action
+  // Wire Salir button via event delegation (survives DOM resets from dangerouslySetInnerHTML)
   useEffect(() => {
-    if (!html) return;
-    const check = () => {
-      const btn = document.querySelector(".salir-btn");
-      if (!btn) { setTimeout(check, 200); return; }
-      btn.addEventListener("click", () => {
-        useAuthStore.getState().logout();
-        window.location.reload();
-      });
+    const handler = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement).closest(".salir-btn");
+      if (!btn) return;
+      e.preventDefault();
+      useAuthStore.getState().logout();
+      window.location.reload();
     };
-    check();
-  }, [html]);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, []);
 
   // Wire event handlers once HTML is in the DOM
   useEffect(() => {
