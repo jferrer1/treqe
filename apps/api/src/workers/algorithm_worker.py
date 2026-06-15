@@ -76,7 +76,7 @@ def _run_matching_sync():
             
             # Load active offers (pending/accepted)
             rows = conn.execute(text(
-                "SELECT id, from_user_id, product_id_wants, product_id_offers, status FROM offers WHERE status IN ('active', 'pending')"
+                "SELECT id, user_id, product_id_wants, product_id_offers, status FROM offers WHERE status IN ('active', 'pending')"
             ))
             
             # Build graph: who wants what
