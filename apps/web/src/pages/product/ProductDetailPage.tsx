@@ -78,17 +78,17 @@ export function ProductDetailPage() {
       const g = document.getElementById('gallery');
       if (!g) return;
       g.dataset.slide = String(i);
-      g.querySelectorAll('.gallery-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
-      g.querySelectorAll('.gallery-dot').forEach((d: any, n: number) => d.classList.toggle('active', n === i));
-      document.querySelectorAll('.gallery-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+      g.querySelectorAll('.gallery-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
+      g.querySelectorAll('.gallery-dot').forEach((d: any, n: number) => { d.classList[n === i ? 'add' : 'remove']('active'); });
+      document.querySelectorAll('.gallery-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
     };
     (window as any).openGalleryModal = (i: number) => {
       const m = document.getElementById('galleryModal');
       if (!m) return;
       m.style.display = 'flex';
       m.dataset.slide = String(i);
-      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
-      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
       document.body.style.overflow = 'hidden';
     };
     (window as any).closeGalleryModal = (e?: MouseEvent) => {
@@ -101,8 +101,8 @@ export function ProductDetailPage() {
       const m = document.getElementById('galleryModal');
       if (!m) return;
       m.dataset.slide = String(i);
-      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => s.classList.toggle('active', n === i));
-      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => t.classList.toggle('active', n === i));
+      m.querySelectorAll('.gallery-modal-slide').forEach((s: any, n: number) => { s.classList[n === i ? 'add' : 'remove']('active'); });
+      m.querySelectorAll('.gallery-modal-thumb').forEach((t: any, n: number) => { t.classList[n === i ? 'add' : 'remove']('active'); });
     };
     (window as any).modalPrev = () => {
       const m = document.getElementById('galleryModal');
@@ -191,22 +191,22 @@ function buildGallery(photos: string[]): string {
 
   const slides = Array.from({length: n}, (_, i) => {
     if (photos[i]) {
-      return `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})">
+      return `<div class="gallery-slide${i === 0 ? " active" : ""}" data-slide="${i}" onclick="event.stopPropagation();openGalleryModal(parseInt(this.dataset.slide))">
         <img src="${photos[i]}" style="width:100%;height:100%;object-fit:contain;display:block" />
       </div>`;
     }
-    return `<div class="gallery-slide${i === 0 ? " active" : ""}" onclick="openGalleryModal(${i})" style="background:${placeholders[i % 6]};display:flex;align-items:center;justify-content:center">
+    return `<div class="gallery-slide${i === 0 ? " active" : ""}" data-slide="${i}" onclick="event.stopPropagation();openGalleryModal(parseInt(this.dataset.slide))" style="background:${placeholders[i % 6]};display:flex;align-items:center;justify-content:center">
       <i class="fas ${icons[i % 6]}" style="font-size:4rem;color:rgba(255,255,255,.15)"></i>
     </div>`;
   }).join("");
 
   const dots = Array.from({length: n}, (_, i) =>
-    `<span class="gallery-dot${i === 0 ? " active" : ""}" onclick="goToSlide(${i})"></span>`
+    `<span class="gallery-dot${i === 0 ? " active" : ""}" data-slide="${i}" onclick="goToSlide(parseInt(this.dataset.slide))"></span>`
   ).join("");
 
   const thumbs = Array.from({length: n}, (_, i) => {
     const img = photos[i] ? `<img src="${photos[i]}" style="width:100%;height:100%;object-fit:cover" />` : `<div style="width:100%;height:100%;background:${placeholders[i % 6]};display:flex;align-items:center;justify-content:center"><i class="fas ${icons[i % 6]}" style="font-size:.7rem;color:rgba(255,255,255,.3)"></i></div>`;
-    return `<div class="gallery-thumb${i === 0 ? " active" : ""}" onclick="goToSlide(${i})" style="cursor:pointer;width:56px;height:56px;border:2px solid var(--border);flex-shrink:0;border-radius:4px;overflow:hidden">
+    return `<div class="gallery-thumb${i === 0 ? " active" : ""}" data-slide="${i}" onclick="goToSlide(parseInt(this.dataset.slide))" style="cursor:pointer;width:56px;height:56px;border:2px solid var(--border);flex-shrink:0;border-radius:4px;overflow:hidden">
       ${img}
     </div>`;
   }).join("");
@@ -223,7 +223,7 @@ function buildGallery(photos: string[]): string {
 
   const modalThumbs = Array.from({length: n}, (_, i) => {
     const img = photos[i] ? `<img src="${photos[i]}" style="width:100%;height:100%;object-fit:cover" />` : `<div style="width:100%;height:100%;background:${placeholders[i % 6]}"></div>`;
-    return `<div class="gallery-modal-thumb${i === 0 ? " active" : ""}" onclick="goToModalSlide(${i})" style="cursor:pointer;width:48px;height:48px;border:2px solid rgba(255,255,255,.25);flex-shrink:0;border-radius:4px;overflow:hidden">
+    return `<div class="gallery-modal-thumb${i === 0 ? " active" : ""}" data-slide="${i}" onclick="goToModalSlide(parseInt(this.dataset.slide))" style="cursor:pointer;width:48px;height:48px;border:2px solid rgba(255,255,255,.25);flex-shrink:0;border-radius:4px;overflow:hidden">
       ${img}
     </div>`;
   }).join("");
