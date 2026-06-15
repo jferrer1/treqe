@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "@/lib/api";
 import "@/lib/search";
 
@@ -136,6 +136,7 @@ export function CatalogPage() {
   const [html, setHtml] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const initialRenderDone = useRef(false);
 
   useEffect(() => {
     fetch(`${BASE}mib/v1-catalogo.html`).then(r => r.text()).then(raw => {
@@ -305,16 +306,17 @@ export function CatalogPage() {
     return () => clearInterval(iv);
   }, [html]);
 
-  // Inject product data
+  // Inject product data — only full render once, scroll appends via DOM
   useEffect(() => {
-    if (!html || !loaded) return;
+    if (!html || !loaded || initialRenderDone.current) return;
     let att = 0;
     const iv = setInterval(() => {
       const counter = document.querySelector(".section-title span");
       const grid = document.querySelector(".catalog");
       if (!counter && !grid && att < 15) { att++; return; }
       clearInterval(iv);
-      if (counter) counter.textContent = `${products.length} art\u00EDculos`;
+      const total = (window as any).__treqeTotal || products.length;
+      if (counter) counter.textContent = `${total} art\u00EDculos`;
       if (grid) {
         if (products.length === 0) {
           grid.innerHTML = `<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">
@@ -336,11 +338,12 @@ export function CatalogPage() {
             </a>
           `).join("");
         }
+        initialRenderDone.current = true;
       }
       att++;
     }, 200);
     return () => clearInterval(iv);
-  }, [html, loaded, products]);
+  }, [html, loaded]);
 
   // Infinite scroll
   useEffect(() => {
