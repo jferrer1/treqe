@@ -137,6 +137,8 @@ export function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
   const initialRenderDone = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const htmlPushed = useRef(false);
 
   useEffect(() => {
     fetch(`${BASE}mib/v1-catalogo.html`).then(r => r.text()).then(raw => {
@@ -396,6 +398,14 @@ export function CatalogPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Push HTML to DOM once via ref — never reset by React re-renders
+  useEffect(() => {
+    if (containerRef.current && html && !htmlPushed.current) {
+      containerRef.current.innerHTML = html;
+      htmlPushed.current = true;
+    }
+  }, [html]);
+
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div ref={containerRef} />;
 }
