@@ -301,7 +301,15 @@ export function MatchesPage(){
       if (btn.dataset.action === "cancel") {
         api.post(`/api/purchases/${id}/cancel`).then(() => setMatches(prev => prev.map(m => m.id === id ? {...m, status:"cancelled"} : m))).catch(()=>{});
       } else {
-        api.post(`/api/matches/${id}/${btn.dataset.action}`).then(() => setMatches(prev => prev.map(m => (m.id===id||m.match_id===id) ? {...m, status: btn.dataset.action==="accept"?"in_progress":"cancelled"} : m))).catch(()=>{});
+        api.post(`/api/matches/${id}/${btn.dataset.action}`).then(() => setMatches(prev => prev.map(m => {
+          if (m.id !== id && m.match_id !== id) return m;
+          if (btn.dataset.action === "reject") return {...m, status: "cancelled"};
+          // Accept: update participant status locally instead of match status
+          const parts = (m.participants || []).map((p: any) => 
+            p.user_id === user?.id ? {...p, status: "accepted"} : p
+          );
+          return {...m, participants: parts};
+        }))).catch(()=>{});
       }
     };
     document.addEventListener("click", h);
