@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
 
-const BASE = import.meta.env.BASE_URL;
-
 export function PaymentPage() {
   const { refType, id } = useParams<{refType:string;id:string}>();
   const navigate = useNavigate();

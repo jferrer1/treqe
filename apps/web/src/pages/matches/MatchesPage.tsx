@@ -29,6 +29,36 @@ const BADGE:Record<string,{html:string;cls:string}> = {
   completed: {html:'<i class="fas fa-check-circle"></i> Completado', cls:"badge-done"},
 };
 
+function renderOfferCard(m: Match): string {
+  const myTitle = m.my_item?.title || "Tu artículo";
+  const myPrice = m.my_item?.price ? `€${m.my_item.price}` : "";
+  const wantTitle = m.other_item?.title || "Artículo solicitado";
+  const wantPrice = m.other_item?.price ? `€${m.other_item.price}` : "";
+  const status = (m as any).status === "active" ? "pending" : (m as any).status || "pending";
+  const statusBadge = status === "accepted" ? '<span class="offer-badge offer-badge--ok"><i class="fas fa-check"></i> Aceptada</span>' :
+    status === "rejected" ? '<span class="offer-badge offer-badge--no"><i class="fas fa-times"></i> Rechazada</span>' :
+    '<span class="offer-badge offer-badge--wait"><i class="fas fa-clock"></i> Buscando match</span>';
+  return `<div class="match-card">
+    <div class="match-card__header">
+      <span class="match-card__id">Solicitud de trueque</span>
+      ${statusBadge}
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px">
+      <div style="flex:1;text-align:center">
+        <div style="width:48px;height:48px;background:#2D2D2D;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:1.1rem">${em(m.my_item?.id||"0")}</div>
+        <div style="font-size:.75rem;font-weight:500">${myTitle}</div>
+        <div style="font-size:.5rem;color:var(--text-dim)">das tú${myPrice ? ' · '+myPrice : ''}</div>
+      </div>
+      <div style="color:var(--text-dim);font-size:.7rem"><i class="fas fa-exchange-alt"></i></div>
+      <div style="flex:1;text-align:center">
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:1.1rem;border:1px dashed var(--border)">${em(m.other_item?.id||"1")}</div>
+        <div style="font-size:.75rem;font-weight:500">${wantTitle}</div>
+        <div style="font-size:.5rem;color:var(--text-dim)">quieres recibe${wantPrice ? ' · '+wantPrice : ''}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId: string): string {
   const badge = BADGE[m.status] || BADGE.pending;
   const id = (m.match_id || m.id || "").slice(-6);
@@ -245,6 +275,12 @@ export function MatchesPage(){
       .match-card__progress-fill { height: 100%; background: #1C1915; transition: width .3s; }
       .match-card__progress-text { font-family: 'IBM Plex Mono', monospace; font-size: .45rem; color: var(--text-dim,#8A8580); text-transform: uppercase; letter-spacing: .06em; }
       
+      /* Offer badges */
+      .offer-badge { font-size: .55rem; padding: 3px 8px; display: flex; align-items: center; gap: 4px; }
+      .offer-badge--wait { color: #d97706; }
+      .offer-badge--ok { color: #22c55e; }
+      .offer-badge--no { color: #DC2626; }
+      
       /* Other status */
       .match-card__item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
       .match-card__img { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border: 1px solid var(--border,#E5E0D8); flex-shrink: 0; overflow: hidden; }
@@ -298,9 +334,10 @@ export function MatchesPage(){
     if (!hasToken) return;
     (async()=>{
       try {
-        const [mr, pr] = await Promise.all([
+        const [mr, pr, or_] = await Promise.all([
           api.get("/api/matches/"),
-          api.get("/api/purchases/")
+          api.get("/api/purchases/"),
+          api.get("/api/offers/mine")
         ]);
         const trades = ((mr as any).items || mr || []).map((m: any) => ({...m, type: "trade"}));
         const seen = new Set<string>();
@@ -311,7 +348,20 @@ export function MatchesPage(){
           other_user: p.seller || {name: "Vendedor"},
           status: p.status === "requested" ? "pending" : p.status === "accepted" ? "in_progress" : p.status
         }));
-        setMatches([...trades, ...purchases]);
+        // Convert unmatched offers to pseudo-matches for Pendientes tab
+        const matchedProductIds = new Set<string>();
+        trades.forEach((t: any) => (t.participants || []).forEach((p: any) => matchedProductIds.add(p.product_id)));
+        const pendingOffers = ((or_ as any).items || or_ || [])
+          .filter((o: any) => o.status === "active" || o.status === "pending")
+          .filter((o: any) => !matchedProductIds.has(o.product_id_offers) && !matchedProductIds.has(o.product_id_wants))
+          .map((o: any) => ({
+            ...o, type: "offer", id: o.id, match_id: o.id,
+            status: "pending",
+            my_item: o.offered_product || {title: o.product_title || "Tu artículo", price: 0, id: o.product_id_offers},
+            other_item: o.wanted_product || {title: "Artículo solicitado", price: 0, id: o.product_id_wants},
+            other_user: o.wanted_owner || {name: "Vendedor"},
+          }));
+        setMatches([...trades, ...purchases, ...pendingOffers]);
       } catch {}
     })();
   }, [hasToken]);
@@ -377,22 +427,23 @@ export function MatchesPage(){
   // Get my participant status for a match
   const myPartStatus = (m: Match) => {
     if (m.type === "purchase") return m.status;
+    if (m.type === "offer") return m.status;
     const parts = m.participants || [];
     const myPart = parts.find((p: any) => p.user_id === currentUserId);
     return myPart?.status || "pending";
   };
 
   const counts = [
-    matches.filter(m => m.type !== "purchase" && myPartStatus(m) === "pending" && m.status !== "cancelled").length,
-    matches.filter(m => m.type !== "purchase" && myPartStatus(m) === "accepted" && m.status !== "active" && m.status !== "in_progress").length,
+    matches.filter(m => m.type !== "purchase" && m.type !== "offer" && myPartStatus(m) === "pending" && m.status !== "cancelled").length,
+    matches.filter(m => (m.type !== "purchase" && m.type !== "offer" && myPartStatus(m) === "accepted" && m.status !== "active" && m.status !== "in_progress") || m.type === "offer").length,
     matches.filter(m => (m.status === "in_progress" || m.status === "accepted" || m.status === "active") || (m.type === "purchase" && m.status === "in_progress")).length,
     matches.filter(m => m.status === "completed").length,
   ];
 
   const filtered = matches.filter(m => {
     const ms = myPartStatus(m);
-    if (tab === "active") return m.type !== "purchase" && ms === "pending" && m.status !== "cancelled";
-    if (tab === "pending") return m.type !== "purchase" && ms === "accepted" && m.status !== "active" && m.status !== "in_progress";
+    if (tab === "active") return m.type !== "purchase" && m.type !== "offer" && ms === "pending" && m.status !== "cancelled";
+    if (tab === "pending") return (m.type !== "purchase" && m.type !== "offer" && ms === "accepted" && m.status !== "active" && m.status !== "in_progress") || m.type === "offer";
     if (tab === "in_progress") return (m.status === "in_progress" || m.status === "accepted" || m.status === "active") || (m.type === "purchase" && m.status === "in_progress");
     return m.status === "completed";
   });
@@ -403,7 +454,7 @@ export function MatchesPage(){
 
   const cards = filtered.length === 0
     ? `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">No hay treqes todavía</p><br><a href="/catalogo" style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">Explorar catálogo</a></div>`
-    : filtered.map(m => renderMatchCard(m, m.participants, currentUserId)).join("");
+    : filtered.map(m => m.type === "offer" ? renderOfferCard(m) : renderMatchCard(m, m.participants, currentUserId)).join("");
 
   const header = `<div class="treqe-header"><button class="treqe-header__back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button><span class="treqe-header__title">Mis Treqes</span><span class="treqe-header__right"></span></div>`;
   const cta = `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><h2 style="font-family:'IBM Plex Sans',sans-serif;font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesión para ver tus intercambios</p><a href="/login" style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Iniciar sesión</a></div>`;
