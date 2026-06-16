@@ -68,7 +68,7 @@ def _run_matching_sync():
         with engine.connect() as conn:
             # Load active products
             products = {}
-            rows = conn.execute(text("SELECT id, user_id, title, price, status FROM products WHERE status = 'active'"))
+            rows = conn.execute(text("SELECT id, user_id, title, price, status FROM products WHERE status = 'active' AND id NOT IN (SELECT product_id FROM match_participants mp JOIN matches m ON mp.match_id = m.id WHERE m.status IN ('pending', 'active', 'in_progress', 'accepted'))"))
             for row in rows:
                 products[row[0]] = {
                     "id": row[0], "user_id": row[1], "title": row[2],
