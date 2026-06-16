@@ -157,6 +157,16 @@ export function MatchesPage(){
   const [matches, setMatches] = useState<Match[]>([]);
   const [tab, setTab] = useState("active");
   const hasToken = !!localStorage.getItem("treqe-token");
+  // Decode user ID from JWT (doesn't depend on async auth check)
+  const getUserId = () => {
+    try {
+      const token = localStorage.getItem("treqe-token");
+      if (!token) return "";
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.sub || "";
+    } catch { return ""; }
+  };
+  const currentUserId = user?.id || getUserId();
 
   // MIB styles
   useEffect(()=>{fetch(`${BASE}mib/v12-mis-matches.html`).then(r=>r.text()).then(raw=>{
@@ -276,7 +286,7 @@ export function MatchesPage(){
         setMatches([...trades, ...purchases]);
       } catch {}
     })();
-  }, [hasToken, user]);
+  }, [hasToken]);
 
   // Action handler
   useEffect(()=>{
@@ -326,7 +336,7 @@ export function MatchesPage(){
 
   const cards = filtered.length === 0
     ? `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">No hay treqes todavía</p><br><a href="/catalogo" style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">Explorar catálogo</a></div>`
-    : filtered.map(m => renderMatchCard(m, m.participants, user?.id || "")).join("");
+    : filtered.map(m => renderMatchCard(m, m.participants, currentUserId)).join("");
 
   const header = `<div class="treqe-header"><button class="treqe-header__back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button><span class="treqe-header__title">Mis Treqes</span><span class="treqe-header__right"></span></div>`;
   const cta = `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><h2 style="font-family:'IBM Plex Sans',sans-serif;font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesión para ver tus intercambios</p><a href="/login" style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Iniciar sesión</a></div>`;
