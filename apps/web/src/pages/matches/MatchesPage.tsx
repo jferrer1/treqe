@@ -111,8 +111,30 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
     </div>`;
   }).join("");
 
+  const myStatus = myPart?.status || "pending";
+  const acceptedCount = parts.filter((p: any) => p.status === "accepted").length;
+  const totalCount = parts.length;
+
   const matchId = m.id || m.match_id || "";
   
+  // Footer depends on MY participant status
+  let footerHtml = "";
+  if (myStatus === "pending" && m.status !== "cancelled") {
+    footerHtml = `<div class="match-card__footer">
+      <button class="mib-btn mib-btn--accept" data-action="accept" data-match-id="${matchId}"><i class="fas fa-check"></i> ACEPTAR</button>
+      <button class="mib-btn mib-btn--reject" data-action="reject" data-match-id="${matchId}"><i class="fas fa-times"></i> RECHAZAR</button>
+    </div>`;
+  } else if (myStatus === "accepted" && m.status !== "active" && m.status !== "in_progress") {
+    // Waiting for others
+    footerHtml = `<div class="match-card__footer-wait">
+      <div class="match-card__wait-label"><i class="far fa-clock"></i> Esperando confirmación</div>
+      <div class="match-card__progress-bar"><div class="match-card__progress-fill" style="width:${Math.round((acceptedCount/totalCount)*100)}%"></div></div>
+      <div class="match-card__progress-text">${acceptedCount}/${totalCount} aceptado${acceptedCount!==1?'s':''}</div>
+    </div>`;
+  } else if (m.status === "active" || m.status === "in_progress" || m.status === "accepted") {
+    footerHtml = `<div class="match-card__progress"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>`;
+  }
+
   return `<div class="match-card">
     <div class="match-card__header">
       <span class="match-card__id">#TRX-${id}</span>
@@ -144,10 +166,7 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
       ${circleRows}
     </div>
 
-    ${m.status==="pending"||m.status==="active" ? `<div class="match-card__footer">
-      <button class="mib-btn mib-btn--accept" data-action="accept" data-match-id="${matchId}"><i class="fas fa-check"></i> ACEPTAR</button>
-      <button class="mib-btn mib-btn--reject" data-action="reject" data-match-id="${matchId}"><i class="fas fa-times"></i> RECHAZAR</button>
-    </div>` : m.status==="in_progress"||m.status==="accepted" ? `<div class="match-card__progress"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>` : ''}
+    ${footerHtml}
   </div>`;
 }
 
@@ -218,6 +237,13 @@ export function MatchesPage(){
       .mib-btn--accept i { color: #22c55e; font-size: .6rem; }
       .mib-btn--reject { background: #FFF; color: #DC2626; border-right: none; }
       .mib-btn--reject i { color: #DC2626; font-size: .6rem; }
+      
+      /* Waiting for others footer */
+      .match-card__footer-wait { padding: 14px 18px; border-top: 1px solid var(--border,#E5E0D8); }
+      .match-card__wait-label { font-family: 'IBM Plex Mono', monospace; font-size: .55rem; font-weight: 500; color: var(--text,#1C1915); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+      .match-card__progress-bar { height: 4px; background: var(--border,#E5E0D8); margin-bottom: 6px; }
+      .match-card__progress-fill { height: 100%; background: #1C1915; transition: width .3s; }
+      .match-card__progress-text { font-family: 'IBM Plex Mono', monospace; font-size: .45rem; color: var(--text-dim,#8A8580); text-transform: uppercase; letter-spacing: .06em; }
       
       /* Other status */
       .match-card__item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
@@ -342,18 +368,27 @@ export function MatchesPage(){
     return () => clearInterval(interval);
   }, [styles]);
 
+  // Get my participant status for a match
+  const myPartStatus = (m: Match) => {
+    if (m.type === "purchase") return m.status;
+    const parts = m.participants || [];
+    const myPart = parts.find((p: any) => p.user_id === currentUserId);
+    return myPart?.status || "pending";
+  };
+
   const counts = [
-    matches.filter(m => (m.status==="active"||m.status==="pending"||m.status==="requested") && m.type!=="purchase").length,
-    matches.filter(m => m.status==="requested" && m.type==="purchase").length,
-    matches.filter(m => m.status==="in_progress"||m.status==="accepted").length,
-    matches.filter(m => m.status==="completed").length,
+    matches.filter(m => m.type !== "purchase" && myPartStatus(m) === "pending" && m.status !== "cancelled").length,
+    matches.filter(m => m.type !== "purchase" && myPartStatus(m) === "accepted" && m.status !== "active" && m.status !== "in_progress").length,
+    matches.filter(m => (m.status === "in_progress" || m.status === "accepted" || m.status === "active") || (m.type === "purchase" && m.status === "in_progress")).length,
+    matches.filter(m => m.status === "completed").length,
   ];
 
   const filtered = matches.filter(m => {
-    if (tab==="active") return (m.status==="active"||m.status==="pending"||m.status==="requested") && m.type!=="purchase";
-    if (tab==="pending") return m.status==="requested" && m.type==="purchase";
-    if (tab==="in_progress") return m.status==="in_progress"||m.status==="accepted";
-    return m.status==="completed";
+    const ms = myPartStatus(m);
+    if (tab === "active") return m.type !== "purchase" && ms === "pending" && m.status !== "cancelled";
+    if (tab === "pending") return m.type !== "purchase" && ms === "accepted" && m.status !== "active" && m.status !== "in_progress";
+    if (tab === "in_progress") return (m.status === "in_progress" || m.status === "accepted" || m.status === "active") || (m.type === "purchase" && m.status === "in_progress");
+    return m.status === "completed";
   });
 
   const tabsHtml = KEYS.map((k, i) =>
