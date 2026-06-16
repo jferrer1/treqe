@@ -34,6 +34,7 @@ class MatchParticipant(Base):
     cash_diff: Mapped[float] = mapped_column(Float, default=0)
     status: Mapped[str] = mapped_column(String(20), default="pending")
     accepted_at: Mapped[datetime | None] = mapped_column(DateTime, default=None)
+    payment_intent_id: Mapped[str | None] = mapped_column(String(100), default=None)
 
     def to_dict(self):
         return {
