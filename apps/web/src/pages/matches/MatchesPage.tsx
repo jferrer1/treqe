@@ -81,7 +81,9 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
   const receivePrice = receiveProduct?.price ? `€${receiveProduct.price}` : "";
   const giveTitle = giveProduct?.title || "Artículo";
   const givePrice = giveProduct?.price ? `€${giveProduct.price}` : "";
-  const diffStr = cashDiff > 0 ? ` + €${cashDiff.toFixed(0)}` : cashDiff < 0 ? ` - €${Math.abs(cashDiff).toFixed(0)}` : "";
+  // Cash diff: >0 = user PAYS, <0 = user RECEIVES. Show on the appropriate side.
+  const receiveExtra = cashDiff < 0 ? ` + €${Math.abs(cashDiff).toFixed(0)}` : "";
+  const giveExtra = cashDiff > 0 ? ` + €${cashDiff.toFixed(0)}` : "";
   const myEmoji = giveProduct?.photos?.[0] ? `<img src="${giveProduct.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(giveProduct?.id||"0")}</span>`;
   const otherEmoji = receiveProduct?.photos?.[0] ? `<img src="${receiveProduct.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(receiveProduct?.id||"1")}</span>`;
 
@@ -115,7 +117,7 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
     <div class="match-card__header">
       <span class="match-card__id">#TRX-${id}</span>
       <span class="match-card__badge"><i class="fas fa-star" style="color:#E8B830;font-size:.55rem"></i> Match encontrado</span>
-      ${t ? `<span class="match-card__timer-pill"><i class="far fa-clock"></i> ${t}</span>` : '<span class="match-card__timer-pill"><i class="far fa-clock"></i> 23:59:59</span>'}
+      ${t ? `<span class="match-card__timer-pill" data-expires="${expiresAt}"><i class="far fa-clock"></i> ${t}</span>` : '<span class="match-card__timer-pill"><i class="far fa-clock"></i> 23:59:59</span>'}
     </div>
     
     <div class="match-hero">
@@ -123,7 +125,7 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
         <div class="match-hero__img" style="background:#FFF;border:1px solid var(--border,#E5E0D8)">${otherEmoji}</div>
         <div class="match-hero__title">${receiveTitle}</div>
         <div class="match-hero__meta">de ${receiveUser?.name||"Usuario"}</div>
-        <div class="match-hero__price">${receivePrice}${diffStr}</div>
+        <div class="match-hero__price">${receivePrice}${receiveExtra}</div>
       </div>
       <div class="match-hero__arrow">
         <div class="match-hero__arrow-icon"><i class="fas fa-arrow-left"></i></div>
@@ -133,7 +135,7 @@ function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId:
         <div class="match-hero__img" style="background:#FFF;border:1px solid var(--border,#E5E0D8)">${myEmoji}</div>
         <div class="match-hero__title">${giveTitle}</div>
         <div class="match-hero__meta">das tú</div>
-        <div class="match-hero__price">${givePrice}${diffStr}</div>
+        <div class="match-hero__price">${givePrice}${giveExtra}</div>
       </div>
     </div>
 
@@ -315,6 +317,22 @@ export function MatchesPage(){
     document.addEventListener('click', h);
     return () => document.removeEventListener('click', h);
   }, []);
+
+  // Live countdown timer — updates every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      document.querySelectorAll('.match-card__timer-pill[data-expires]').forEach((el: any) => {
+        const expires = new Date(el.dataset.expires).getTime();
+        const diff = expires - Date.now();
+        if (diff <= 0) { el.innerHTML = '<i class="far fa-clock"></i> Expirado'; return; }
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        el.innerHTML = `<i class="far fa-clock"></i> ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [styles]);
 
   const counts = [
     matches.filter(m => (m.status==="active"||m.status==="pending"||m.status==="requested") && m.type!=="purchase").length,
