@@ -29,10 +29,15 @@ const BADGE:Record<string,{html:string;cls:string}> = {
   completed: {html:'<i class="fas fa-check-circle"></i> Completado', cls:"badge-done"},
 };
 
-function renderMatchCard(m: Match, participants?: any[]): string {
+function renderMatchCard(m: Match, participants: any[]|undefined, currentUserId: string): string {
   const badge = BADGE[m.status] || BADGE.pending;
   const id = (m.match_id || m.id || "").slice(-6);
-  const t = timeLeft(m.timer_end || null);
+  const parts = participants || [];
+  
+  // Timer: 24h from created_at
+  const created = m.timer_end || (m as any).created_at;
+  const expiresAt = created ? new Date(new Date(created).getTime() + 24*3600*1000).toISOString() : null;
+  const t = timeLeft(expiresAt);
 
   // Purchase card (simple)
   if (m.type === "purchase") {
@@ -57,47 +62,39 @@ function renderMatchCard(m: Match, participants?: any[]): string {
     </div>`;
   }
 
-  // === MIB-STYLE TRADE CARD ===
-  const parts = participants || [];
-  const myUserId = m.my_item?.user_id || "";
+  // === MIB-STYLE TRADE CARD — uses participants from API ===
+  // Find my participant record
+  const myPart = parts.find((p: any) => p.user_id === currentUserId);
+  const myIdx = myPart ? parts.indexOf(myPart) : -1;
   
-  // Find what I receive and give from the circle
-  let receiveItem: any = m.other_item;
-  let receiveUser: any = m.other_user;
-  let giveItem = m.my_item;
-  let cashDiff = m.cash_diff || 0;
-  
-  // If we have participants, extract the trade details
-  if (parts.length >= 2) {
-    const myIdx = parts.findIndex((p: any) => p.user_id === myUserId);
-    if (myIdx >= 0) {
-      const prevIdx = (myIdx - 1 + parts.length) % parts.length;
-      const prev = parts[prevIdx];
-      receiveItem = prev.product || {title: prev.product?.title || "Artículo", price: 0};
-      receiveUser = prev.user || {name: "Usuario"};
-      giveItem = parts[myIdx].product || m.my_item || {title: "Artículo", price: 0};
-      // Cash diff from my participant record
-      cashDiff = parts[myIdx].cash_diff || 0;
-    }
-  }
+  // Figure out what I receive (from previous participant) and what I give (my product)
+  let receiveProduct = parts.length > 1 && myIdx >= 0 
+    ? parts[(myIdx - 1 + parts.length) % parts.length].product 
+    : null;
+  let receiveUser = parts.length > 1 && myIdx >= 0
+    ? parts[(myIdx - 1 + parts.length) % parts.length].user
+    : null;
+  let giveProduct = myPart?.product || null;
+  let cashDiff = myPart?.cash_diff || 0;
 
-  const receiveTitle = receiveItem?.title || "Artículo";
-  const receivePrice = receiveItem?.price ? `€${receiveItem.price}` : "";
-  const giveTitle = giveItem?.title || "Artículo";
-  const givePrice = giveItem?.price ? `€${giveItem.price}` : "";
-  const diffStr = cashDiff > 0 ? ` + €${cashDiff.toFixed(0)}` : "";
-  const myEmoji = giveItem?.photos?.[0] ? `<img src="${giveItem.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(giveItem?.id||"0")}</span>`;
-  const otherEmoji = receiveItem?.photos?.[0] ? `<img src="${receiveItem.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(receiveItem?.id||"1")}</span>`;
+  const receiveTitle = receiveProduct?.title || "Artículo";
+  const receivePrice = receiveProduct?.price ? `€${receiveProduct.price}` : "";
+  const giveTitle = giveProduct?.title || "Artículo";
+  const givePrice = giveProduct?.price ? `€${giveProduct.price}` : "";
+  const diffStr = cashDiff > 0 ? ` + €${cashDiff.toFixed(0)}` : cashDiff < 0 ? ` - €${Math.abs(cashDiff).toFixed(0)}` : "";
+  const myEmoji = giveProduct?.photos?.[0] ? `<img src="${giveProduct.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(giveProduct?.id||"0")}</span>`;
+  const otherEmoji = receiveProduct?.photos?.[0] ? `<img src="${receiveProduct.photos[0]}" style="width:100%;height:100%;object-fit:cover"/>` : `<span>${em(receiveProduct?.id||"1")}</span>`;
 
-  // Circle rows (matching MIB v12 design exactly)
+  // Circle rows (matching MIB v12)
   const circleRows = parts.map((p: any) => {
-    const isMe = p.user_id === myUserId;
+    const isMe = p.user_id === currentUserId;
     const icon = isMe ? `<div class="circle-avatar circle-avatar--me">TÚ</div>` : `<div class="circle-avatar">${(p.user?.name||"?")[0].toUpperCase()}</div>`;
     const name = isMe ? "Tú" : (p.user?.name || "Usuario");
-    const pTitle = (p.product?.title || "Artículo").length > 25 ? (p.product?.title||"Artículo").substring(0,23)+"…" : (p.product?.title||"Artículo");
-    // Who receives this person's product (next person in cycle)
+    const pTitle = (p.product?.title || "Artículo");
+    const truncated = pTitle.length > 22 ? pTitle.substring(0,20)+"…" : pTitle;
     const nextIdx = (parts.indexOf(p) + 1) % parts.length;
-    const nextName = parts[nextIdx]?.user_id === myUserId ? "Tú" : (parts[nextIdx]?.user?.name || "?");
+    const nextIsMe = parts[nextIdx]?.user_id === currentUserId;
+    const nextName = nextIsMe ? "Tú" : (parts[nextIdx]?.user?.name || "?");
     const statusClass = p.status === "accepted" ? "circle-status--ok" : "circle-status--wait";
     const statusHtml = p.status === "accepted" 
       ? '<i class="fas fa-check"></i> Aceptado'
@@ -106,12 +103,14 @@ function renderMatchCard(m: Match, participants?: any[]): string {
       ${icon}
       <div class="circle-row__info">
         <span class="circle-row__name">${name}</span>
-        <span class="circle-row__action"><i class="fas fa-arrow-right" style="font-size:.4rem;margin-right:3px"></i>${pTitle} → ${nextName}</span>
+        <span class="circle-row__action"><i class="fas fa-gift" style="font-size:.4rem;margin-right:3px"></i>${truncated} → ${nextName}</span>
       </div>
       <span class="circle-row__status ${statusClass}">${statusHtml}</span>
     </div>`;
   }).join("");
 
+  const matchId = m.id || m.match_id || "";
+  
   return `<div class="match-card">
     <div class="match-card__header">
       <span class="match-card__id">#TRX-${id}</span>
@@ -143,10 +142,10 @@ function renderMatchCard(m: Match, participants?: any[]): string {
       ${circleRows}
     </div>
 
-    ${m.status==="active" ? `<div class="match-card__footer">
-      <button class="mib-btn mib-btn--accept" data-action="accept" data-match-id="${m.id||m.match_id}"><i class="fas fa-check"></i> ACEPTAR</button>
-      <button class="mib-btn mib-btn--reject" data-action="reject" data-match-id="${m.id||m.match_id}"><i class="fas fa-times"></i> RECHAZAR</button>
-    </div>` : m.status==="in_progress" ? `<div class="match-card__progress"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>` : ''}
+    ${m.status==="pending"||m.status==="active" ? `<div class="match-card__footer">
+      <button class="mib-btn mib-btn--accept" data-action="accept" data-match-id="${matchId}"><i class="fas fa-check"></i> ACEPTAR</button>
+      <button class="mib-btn mib-btn--reject" data-action="reject" data-match-id="${matchId}"><i class="fas fa-times"></i> RECHAZAR</button>
+    </div>` : m.status==="in_progress"||m.status==="accepted" ? `<div class="match-card__progress"><span><i class="fas fa-truck"></i> Intercambio en curso</span></div>` : ''}
   </div>`;
 }
 
@@ -327,7 +326,7 @@ export function MatchesPage(){
 
   const cards = filtered.length === 0
     ? `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em">No hay treqes todavía</p><br><a href="/catalogo" style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;text-decoration:none">Explorar catálogo</a></div>`
-    : filtered.map(m => renderMatchCard(m, m.participants)).join("");
+    : filtered.map(m => renderMatchCard(m, m.participants, user?.id || "")).join("");
 
   const header = `<div class="treqe-header"><button class="treqe-header__back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button><span class="treqe-header__title">Mis Treqes</span><span class="treqe-header__right"></span></div>`;
   const cta = `<div class="notif-empty"><i class="fas fa-exchange-alt"></i><h2 style="font-family:'IBM Plex Sans',sans-serif;font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:8px">Tus treqes te esperan</h2><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);margin-bottom:24px;text-transform:uppercase;letter-spacing:.08em">Inicia sesión para ver tus intercambios</p><a href="/login" style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;padding:10px 28px;background:var(--text);color:var(--bg);cursor:pointer;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Iniciar sesión</a></div>`;
