@@ -308,15 +308,15 @@ export function MatchesPage(){
   }, []);
 
   const counts = [
-    matches.filter(m => (m.status==="active"||m.status==="requested") && m.type!=="purchase").length,
-    matches.filter(m => m.status==="pending"||(m.status==="requested"&&m.type==="purchase")).length,
+    matches.filter(m => (m.status==="active"||m.status==="pending"||m.status==="requested") && m.type!=="purchase").length,
+    matches.filter(m => m.status==="requested" && m.type==="purchase").length,
     matches.filter(m => m.status==="in_progress"||m.status==="accepted").length,
     matches.filter(m => m.status==="completed").length,
   ];
 
   const filtered = matches.filter(m => {
-    if (tab==="active") return (m.status==="active"||m.status==="requested") && m.type!=="purchase";
-    if (tab==="pending") return m.status==="pending"||(m.status==="requested"&&m.type==="purchase");
+    if (tab==="active") return (m.status==="active"||m.status==="pending"||m.status==="requested") && m.type!=="purchase";
+    if (tab==="pending") return m.status==="requested" && m.type==="purchase";
     if (tab==="in_progress") return m.status==="in_progress"||m.status==="accepted";
     return m.status==="completed";
   });
