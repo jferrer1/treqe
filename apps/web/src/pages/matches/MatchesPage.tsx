@@ -276,7 +276,7 @@ export function MatchesPage(){
         setMatches([...trades, ...purchases]);
       } catch {}
     })();
-  }, [hasToken]);
+  }, [hasToken, user]);
 
   // Action handler
   useEffect(()=>{
