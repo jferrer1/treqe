@@ -126,8 +126,11 @@ export function ProfilePage() {
           });
           setMyProducts(myItems.slice(0, 6).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "📦", color: randomColor(String(x.id)), status: x.status || "active"})));
           setLikedProducts(favItems.slice(0, 3).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "❤️", color: randomColor(String(x.id)), status: "active"})));
-        } catch (e) {
+        } catch (e: any) {
+          document.title = 'Treqe - ERROR: ' + (e.message || String(e)).substring(0, 30);
           console.error('[ProfilePage] data fetch error:', e);
+          // Show error directly on page
+          b = `<div style="padding:40px;text-align:center;font-family:var(--font-sans)"><h2>Error cargando perfil</h2><p style="color:#DC2626;font-size:.8rem">${e.message||'Error desconocido'}</p></div>` + b;
         }
       }
 
