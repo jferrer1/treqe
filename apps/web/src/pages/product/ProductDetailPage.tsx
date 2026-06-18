@@ -69,7 +69,10 @@ export function ProductDetailPage() {
 .gallery-thumbs{-ms-overflow-style:none;scrollbar-width:none}
 </style>`;
       // Ensure back arrow is always visible (template may hide it on desktop)
-      style += "<style>.detail-header{display:flex!important}</style>";
+      style += "<style>.detail-header{display:flex!important}.gallery-trade.offered{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important}</style>";
+      // Check if user already offered on this product
+      if (hasToken && id && id !== "demo") {
+        try { const offers: any = await api.get("/api/offers/mine"); const offered = new Set((offers.items||[]).map((o:any)=>o.product_id_wants)); if (offered.has(id)) style += "<style>.gallery-trade{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important;cursor:default}.gallery-trade i{color:#F9F7F2!important}.gallery-trade::after{content:' ofrecido';font-family:'IBM Plex Mono',monospace;font-size:.5rem;margin-left:6px;text-transform:uppercase;letter-spacing:.06em}</style>"; } catch {} }
       setHtml(style + body);
     })();
   }, [id]);

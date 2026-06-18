@@ -175,7 +175,7 @@ export function CatalogPage() {
       // Pre-replace hardcoded MIB values to prevent flash
       b = b.replace(/>70 art[^<]*</, ">0 art\u00EDculos<");
       b = b.replace(/<div id="pagingSentinel">[^<]*<\/div>/, '<div id="products-placeholder"></div>');
-      s = s.replace("</style>", ".item-card{display:flex;flex-direction:column;height:100%}.item-card__info{flex:1;background:var(--bg)}.search-expand{top:59%;right:45px!important}</style>");
+      s = s.replace("</style>", ".item-card{display:flex;flex-direction:column;height:100%}.item-card__info{flex:1;background:var(--bg)}.search-expand{top:59%;right:45px!important}.trade-btn.offered{background:#1C1915!important;color:#F9F7F2!important;border-color:#1C1915!important}.trade-btn.offered i{color:#F9F7F2!important}</style>");
       setHtml(s + b);
     });
   }, []);
@@ -188,6 +188,20 @@ export function CatalogPage() {
         (window as any).__treqeOffset = 10;
         (window as any).__treqeTotal = res.total || 0;
         (window as any).__treqeLoading = false;
+        // Fetch user's offers to highlight offered products
+        try { const offers: any = await api.get("/api/offers/mine"); (window as any).__treqeOfferedIds = new Set((offers.items||[]).map((o:any)=>o.product_id_wants)); } catch { (window as any).__treqeOfferedIds = new Set(); }
+        // Global highlight function
+        (window as any).highlightOffered = () => {
+          const offered = (window as any).__treqeOfferedIds as Set<string>;
+          if (!offered || offered.size === 0) return;
+          document.querySelectorAll('.trade-btn').forEach((btn: any) => {
+            const card = btn.closest('.item-card');
+            if (!card) return;
+            const href = card.getAttribute('href') || '';
+            const pid = href.split('/').pop() || '';
+            if (offered.has(pid)) btn.classList.add('offered');
+          });
+        };
       } catch { /* no API */ }
       setLoaded(true);
     })();
@@ -341,6 +355,8 @@ export function CatalogPage() {
           `).join("");
         }
         initialRenderDone.current = true;
+        // Highlight products already offered on
+        setTimeout(() => (window as any).highlightOffered?.(), 100);
       }
       att++;
     }, 200);
@@ -387,6 +403,8 @@ export function CatalogPage() {
               // Re-apply search filter if active
               const si = document.getElementById("searchInput") as HTMLInputElement | null;
               if (si?.value && (window as any).treqeSearch) (window as any).treqeSearch(si.value);
+              // Highlight offered products too
+              setTimeout(() => (window as any).highlightOffered?.(), 50);
             }
             return updated;
           });
