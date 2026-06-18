@@ -82,20 +82,24 @@ export function ProfilePage() {
 
       // If authenticated, fetch user data and inject before rendering
       if (hasToken) {
-        try {
-          const p = await api.get("/api/auth/me");
-          const myRes = await api.get("/api/products/mine");
-          const favRes = await api.get("/api/favorites");
-          const myItems = (myRes as any)?.items || (Array.isArray(myRes) ? myRes : []);
-          const favItems = (favRes as any)?.items || (Array.isArray(favRes) ? favRes : []);
-          document.title = `Treqe - ${(p as any).name || (p as any).email} (${myItems.length} prod)`;
-          
+        let userName = "";
+        let myItems: any[] = [];
+        let favItems: any[] = [];
+        let userData: any = null;
+        
+        // Each call independent — one failure doesn't block others
+        try { const p = await api.get("/api/auth/me"); userData = p; userName = (p as any).name || (p as any).email || ""; document.title = `Treqe - ${userName}`; } catch (e) { console.error('auth/me failed:', e); }
+        try { const myRes = await api.get("/api/products/mine"); myItems = (myRes as any)?.items || (Array.isArray(myRes) ? myRes : []); } catch (e) { console.error('products failed:', e); }
+        try { const favRes = await api.get("/api/favorites"); favItems = (favRes as any)?.items || (Array.isArray(favRes) ? favRes : []); } catch (e) { console.error('favorites failed:', e); }
+
+        if (!userName) {
+          b = `<div style="padding:40px;text-align:center;font-family:var(--font-sans)"><h2>Error cargando perfil</h2><p style="color:#DC2626;font-size:.8rem">No se pudo cargar tu perfil. Comprueba tu conexion.</p></div>` + b;
+        } else {
           // Inject score
-          const score = String((p as any).score || 50);
+          const score = String((userData as any).score || 50);
           b = b.replace(/(\d+)\s*<small>\/ 100<\/small>/, `${score} <small>/ 100</small>`);
           b = b.replace(/id="scoreFill"[^>]*style="width:\s*\d+%/, `id="scoreFill" style="width:${score}%`);
           
-          // Inject product lists (replace MIB hardcoded .my-item blocks)
           if (myItems.length > 0) {
             const myCards = myItems.slice(0, 6).map((x: any) => renderProduct({
               id: x.id, title: x.title, price: x.price,
@@ -112,23 +116,16 @@ export function ProfilePage() {
             b = b.replace(/(<div class="section__title"><i class="fas fa-heart"[^>]*>[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items">${favCards}</div>`);
           }
           
-          // Update stat numbers
           b = b.replace(/<span class="stat-card__number">\d+<\/span>/, `<span class="stat-card__number">${myItems.length}</span>`);
-          b = b.replace(/<span class="stat-card__number">\d+<\/span>/, (m, offset) => offset === b.indexOf('<span class="stat-card__number">') ? m : m);  // only first
           
           setProfile({
-            id: (p as any).id, email: (p as any).email, name: (p as any).name || (p as any).email?.split("@")[0] || "Usuario",
-            score: (p as any).score || 50, swaps: (p as any).swaps_completed || 0,
-            products: (p as any).products_count || 0, months: (p as any).months_active || 1,
-            verified: (p as any).verified || false
+            id: (userData as any).id, email: (userData as any).email, name: userName,
+            score: (userData as any).score || 50, swaps: (userData as any).swaps_completed || 0,
+            products: (userData as any).products_count || 0, months: (userData as any).months_active || 1,
+            verified: (userData as any).verified || false
           });
           setMyProducts(myItems.slice(0, 6).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "📦", color: randomColor(String(x.id)), status: x.status || "active"})));
           setLikedProducts(favItems.slice(0, 3).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "❤️", color: randomColor(String(x.id)), status: "active"})));
-        } catch (e: any) {
-          document.title = 'Treqe - ERROR: ' + (e.message || String(e)).substring(0, 30);
-          console.error('[ProfilePage] data fetch error:', e);
-          // Show error directly on page
-          b = `<div style="padding:40px;text-align:center;font-family:var(--font-sans)"><h2>Error cargando perfil</h2><p style="color:#DC2626;font-size:.8rem">${e.message||'Error desconocido'}</p></div>` + b;
         }
       }
 
