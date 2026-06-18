@@ -46,7 +46,6 @@ function renderProduct(p: Product, asLiked = false): string {
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const [html, setHtml] = useState("");
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
@@ -97,9 +96,9 @@ export function ProfilePage() {
     }
   }, [html]);
 
-  // Fetch user data
+  // Fetch user data — uses token directly, not auth store user (faster, no async dependency)
   useEffect(() => {
-    if (!user || !html) return;
+    if (!hasToken || !html) return;
     (async () => {
       try {
         const p: any = await api.get("/api/users/me");
@@ -107,6 +106,7 @@ export function ProfilePage() {
         const favRes: any = await api.get("/api/favorites");
         const myItems = myRes?.items || (Array.isArray(myRes) ? myRes : []);
         const favItems = favRes?.items || (Array.isArray(favRes) ? favRes : favRes?.products || []);
+        document.title = `Treqe - ${p.name || p.email} (${myItems.length} prod)`;
         console.log('[ProfilePage] user:', p.email, '| myItems:', myItems.length, '| favItems:', favItems.length, '| myRes keys:', Object.keys(myRes||{}));
         setProfile({
           id: p.id, email: p.email, name: p.name || p.email?.split("@")[0] || "Usuario",
@@ -122,10 +122,13 @@ export function ProfilePage() {
           id: x.id, title: x.title, price: x.price, emoji: x.emoji || "\u2764\uFE0F",
           color: randomColor(String(x.id)), status: "active"
         })));
-      } catch { /* use defaults */ }
-      setDataLoading(false);
+        setDataLoading(false);
+      } catch (e: any) { 
+        console.error('[ProfilePage] fetch error:', e.message || e);
+        setDataLoading(false); 
+      }
     })();
-  }, [user, html]);
+  }, [hasToken, html]);
 
   // Wire Salir button via event delegation (survives DOM resets from dangerouslySetInnerHTML)
   useEffect(() => {
