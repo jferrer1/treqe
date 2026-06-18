@@ -103,19 +103,21 @@ export function ProfilePage() {
     (async () => {
       try {
         const p: any = await api.get("/api/users/me");
-        const my: any = await api.get("/api/products/mine");
-        const fav: any = await api.get("/api/favorites");
+        const myRes: any = await api.get("/api/products/mine");
+        const favRes: any = await api.get("/api/favorites");
+        const myItems = myRes?.items || (Array.isArray(myRes) ? myRes : []);
+        const favItems = favRes?.items || (Array.isArray(favRes) ? favRes : favRes?.products || []);
         setProfile({
           id: p.id, email: p.email, name: p.name || p.email?.split("@")[0] || "Usuario",
           score: p.score || 50, swaps: p.swaps_completed || 0,
           products: p.products_count || 0, months: p.months_active || 1,
           verified: p.verified || false
         });
-        setMyProducts((my.products || my || []).slice(0, 6).map((x: any) => ({
+        setMyProducts(myItems.slice(0, 6).map((x: any) => ({
           id: x.id, title: x.title, price: x.price, emoji: x.emoji || "\uD83D\uDCE6",
           color: randomColor(String(x.id)), status: x.status || "active"
         })));
-        setLikedProducts((fav.products || fav || []).slice(0, 3).map((x: any) => ({
+        setLikedProducts(favItems.slice(0, 3).map((x: any) => ({
           id: x.id, title: x.title, price: x.price, emoji: x.emoji || "\u2764\uFE0F",
           color: randomColor(String(x.id)), status: "active"
         })));
