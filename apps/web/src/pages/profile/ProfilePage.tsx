@@ -152,12 +152,14 @@ export function ProfilePage() {
     check();
   }, [html, wired]);
 
-  // Inject real data into DOM
+  // Inject real data into DOM — runs whenever profile/products change
   useEffect(() => {
-    if (!wired || dataLoading || !profile) return;
+    if (dataLoading || !profile) return;
+    let attempts = 0;
     const check = () => {
       const scoreEl = document.querySelector(".scoring-card__score");
-      if (!scoreEl) { setTimeout(check, 200); return; }
+      if (!scoreEl) { if (attempts++ < 20) setTimeout(check, 300); return; }
+      console.log('[ProfilePage] injecting data. Products:', myProducts.length, 'Favs:', likedProducts.length);
       scoreEl.innerHTML = `${profile.score} <small>/ 100</small>`;
       const fill = document.getElementById("scoreFill");
       if (fill) fill.style.width = `${profile.score}%`;
@@ -180,7 +182,7 @@ export function ProfilePage() {
       });
     };
     check();
-  }, [wired, profile, dataLoading, myProducts, likedProducts]);
+  }, [profile, dataLoading, myProducts, likedProducts]);
 
   function wireHandlers() {
     // Global click handler for data-nav buttons
