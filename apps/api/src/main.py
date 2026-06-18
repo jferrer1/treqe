@@ -39,7 +39,25 @@ async def lifespan(app: FastAPI):
     if redis_listener:
         await redis_listener.start()
         print("[treqe] Redis listener started", file=sys.stderr)
+    
+    # Start background algorithm scheduler (every 15 min)
+    import asyncio
+    async def algorithm_loop():
+        await asyncio.sleep(30)  # Wait 30s for everything to stabilize
+        while True:
+            try:
+                from .workers.algorithm_worker import _run_matching_sync
+                cycles, _ = _run_matching_sync()
+                if len(cycles) > 0:
+                    print(f"[treqe] Background algorithm: {len(cycles)} cycles found", file=sys.stderr)
+            except Exception as e:
+                print(f"[treqe] Background algorithm error: {e}", file=sys.stderr)
+            await asyncio.sleep(900)  # 15 minutes
+    algo_task = asyncio.create_task(algorithm_loop())
+    print("[treqe] Algorithm scheduler started (every 15 min)", file=sys.stderr)
+    
     yield
+    algo_task.cancel()
     if redis_listener:
         await redis_listener.stop()
     print("[treqe] Shutting down...", file=sys.stderr)
