@@ -83,7 +83,7 @@ export function ProfilePage() {
       // If authenticated, fetch user data and inject before rendering
       if (hasToken) {
         try {
-          const p = await api.get("/api/users/me");
+          const p = await api.get("/api/auth/me");
           const myRes = await api.get("/api/products/mine");
           const favRes = await api.get("/api/favorites");
           const myItems = (myRes as any)?.items || (Array.isArray(myRes) ? myRes : []);
@@ -153,7 +153,7 @@ export function ProfilePage() {
     if (!hasToken || !html) return;
     (async () => {
       try {
-        const p: any = await api.get("/api/users/me");
+        const p: any = await api.get("/api/auth/me");
         const myRes: any = await api.get("/api/products/mine");
         const favRes: any = await api.get("/api/favorites");
         const myItems = myRes?.items || (Array.isArray(myRes) ? myRes : []);

@@ -32,7 +32,7 @@ export function PurchaseModal({ productTitle, productPrice, productId, productWe
   const [clientSecret, setClientSecret] = useState("");
   const cardRef = useRef<any>(null);
 
-  useEffect(()=>{(async()=>{try{const u:any=await api.get("/api/users/me");if(u?.location)setAddress(u.location)}catch{}})();},[]);
+  useEffect(()=>{(async()=>{try{const u:any=await api.get("/api/auth/me");if(u?.location)setAddress(u.location)}catch{}})();},[]);
   useEffect(() => {
     if (document.querySelector("#stripe-js")) return;
     const script = document.createElement("script");

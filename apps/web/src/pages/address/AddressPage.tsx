@@ -10,7 +10,7 @@ export function AddressPage() {
 
   useEffect(() => {
     if (!localStorage.getItem("treqe-token")) return;
-    api.get<any>("/api/users/me").then(u => {
+    api.get<any>("/api/auth/me").then(u => {
       if (u.address) setAddress(u.address);
     }).catch(() => {});
   }, []);
