@@ -83,32 +83,6 @@ async def accept_match(match_id: str, current_user=Depends(get_current_user),
     if part.status != "pending":
         raise HTTPException(400, f"Already {part.status}")
     
-    # Check if user needs to pay (cash_diff > 0)
-    payment_needed = part.cash_diff > 0
-    payment_intent = None
-    
-    if payment_needed:
-        # Create Stripe PaymentIntent for escrow
-        try:
-            from ..config import settings
-            import stripe
-            stripe.api_key = settings.STRIPE_SECRET_KEY
-            amount_cents = int(part.cash_diff * 100)
-            payment_intent = stripe.PaymentIntent.create(
-                amount=amount_cents,
-                currency="eur",
-                metadata={
-                    "match_id": match_id,
-                    "user_id": current_user.id,
-                    "type": "trade_escrow"
-                },
-                capture_method="manual"  # Hold funds, don't capture until all accepted
-            )
-            # Store payment intent ID on participant
-            part.payment_intent_id = payment_intent.id
-        except Exception as e:
-            raise HTTPException(500, f"Payment setup failed: {str(e)}")
-    
     part.status = "accepted"
     part.accepted_at = __import__("datetime").datetime.utcnow()
     await db.commit()
@@ -120,12 +94,7 @@ async def accept_match(match_id: str, current_user=Depends(get_current_user),
         if match:
             match.status = "active"
             await db.commit()
-    
-    result = {"ok": True, "payment_required": payment_needed}
-    if payment_intent:
-        result["client_secret"] = payment_intent.client_secret
-        result["amount"] = int(part.cash_diff * 100)
-    return result
+    return {"ok": True}
 
 
 @router.post("/{match_id}/reject")
@@ -155,50 +124,3 @@ async def cancel_match(match_id: str, current_user=Depends(get_current_user),
     match.status = "cancelled"
     await db.commit()
     return {"ok": True}
-
-
-@router.get("/{match_id}/payment")
-async def get_match_payment(match_id: str, current_user=Depends(get_current_user),
-                            db: AsyncSession = Depends(get_db)):
-    """Get payment intent info for trade escrow."""
-    part = (await db.execute(
-        select(MatchParticipant).where(MatchParticipant.match_id == match_id,
-                                       MatchParticipant.user_id == current_user.id)
-    )).scalar_one_or_none()
-    if not part or not part.payment_intent_id:
-        raise HTTPException(404, "No payment found for this match")
-    
-    try:
-        from ..config import settings
-        import stripe
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        pi = stripe.PaymentIntent.retrieve(part.payment_intent_id)
-        return {
-            "client_secret": pi.client_secret,
-            "amount": pi.amount,
-            "status": pi.status
-        }
-    except Exception as e:
-        raise HTTPException(500, str(e))
-
-
-@router.post("/{match_id}/confirm-payment")
-async def confirm_match_payment(match_id: str, current_user=Depends(get_current_user),
-                                db: AsyncSession = Depends(get_db)):
-    """Confirm (capture) the escrow payment."""
-    part = (await db.execute(
-        select(MatchParticipant).where(MatchParticipant.match_id == match_id,
-                                       MatchParticipant.user_id == current_user.id)
-    )).scalar_one_or_none()
-    if not part or not part.payment_intent_id:
-        raise HTTPException(404, "No payment found")
-    
-    try:
-        from ..config import settings
-        import stripe
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        stripe.PaymentIntent.capture(part.payment_intent_id)
-    except Exception as e:
-        raise HTTPException(500, f"Payment capture failed: {str(e)}")
-    
-    return {"ok": True, "status": "captured"}
