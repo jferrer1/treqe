@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { api } from "@/lib/api";
@@ -53,6 +53,9 @@ export function ProfilePage() {
   const [likedProducts, setLikedProducts] = useState<Product[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [wired, setWired] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const htmlPushed = useRef(false);
+  const hasToken = !!localStorage.getItem("treqe-token");
 
   // Fetch MIB HTML
   useEffect(() => {
@@ -81,6 +84,18 @@ export function ProfilePage() {
       setHtml(s + b);
     });
   }, []);
+
+  // Push HTML to DOM via ref — prevents React from resetting injected data
+  useEffect(() => {
+    htmlPushed.current = false;
+    setWired(false);
+  }, [hasToken]);
+  useEffect(() => {
+    if (containerRef.current && html && !htmlPushed.current) {
+      containerRef.current.innerHTML = html;
+      htmlPushed.current = true;
+    }
+  }, [html]);
 
   // Fetch user data
   useEffect(() => {
@@ -204,8 +219,6 @@ export function ProfilePage() {
     });
   }
 
-  const hasToken = !!localStorage.getItem("treqe-token");
-
   // Loading
   if (!html) return <div style={{ padding: 60, textAlign: "center", fontFamily: "var(--font-sans)" }}>Cargando...</div>;
 
@@ -230,5 +243,5 @@ export function ProfilePage() {
     return <div dangerouslySetInnerHTML={{ __html: styledHtml }} />;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div ref={containerRef} />;
 }
