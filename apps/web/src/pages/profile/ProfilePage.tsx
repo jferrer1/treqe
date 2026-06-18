@@ -58,7 +58,7 @@ export function ProfilePage() {
 
   // Fetch MIB HTML
   useEffect(() => {
-    fetch(`${BASE}mib/v4-perfil.html`).then(r => r.text()).then(raw => {
+    fetch(`${BASE}mib/v4-perfil.html`).then(r => r.text()).then(async raw => {
       const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
       const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
       const s = sm ? `<style>${sm[1]}</style>` : "";
@@ -79,6 +79,57 @@ export function ProfilePage() {
       b = b.replace(/(<button class="dm-toggle"[^>]*>[^<]*<\/button>)/, '$1 <button class="salir-btn" style="font-family:&quot;IBM Plex Mono&quot;,monospace;font-size:.6rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border:1px solid #E74C3C;border-radius:2px;color:#E74C3C;background:transparent;cursor:pointer;transition:all .15s">Salir</button>');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       b = rewriteMibLinks(b);
+
+      // If authenticated, fetch user data and inject before rendering
+      if (hasToken) {
+        try {
+          const [p, myRes, favRes] = await Promise.all([
+            api.get("/api/users/me"),
+            api.get("/api/products/mine"),
+            api.get("/api/favorites")
+          ]);
+          const myItems = (myRes as any)?.items || (Array.isArray(myRes) ? myRes : []);
+          const favItems = (favRes as any)?.items || (Array.isArray(favRes) ? favRes : []);
+          document.title = `Treqe - ${(p as any).name || (p as any).email} (${myItems.length} prod)`;
+          
+          // Inject score
+          const score = String((p as any).score || 50);
+          b = b.replace(/(\d+)\s*<small>\/ 100<\/small>/, `${score} <small>/ 100</small>`);
+          b = b.replace(/id="scoreFill"[^>]*style="width:\s*\d+%/, `id="scoreFill" style="width:${score}%`);
+          
+          // Inject product lists (replace MIB hardcoded .my-item blocks)
+          if (myItems.length > 0) {
+            const myCards = myItems.slice(0, 6).map((x: any) => renderProduct({
+              id: x.id, title: x.title, price: x.price,
+              emoji: x.emoji || "📦", color: randomColor(String(x.id)), status: x.status || "active"
+            })).join("");
+            b = b.replace(/(<div class="section__title">Mis art[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items">${myCards}</div>`);
+          }
+          
+          if (favItems.length > 0) {
+            const favCards = favItems.slice(0, 3).map((x: any) => renderProduct({
+              id: x.id, title: x.title, price: x.price,
+              emoji: x.emoji || "❤️", color: randomColor(String(x.id)), status: "active"
+            }, true)).join("");
+            b = b.replace(/(<div class="section__title"><i class="fas fa-heart"[^>]*>[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items">${favCards}</div>`);
+          }
+          
+          // Update stat numbers
+          b = b.replace(/<span class="stat-card__number">\d+<\/span>/, `<span class="stat-card__number">${myItems.length}</span>`);
+          b = b.replace(/<span class="stat-card__number">\d+<\/span>/, (m, offset) => offset === b.indexOf('<span class="stat-card__number">') ? m : m);  // only first
+          
+          setProfile({
+            id: (p as any).id, email: (p as any).email, name: (p as any).name || (p as any).email?.split("@")[0] || "Usuario",
+            score: (p as any).score || 50, swaps: (p as any).swaps_completed || 0,
+            products: (p as any).products_count || 0, months: (p as any).months_active || 1,
+            verified: (p as any).verified || false
+          });
+          setMyProducts(myItems.slice(0, 6).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "📦", color: randomColor(String(x.id)), status: x.status || "active"})));
+          setLikedProducts(favItems.slice(0, 3).map((x: any) => ({id: x.id, title: x.title, price: x.price, emoji: x.emoji || "❤️", color: randomColor(String(x.id)), status: "active"})));
+        } catch (e) {
+          console.error('[ProfilePage] data fetch error:', e);
+        }
+      }
 
       setHtml(s + b);
     });
