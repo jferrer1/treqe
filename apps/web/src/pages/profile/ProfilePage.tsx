@@ -83,11 +83,9 @@ export function ProfilePage() {
       // If authenticated, fetch user data and inject before rendering
       if (hasToken) {
         try {
-          const [p, myRes, favRes] = await Promise.all([
-            api.get("/api/users/me"),
-            api.get("/api/products/mine"),
-            api.get("/api/favorites")
-          ]);
+          const p = await api.get("/api/users/me");
+          const myRes = await api.get("/api/products/mine");
+          const favRes = await api.get("/api/favorites");
           const myItems = (myRes as any)?.items || (Array.isArray(myRes) ? myRes : []);
           const favItems = (favRes as any)?.items || (Array.isArray(favRes) ? favRes : []);
           document.title = `Treqe - ${(p as any).name || (p as any).email} (${myItems.length} prod)`;
