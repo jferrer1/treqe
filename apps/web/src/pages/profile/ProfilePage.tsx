@@ -107,6 +107,7 @@ export function ProfilePage() {
         const favRes: any = await api.get("/api/favorites");
         const myItems = myRes?.items || (Array.isArray(myRes) ? myRes : []);
         const favItems = favRes?.items || (Array.isArray(favRes) ? favRes : favRes?.products || []);
+        console.log('[ProfilePage] user:', p.email, '| myItems:', myItems.length, '| favItems:', favItems.length, '| myRes keys:', Object.keys(myRes||{}));
         setProfile({
           id: p.id, email: p.email, name: p.name || p.email?.split("@")[0] || "Usuario",
           score: p.score || 50, swaps: p.swaps_completed || 0,
