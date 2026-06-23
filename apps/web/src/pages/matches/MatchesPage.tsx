@@ -268,6 +268,14 @@ export function MatchesPage(){
       .mib-btn--reject { background: #FFF; color: #DC2626; border-right: none; }
       .mib-btn--reject i { color: #DC2626; font-size: .6rem; }
       
+      /* Button states */
+      .mib-btn--loading { opacity: .7; cursor: wait; }
+      .mib-btn--loading i { animation: fa-spin 1s infinite linear; }
+      .mib-btn--success { background: #1C1915; color: #22c55e; pointer-events: none; }
+      .mib-btn--success i { color: #22c55e; }
+      .mib-btn--cancelled { background: #FFF; color: #DC2626; border: 1px solid #DC2626; pointer-events: none; }
+      .mib-btn--cancelled i { color: #DC2626; }
+      
       /* Waiting for others footer */
       .match-card__footer-wait { padding: 14px 18px; border-top: 1px solid var(--border,#E5E0D8); }
       .match-card__wait-label { font-family: 'IBM Plex Mono', monospace; font-size: .55rem; font-weight: 500; color: var(--text,#1C1915); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
@@ -374,24 +382,47 @@ export function MatchesPage(){
       e.preventDefault(); e.stopPropagation();
       if (!user) { nav("/login"); return; }
       const id = btn.dataset.matchId || "";
+      
+      // Visual feedback: loading state
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btn.classList.add('mib-btn--loading');
+      btn.style.pointerEvents = 'none';
+      
       if (btn.dataset.action === "cancel") {
-        api.post(`/api/purchases/${id}/cancel`).then(() => setMatches(prev => prev.map(m => m.id === id ? {...m, status:"cancelled"} : m))).catch(()=>{});
+        api.post(`/api/purchases/${id}/cancel`).then(() => setMatches(prev => prev.map(m => m.id === id ? {...m, status:"cancelled"} : m))
+        ).catch(() => { btn.innerHTML = originalHTML; btn.classList.remove('mib-btn--loading'); btn.style.pointerEvents = ''; });
       } else {
         api.post(`/api/matches/${id}/${btn.dataset.action}`).then((res: any) => {
-          // Check if payment required (cash_diff > 0 for trade)
+          btn.classList.remove('mib-btn--loading');
+          // Check if payment required
           if (res.payment_required && res.client_secret) {
             window.location.hash = `#/pago/trade/${id}`;
             return;
           }
-          setMatches(prev => prev.map(m => {
-            if (m.id !== id && m.match_id !== id) return m;
-            if (btn.dataset.action === "reject") return {...m, status: "cancelled"};
-            const parts = (m.participants || []).map((p: any) => 
-              p.user_id === user?.id ? {...p, status: "accepted"} : p
-            );
-            return {...m, participants: parts};
-          }));
-        }).catch(()=>{});
+          // Success state
+          if (btn.dataset.action === "accept") {
+            btn.innerHTML = '<i class="fas fa-check"></i> ACEPTADO';
+            btn.classList.add('mib-btn--success');
+          } else {
+            btn.innerHTML = '<i class="fas fa-times"></i> RECHAZADO';
+            btn.classList.add('mib-btn--cancelled');
+          }
+          setTimeout(() => {
+            setMatches(prev => prev.map(m => {
+              if (m.id !== id && m.match_id !== id) return m;
+              if (btn.dataset.action === "reject") return {...m, status: "cancelled"};
+              const parts = (m.participants || []).map((p: any) => 
+                p.user_id === user?.id ? {...p, status: "accepted"} : p
+              );
+              return {...m, participants: parts};
+            }));
+          }, 600);
+        }).catch(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('mib-btn--loading');
+          btn.style.pointerEvents = '';
+        });
       }
     };
     document.addEventListener("click", h);
