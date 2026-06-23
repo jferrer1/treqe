@@ -31,6 +31,8 @@ function getTitle(el: Element): string {
   return el.querySelector(".item-card__title")?.textContent || "";
 }
 
+// Replaced by treqeApplyFilters in search.ts
+/*
 function applyFilterDOM() {
   const sel = (document.getElementById("categorySelect") as HTMLSelectElement)?.value || "";
   const activePrice = document.querySelector(".filter-quick-btn.active") as HTMLElement | null;
@@ -108,6 +110,7 @@ function applyFilterDOM() {
   }
   document.getElementById("filterModal")?.classList.remove("visible");
 }
+*/
 
 // MIB subcategory mapping
 const SUBCATEGORIES: Record<string,string[]> = {
@@ -238,7 +241,7 @@ export function CatalogPage() {
         const txt = (btn as HTMLElement).textContent || "";
         if (txt.includes("plicar") || txt.includes("Aplicar")) {
           e.stopPropagation();
-          applyFilterDOM();
+          (window as any).treqeApplyFilters?.();
           return;
         }
       }
