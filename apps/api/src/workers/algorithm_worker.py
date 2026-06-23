@@ -142,16 +142,32 @@ def _run_matching_sync():
                         "rfrom": receives_from, "diff": price_diff
                     })
                 
-                # Create notifications for each user in the cycle
-                for uid in user_ids:
+                # Create notifications for each user in the cycle — rich data
+                for i, aid in enumerate(article_ids):
+                    uid = products[aid]["user_id"]
+                    # What this user RECEIVES (from previous person in cycle)
+                    prev_aid = article_ids[(i - 1 + n) % n]
+                    receive_product = products[prev_aid]
+                    give_product = products[aid]
+                    cash = price_diff = products[prev_aid]["price"] - products[aid]["price"]
+                    
+                    body_parts = [
+                        f"Recibes: {receive_product['title']} (EUR{receive_product['price']:.0f})",
+                        f"Das: {give_product['title']} (EUR{give_product['price']:.0f})",
+                    ]
+                    if cash > 0:
+                        body_parts.append(f"Pagas EUR{cash:.0f} de diferencia")
+                    elif cash < 0:
+                        body_parts.append(f"Recibes EUR{abs(cash):.0f} de diferencia")
+                    
                     notif_id = str(__import__('uuid').uuid4())
                     conn.execute(text(
                         "INSERT INTO notifications (id, user_id, type, title, body, action_url, created_at, read) "
                         "VALUES (:id, :uid, 'new_match', :title, :msg, :url, :now, false)"
                     ), {
                         "id": notif_id, "uid": uid,
-                        "title": "Nuevo intercambio encontrado!",
-                        "msg": f"Se encontro un circulo de {len(article_ids)} articulos. Revisa tus Treqes!",
+                        "title": f"Match encontrado! #{match_id[:8]}",
+                        "msg": " | ".join(body_parts),
                         "url": "/treqes",
                         "now": datetime.utcnow()
                     })
