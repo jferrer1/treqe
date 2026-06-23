@@ -106,6 +106,9 @@ export function ProfilePage() {
               emoji: x.emoji || "📦", color: randomColor(String(x.id)), status: x.status || "active"
             })).join("");
             b = b.replace(/(<div class="section__title">Mis art[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items">${myCards}</div>`);
+          } else {
+            // Show empty state CTA instead of MIB hardcoded products
+            b = b.replace(/(<div class="section__title">Mis art[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items"><div style="text-align:center;padding:32px 16px;grid-column:1/-1"><i class="fas fa-box-open" style="font-size:1.8rem;display:block;margin-bottom:12px;opacity:.2;color:var(--text-dim)"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px">No tienes artículos todavía</p><a href="/subir" style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:8px 20px;background:var(--text);color:var(--bg);text-decoration:none;text-transform:uppercase;letter-spacing:.08em">Subir artículo</a></div></div>`);
           }
           
           if (favItems.length > 0) {
@@ -114,6 +117,8 @@ export function ProfilePage() {
               emoji: x.emoji || "❤️", color: randomColor(String(x.id)), status: "active"
             }, true)).join("");
             b = b.replace(/(<div class="section__title"><i class="fas fa-heart"[^>]*>[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items">${favCards}</div>`);
+          } else {
+            b = b.replace(/(<div class="section__title"><i class="fas fa-heart"[^>]*>[^<]*<\/span>[\s\S]*?)<div class="my-items">[\s\S]*?<\/div>/, `$1<div class="my-items"><div style="text-align:center;padding:24px 16px;grid-column:1/-1"><i class="far fa-heart" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:.15;color:var(--text-dim)"></i><p style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em">No tienes favoritos</p></div></div>`);
           }
           
           b = b.replace(/<span class="stat-card__number">\d+<\/span>/, `<span class="stat-card__number">${myItems.length}</span>`);
