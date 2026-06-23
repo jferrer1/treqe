@@ -35,6 +35,18 @@ async def lifespan(app: FastAPI):
     print("[treqe] Creating database tables...", file=sys.stderr)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Add payment columns if missing (migration for existing DB)
+        from sqlalchemy import text
+        try:
+            await conn.execute(text(
+                "ALTER TABLE match_participants ADD COLUMN IF NOT EXISTS payment_intent_id VARCHAR(100)"
+            ))
+            await conn.execute(text(
+                "ALTER TABLE match_participants ADD COLUMN IF NOT EXISTS payment_confirmed BOOLEAN DEFAULT FALSE"
+            ))
+            print("[treqe] Payment columns ensured", file=sys.stderr)
+        except Exception as e:
+            print(f"[treqe] Payment columns migration skipped: {e}", file=sys.stderr)
     print("[treqe] Database ready", file=sys.stderr)
     if redis_listener:
         await redis_listener.start()
