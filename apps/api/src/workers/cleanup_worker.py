@@ -45,6 +45,20 @@ def run_cleanup():
                 ), {"mid": mid})
                 
                 for product_id, user_id in rows2:
+                    # Refund escrow if participant paid
+                    pi_rows = conn.execute(text(
+                        "SELECT payment_intent_id FROM match_participants WHERE match_id = :mid AND user_id = :uid AND payment_confirmed = true"
+                    ), {"mid": mid, "uid": user_id})
+                    for (pi_id,) in pi_rows:
+                        if pi_id:
+                            try:
+                                import stripe, os
+                                stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
+                                stripe.Refund.create(payment_intent=pi_id)
+                                print(f"[cleanup_worker] Refunded {pi_id}", file=sys.stderr)
+                            except Exception as e:
+                                print(f"[cleanup_worker] Refund failed for {pi_id}: {e}", file=sys.stderr)
+                    
                     # Release product back to active
                     conn.execute(text(
                         "UPDATE products SET status = 'active' WHERE id = :pid"
