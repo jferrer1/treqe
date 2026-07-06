@@ -14,6 +14,16 @@
     else if (txt.startsWith('+')) { minPrice = parseFloat(txt.replace(/[^0-9]/g,'')) || 500; maxPrice = Infinity; }
     else { const parts = txt.split('-').map(s => parseFloat(s.replace(/[^0-9]/g,'')) || 0); minPrice = parts[0] || 0; maxPrice = parts[1] || Infinity; }
   }
+  // A3: custom manual price range (#priceMin/#priceMax) overrides quick buttons
+  const cMinEl = document.getElementById("priceMin") as HTMLInputElement | null;
+  const cMaxEl = document.getElementById("priceMax") as HTMLInputElement | null;
+  const cMin = cMinEl && cMinEl.value !== "" ? parseFloat(cMinEl.value) : NaN;
+  const cMax = cMaxEl && cMaxEl.value !== "" ? parseFloat(cMaxEl.value) : NaN;
+  if (!Number.isNaN(cMin) || !Number.isNaN(cMax)) {
+    minPrice = !Number.isNaN(cMin) ? cMin : 0;
+    maxPrice = !Number.isNaN(cMax) ? cMax : Infinity;
+  }
+
   const condFilter = activeCond?.dataset?.condition || "";
   
   document.querySelectorAll(".item-card").forEach((c: any) => {
@@ -41,21 +51,33 @@
   const sel = (document.getElementById("categorySelect") as HTMLSelectElement)?.value || "";
   const activePrice = document.querySelector(".filter-quick-btn.active") as HTMLElement | null;
   const activeCond = document.querySelector("#filterModal .filter-chip.active") as HTMLElement | null;
+  const cMinEl = document.getElementById("priceMin") as HTMLInputElement | null;
+  const cMaxEl = document.getElementById("priceMax") as HTMLInputElement | null;
   
   // Remove old chips
   document.getElementById("active-filters")?.remove();
   
   const activeFilters: string[] = [];
   if (sel) activeFilters.push(sel);
+  // A3: custom manual range chip takes precedence over quick-button label
+  const hasCustomMin = !!(cMinEl && cMinEl.value !== "");
+  const hasCustomMax = !!(cMaxEl && cMaxEl.value !== "");
+  let customPriceLabel = "";
+  if (hasCustomMin || hasCustomMax) {
+    const lo = hasCustomMin ? cMinEl!.value : "0";
+    const hi = hasCustomMax ? cMaxEl!.value : "\u221E";
+    customPriceLabel = `\u20AC${lo} - \u20AC${hi}`;
+  }
   const priceLabel = activePrice?.textContent?.trim();
-  if (priceLabel) activeFilters.push(priceLabel);
+  if (customPriceLabel) activeFilters.push(customPriceLabel);
+  else if (priceLabel) activeFilters.push(priceLabel);
   const condLabel = activeCond?.textContent?.trim();
   if (condLabel && condLabel !== "Cualquiera") activeFilters.push(condLabel);
   
   if (activeFilters.length > 0) {
     const container = document.createElement("div");
     container.id = "active-filters";
-    container.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;align-items:center";
+    container.className = "active-filters-bar";
     
     activeFilters.forEach(label => {
       const chip = document.createElement("span");
@@ -65,6 +87,11 @@
         chip.remove();
         // Reset corresponding filter
         if (label === sel) (document.getElementById("categorySelect") as HTMLSelectElement).value = "";
+        else if (label === customPriceLabel) {
+          if (cMinEl) cMinEl.value = "";
+          if (cMaxEl) cMaxEl.value = "";
+          document.querySelectorAll(".filter-quick-btn").forEach((b: any) => b.classList.remove("active"));
+        }
         else if (label === priceLabel) document.querySelectorAll(".filter-quick-btn").forEach((b: any) => b.classList.remove("active"));
         else if (label === condLabel) {
           document.querySelectorAll("#filterModal .filter-chip").forEach((b: any) => b.classList.remove("active"));
@@ -81,6 +108,8 @@
     clearAll.textContent = "Limpiar todo";
     clearAll.addEventListener("click", () => {
       (document.getElementById("categorySelect") as HTMLSelectElement).value = "";
+      if (cMinEl) cMinEl.value = "";
+      if (cMaxEl) cMaxEl.value = "";
       document.querySelectorAll(".filter-quick-btn").forEach((b: any) => b.classList.remove("active"));
       document.querySelectorAll("#filterModal .filter-chip").forEach((b: any) => b.classList.remove("active"));
       document.querySelector("#filterModal .filter-chip[data-condition=any]")?.classList.add("active");

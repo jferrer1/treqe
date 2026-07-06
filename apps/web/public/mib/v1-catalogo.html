@@ -141,6 +141,12 @@
       padding: 8px 24px 4px;
       align-items: center;
     }
+    /* A4: active filter chips bar aligned to toolbar box at all breakpoints */
+    .active-filters-bar {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      align-items: center;
+      padding: 8px 24px 4px;
+    }
     .tool-btn {
       display: flex; align-items: center; gap: 6px;
       padding: 8px 16px;
@@ -191,10 +197,12 @@
     @media (min-width: 600px) {
       .header { padding: 24px 32px 12px; }
       .toolbar { padding: 8px 32px 4px; }
+      .active-filters-bar { padding: 8px 32px 4px; }
     }
     @media (min-width: 1024px) {
       .header { max-width: 1200px; margin: 0 auto; padding: 32px 48px 16px; }
       .toolbar { max-width: 1200px; margin: 0 auto; padding: 8px 48px 4px; }
+      .active-filters-bar { max-width: 1200px; margin: 0 auto; padding: 8px 48px 4px; }
     }
 
     /* ===== SECTION TITLE ===== */
