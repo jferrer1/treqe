@@ -66,6 +66,16 @@
   } else if (emptyEl) {
     emptyEl.remove();
   }
+
+  // DEBUG BANNER: muestra el estado real de filtros en tiempo real (quitar cuando A3 funcione)
+  let debugEl = document.getElementById("treqe-debug");
+  if (!debugEl) {
+    debugEl = document.createElement("div");
+    debugEl.id = "treqe-debug";
+    debugEl.style.cssText = "position:fixed;bottom:8px;left:8px;z-index:9999;background:#1C1915;color:#0f0;font-family:'IBM Plex Mono',monospace;font-size:.45rem;padding:6px 10px;border-radius:2px;opacity:.85;max-width:320px;line-height:1.4";
+    document.body.appendChild(debugEl);
+  }
+  debugEl.textContent = `minPrice=${minPrice} maxPrice=${maxPrice === Infinity ? "\u221E" : maxPrice} | cMin=${cMin===cMin?cMin:"-"} cMax=${cMax===cMax?cMax:"-"} | visible=${visibleCount}/${document.querySelectorAll(".item-card").length} | customRange=${cMin===cMin||cMax===cMax}`;
 };
 
 // Enhanced filter application — also respects active search

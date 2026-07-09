@@ -1,7 +1,7 @@
 """Products router."""
 import json
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, case
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..database import get_db
 from ..models.product import Product
@@ -29,7 +29,7 @@ async def list_products(
     price_min: float | None = Query(None),
     price_max: float | None = Query(None),
     condition: str | None = Query(None),
-    sort: str = Query("newest"),
+    sort: str = Query("relevance"),
     offset: int = Query(0, ge=0),
     page: int = Query(1, ge=1),
     limit: int = Query(20, le=100),
@@ -54,8 +54,17 @@ async def list_products(
         query = query.where(Product.price <= price_max)
     if condition:
         query = query.where(Product.condition == condition)
-    sort_map = {"newest": Product.created_at.desc(), "price_asc": Product.price.asc(), "price_desc": Product.price.desc()}
-    query = query.order_by(sort_map.get(sort, Product.created_at.desc()))
+    sort_map = {
+        "relevance": [case((Product.photos != "[]", 1), else_=0).desc(), Product.created_at.desc()],
+        "newest": Product.created_at.desc(),
+        "price_asc": Product.price.asc(),
+        "price_desc": Product.price.desc(),
+    }
+    order = sort_map.get(sort, sort_map["relevance"])
+    if isinstance(order, list):
+        query = query.order_by(*order)
+    else:
+        query = query.order_by(order)
 
     count_q = select(func.count()).select_from(query.subquery())
     total = (await db.execute(count_q)).scalar() or 0
