@@ -21,6 +21,9 @@ function sortDOM(type: string) {
   if (type === "price-asc") cards.sort((a, b) => getPrice(a) - getPrice(b));
   else if (type === "price-desc") cards.sort((a, b) => getPrice(b) - getPrice(a));
   else if (type === "name") cards.sort((a, b) => getTitle(a).localeCompare(getTitle(b)));
+  else if (type === "recent" || type === "relevance") {
+    cards.sort((a, b) => getCreated(b).localeCompare(getCreated(a)));
+  }
   cards.forEach(c => grid.appendChild(c));
 }
 function getPrice(el: Element): number {
@@ -29,6 +32,9 @@ function getPrice(el: Element): number {
 }
 function getTitle(el: Element): string {
   return el.querySelector(".item-card__title")?.textContent || "";
+}
+function getCreated(el: Element): string {
+  return (el as HTMLElement).dataset.created || "";
 }
 
 // Replaced by treqeApplyFilters in search.ts
@@ -344,7 +350,7 @@ export function CatalogPage() {
           </div>`;
         } else {
           grid.innerHTML = products.map((p, i) => `
-            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}">
+            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
                 <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                 <i class="fas fa-box placeholder-icon white"></i>
@@ -387,7 +393,7 @@ export function CatalogPage() {
               const html = newItems.map((p: Product, i: number) => {
                 const idx = existing + i;
                 const img = p.photos?.[0] || p.images?.[0];
-                return `<a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}">
+                return `<a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}">
                   <div class="item-card__image" style="background:${BG[idx % BG.length]}">
                     <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                     ${img ? `<img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />` : `<i class="fas fa-box placeholder-icon white"></i>`}
