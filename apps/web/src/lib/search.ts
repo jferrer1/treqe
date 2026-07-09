@@ -40,6 +40,29 @@
     
     c.style.setProperty("display", searchMatch && catMatch && priceMatch && condMatch ? "" : "none", "important");
   });
+
+  // A6: actualizar contador de productos + empty state cuando no hay resultados
+  let visibleCount = 0;
+  document.querySelectorAll(".item-card").forEach((c: any) => {
+    if (c.style.display !== "none") visibleCount++;
+  });
+  const counter = document.querySelector(".section-title span");
+  if (counter) counter.textContent = `${visibleCount} art\u00EDculos`;
+  const emptyEl = document.getElementById("catalog-empty");
+  if (visibleCount === 0 && document.querySelectorAll(".item-card").length > 0) {
+    if (!emptyEl) {
+      const grid = document.querySelector(".catalog");
+      if (grid) {
+        const div = document.createElement("div");
+        div.id = "catalog-empty";
+        div.style.cssText = "grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;font-family:var(--font-mono);font-size:.55rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em";
+        div.innerHTML = '<i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:12px;opacity:.3"></i>Sin resultados';
+        grid.appendChild(div);
+      }
+    }
+  } else if (emptyEl) {
+    emptyEl.remove();
+  }
 };
 
 // Enhanced filter application — also respects active search
