@@ -14,14 +14,17 @@
     else if (txt.startsWith('+')) { minPrice = parseFloat(txt.replace(/[^0-9]/g,'')) || 500; maxPrice = Infinity; }
     else { const parts = txt.split('-').map(s => parseFloat(s.replace(/[^0-9]/g,'')) || 0); minPrice = parts[0] || 0; maxPrice = parts[1] || Infinity; }
   }
-  // A3: custom manual price range (#priceMin/#priceMax) overrides quick buttons
+  // A3: custom manual price range — override quick buttons with manual inputs (if any)
   const cMinEl = document.getElementById("priceMin") as HTMLInputElement | null;
   const cMaxEl = document.getElementById("priceMax") as HTMLInputElement | null;
-  const cMin = cMinEl && cMinEl.value !== "" ? parseFloat(cMinEl.value) : NaN;
-  const cMax = cMaxEl && cMaxEl.value !== "" ? parseFloat(cMaxEl.value) : NaN;
-  if (!Number.isNaN(cMin) || !Number.isNaN(cMax)) {
-    minPrice = !Number.isNaN(cMin) ? cMin : 0;
-    maxPrice = !Number.isNaN(cMax) ? cMax : Infinity;
+  const cMinVal = cMinEl?.value ?? "";
+  const cMaxVal = cMaxEl?.value ?? "";
+  const cMin = cMinVal !== "" ? parseFloat(cMinVal) : NaN;
+  const cMax = cMaxVal !== "" ? parseFloat(cMaxVal) : NaN;
+  // NaN !== NaN → false, so cMin === cMin is true only for valid numbers
+  if (cMin === cMin || cMax === cMax) {
+    minPrice = cMin === cMin ? cMin : 0;
+    maxPrice = cMax === cMax ? cMax : Infinity;
   }
 
   const condFilter = activeCond?.dataset?.condition || "";

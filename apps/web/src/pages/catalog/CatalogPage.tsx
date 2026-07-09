@@ -21,8 +21,10 @@ function sortDOM(type: string) {
   if (type === "price-asc") cards.sort((a, b) => getPrice(a) - getPrice(b));
   else if (type === "price-desc") cards.sort((a, b) => getPrice(b) - getPrice(a));
   else if (type === "name") cards.sort((a, b) => getTitle(a).localeCompare(getTitle(b)));
-  else if (type === "recent" || type === "relevance") {
+  else if (type === "recent") {
     cards.sort((a, b) => getCreated(b).localeCompare(getCreated(a)));
+  } else if (type === "relevance") {
+    cards.sort((a, b) => getOrder(a) - getOrder(b));
   }
   cards.forEach(c => grid.appendChild(c));
 }
@@ -35,6 +37,9 @@ function getTitle(el: Element): string {
 }
 function getCreated(el: Element): string {
   return (el as HTMLElement).dataset.created || "";
+}
+function getOrder(el: Element): number {
+  return parseInt((el as HTMLElement).dataset.order || "0", 10) || 0;
 }
 
 // Replaced by treqeApplyFilters in search.ts
@@ -350,7 +355,7 @@ export function CatalogPage() {
           </div>`;
         } else {
           grid.innerHTML = products.map((p, i) => `
-            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}">
+            <a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}" data-order="${i}">
               <div class="item-card__image" style="background:${BG[i % BG.length]}">
                 <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                 <i class="fas fa-box placeholder-icon white"></i>
@@ -393,7 +398,7 @@ export function CatalogPage() {
               const html = newItems.map((p: Product, i: number) => {
                 const idx = existing + i;
                 const img = p.photos?.[0] || p.images?.[0];
-                return `<a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}">
+                return `<a href="/articulo/${p.id}" class="item-card" data-category="${(p as any).category || ""}" data-condition="${p.condition || ""}" data-created="${(p as any).created_at || ""}" data-order="${existing + i}">
                   <div class="item-card__image" style="background:${BG[idx % BG.length]}">
                     <button class="like-btn" onclick="event.preventDefault();event.stopPropagation()"><i class="far fa-heart"></i></button>
                     ${img ? `<img src="${img}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />` : `<i class="fas fa-box placeholder-icon white"></i>`}
