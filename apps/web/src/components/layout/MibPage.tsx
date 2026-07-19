@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 
 interface Props { page: string; noBottomNav?: boolean; }
 
@@ -26,6 +27,7 @@ const CACHE: Record<string, string> = {};
 
 export function MibPage({ page, noBottomNav }: Props) {
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
   const [html, setHtml] = useState(CACHE[page] || "");
 
   useEffect(() => {
@@ -47,10 +49,15 @@ export function MibPage({ page, noBottomNav }: Props) {
     });
   }, [page]);
 
-  // Intercept link clicks for React Router navigation
+  // Intercept link clicks for React Router navigation + back buttons
   useEffect(() => {
     const h = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement).closest("a");
+      const target = e.target as HTMLElement;
+      // Handle back button clicks
+      const backBtn = target.closest('.treqe-header__back');
+      if (backBtn) { e.preventDefault(); navigate(-1); return; }
+      // Handle link clicks
+      const a = target.closest("a");
       if (!a) return;
       const href = a.getAttribute("href") || "";
       for (const [old, path] of Object.entries(ROUTE_MAP)) {
@@ -64,5 +71,27 @@ export function MibPage({ page, noBottomNav }: Props) {
   }, [navigate]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
+
+  // Replace profile icon with avatar when user is logged in
+  useEffect(() => {
+    if (!html || !user) return;
+    const timer = setTimeout(() => {
+      const bottomNav = document.querySelector('.bottom-nav');
+      if (!bottomNav) return;
+      const links = bottomNav.querySelectorAll('a.nav-item, .nav-item');
+      links.forEach((link) => {
+        const span = link.querySelector('span');
+        if (span && span.textContent?.trim() === 'Perfil') {
+          const icon = link.querySelector('i.far.fa-user, i.fas.fa-user');
+          if (icon) {
+            const initial = (user.name || user.email || '?').charAt(0).toUpperCase();
+            icon.outerHTML = `<span style="width:28px;height:28px;border-radius:2px;background:#1C1915;color:#F9F7F2;display:inline-flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:600;text-transform:uppercase">${initial}</span>`;
+          }
+        }
+      });
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [html, user]);
+
   return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
