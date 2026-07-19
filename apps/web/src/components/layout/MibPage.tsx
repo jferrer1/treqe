@@ -74,23 +74,33 @@ export function MibPage({ page, noBottomNav }: Props) {
 
   // Replace profile icon with avatar when user is logged in
   useEffect(() => {
-    if (!html || !user) return;
-    const timer = setTimeout(() => {
+    if (!html) return;
+    let attempts = 0;
+    const tryUpdate = () => {
       const bottomNav = document.querySelector('.bottom-nav');
-      if (!bottomNav) return;
-      const links = bottomNav.querySelectorAll('a.nav-item, .nav-item');
+      if (!bottomNav) { if (attempts++ < 20) setTimeout(tryUpdate, 200); return; }
+      const links = bottomNav.querySelectorAll('a.nav-item, a[href*="v4-perfil"], a[href*="perfil"]');
+      const currentUser = useAuthStore.getState().user;
       links.forEach((link) => {
         const span = link.querySelector('span');
-        if (span && span.textContent?.trim() === 'Perfil') {
-          const icon = link.querySelector('i.far.fa-user, i.fas.fa-user');
-          if (icon) {
-            const initial = (user.name || user.email || '?').charAt(0).toUpperCase();
-            icon.outerHTML = `<span style="width:28px;height:28px;border-radius:2px;background:#1C1915;color:#F9F7F2;display:inline-flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:600;text-transform:uppercase">${initial}</span>`;
+        if (!span) return;
+        const text = span.textContent?.trim() || '';
+        if (text === 'Perfil') {
+          const icon = link.querySelector('i.fa-user, i.far, i.fas');
+          if (!currentUser && icon) {
+            // Not logged in — ensure user icon is shown
+            if (!link.querySelector('i.fa-user')) {
+              icon.outerHTML = '<i class="far fa-user"></i>';
+            }
+          } else if (currentUser) {
+            const initial = ((currentUser.name || currentUser.email || '?').charAt(0)).toUpperCase();
+            const avatarHtml = `<span style="width:28px;height:28px;border-radius:2px;background:#1C1915;color:#F9F7F2;display:inline-flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:600;text-transform:uppercase">${initial}</span>`;
+            if (icon) icon.outerHTML = avatarHtml;
           }
         }
       });
-    }, 50);
-    return () => clearTimeout(timer);
+    };
+    setTimeout(tryUpdate, 100);
   }, [html, user]);
 
   return <div dangerouslySetInnerHTML={{__html: html}} />;
