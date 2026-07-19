@@ -3,9 +3,9 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
 
 interface BlogPost {
-  id: number; slug: string; title: string; excerpt: string | null;
-  content: string; category: string; image_url: string | null;
-  read_time: number; published_at: string | null; featured: boolean;
+  id: number|string; slug: string; title: string; excerpt: string | null;
+  content?: string; body?: string; category?: string; image_url?: string | null;
+  read_time?: number; published_at?: string | null; created_at?: string | null; featured?: boolean;
 }
 
 const CATS = [
@@ -33,7 +33,7 @@ export function BlogPage() {
     if (slug) {
       api.get<BlogPost>(`/api/blog/${slug}`).then(setPost).catch(() => setPost(null)).finally(() => setLoading(false));
     } else {
-      api.get<{ posts: BlogPost[] }>("/api/blog/?limit=50").then(r => setPosts(r.posts || [])).catch(() => {}).finally(() => setLoading(false));
+      api.get<{ posts: BlogPost[]; items: BlogPost[] }>("/api/blog/?limit=50").then(r => setPosts(r.posts || r.items || [])).catch(() => {}).finally(() => setLoading(false));
     }
   }, [slug]);
 
@@ -52,15 +52,15 @@ export function BlogPage() {
          !post ? <p style={{textAlign:"center",color:"#8A8580",padding:40}}>Artículo no encontrado</p> : (
           <article style={S.postArt}>
             <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:16}}>
-              <span style={{...S.catTag,border:"none"}}>{post.category}</span>
+              <span style={{...S.catTag,border:"none"}}>{post.category || ''}</span>
               <span style={{color:"#A09A94"}}>·</span>
-              <span style={S.meta}>{fmt(post.published_at)}</span>
+              <span style={S.meta}>{fmt(post.published_at || post.created_at || null)}</span>
               <span style={{color:"#A09A94"}}>·</span>
-              <span style={S.meta}>{post.read_time} min lectura</span>
+              <span style={S.meta}>{post.read_time || 0} min lectura</span>
             </div>
             <h1 style={S.postTitle}>{post.title}</h1>
             {post.excerpt && <p style={S.postSub}>{post.excerpt}</p>}
-            <div style={S.postBody} dangerouslySetInnerHTML={{__html: post.content}} />
+            <div style={S.postBody} dangerouslySetInnerHTML={{__html: post.body || post.content || ''}} />
             <div style={{marginTop:32,paddingTop:24,borderTop:"1px solid #E5E0D8"}}>
               <Link to="/blog" style={{...S.backBtn,textDecoration:"none"}}>← Volver al blog</Link>
             </div>
@@ -71,8 +71,8 @@ export function BlogPage() {
   );
 
   // List view
-  const filtered = useMemo(() => activeCat === "all" ? posts : posts.filter(p => p.category === activeCat), [posts, activeCat]);
-  const featured = useMemo(() => filtered.find(p => p.featured) || filtered[0], [filtered]);
+  const filtered = useMemo(() => activeCat === "all" ? posts : posts.filter(p => p.category || '' === activeCat), [posts, activeCat]);
+  const featured = useMemo(() => filtered.find(p => p.featured || false) || filtered[0], [filtered]);
   const grid = useMemo(() => filtered.filter(p => p.slug !== featured?.slug).slice(0, visible), [filtered, featured, visible]);
 
   return (
@@ -122,11 +122,11 @@ export function BlogPage() {
             <div style={S.grid}>
               {grid.map(p => (
                 <Link key={p.id} to={`/blog/${p.slug}`} style={S.card}>
-                  <div style={S.cardThumb}><span style={{fontFamily:FM,fontSize:".8rem",color:"#55504B",fontWeight:600}}>{p.category.charAt(0).toUpperCase()}</span></div>
+                  <div style={S.cardThumb}><span style={{fontFamily:FM,fontSize:".8rem",color:"#55504B",fontWeight:600}}>{(p.category || '').charAt(0).toUpperCase()}</span></div>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap",marginBottom:4}}>
-                      <span style={S.meta}>{fmt(p.published_at)}</span>
-                      <span style={S.catTag}>{CATS.find(c=>c.key===p.category)?.label||p.category}</span>
+                      <span style={S.meta}>{fmt(p.published_at || p.created_at || null)}</span>
+                      <span style={S.catTag}>{CATS.find(c=>c.key===(p.category||''))?.label||(p.category||'')}</span>
                     </div>
                     <div style={S.cardTitle}>{p.title}</div>
                     <div style={S.cardExc}>{p.excerpt}</div>
@@ -153,7 +153,7 @@ export function BlogPage() {
               <div style={S.sbCard}>
                 <h3 style={S.sbH3}>Categorías</h3>
                 <ul style={{listStyle:"none",padding:0,margin:0}}>
-                  {CATS.filter(c=>c.key!=="all").map(c=>{const n=posts.filter(p=>p.category===c.key).length;return(
+                  {CATS.filter(c=>c.key!=="all").map(c=>{const n=posts.filter(p=>(p.category||'')===c.key).length;return(
                     <li key={c.key} style={S.sbLi} onClick={()=>setActiveCat(c.key)}><span>{c.label}</span><span style={S.sbBadge}>{n}</span></li>
                   )})}
                 </ul>
