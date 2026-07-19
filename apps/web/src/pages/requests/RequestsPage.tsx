@@ -54,8 +54,8 @@ export function RequestsPage() {
                 Recibes: {o.product_wanted?.title || "Articulo"}{o.product_wanted?.price ? ` (${o.product_wanted.price} EUR)` : ""}
               </div>
               <div style={{display:"flex",gap:8}}>
-                {o.product_wanted?.id && <Link to={`/articulo/${o.product_wanted.id}`} style={{fontSize:".75rem",color:"#1C1915",textDecoration:"underline"}}>Ver articulo</Link>}
-                {o.status !== "cancelled" && o.status !== "rejected" && <button onClick={() => handleCancel(o.id)} style={{fontSize:".75rem",color:"#DC2626",background:"none",border:"none",cursor:"pointer",textDecoration:"underline"}}>Cancelar</button>}
+                {o.product_wanted?.id && <Link to={`/articulo/${o.product_wanted.id}`} style={{fontSize:".65rem",color:"#55504B",fontFamily:"'IBM Plex Mono',monospace",textTransform:"uppercase",letterSpacing:".08em",padding:"6px 12px",border:"1px solid #E5E0D8",borderRadius:2,textDecoration:"none",background:"#FFF"}}>Ver articulo</Link>}
+                {o.status !== "cancelled" && o.status !== "rejected" && <button onClick={() => handleCancel(o.id)} style={{fontSize:".6rem",color:"#DC2626",fontFamily:"'IBM Plex Mono',monospace",textTransform:"uppercase",letterSpacing:".08em",padding:"6px 12px",border:"1px solid #FECACA",borderRadius:2,background:"#FEF2F2",cursor:"pointer"}}>Cancelar</button>}
               </div>
             </div>
           );
