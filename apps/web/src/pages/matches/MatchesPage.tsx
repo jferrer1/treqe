@@ -357,8 +357,13 @@ export function MatchesPage(){
           status: p.status === "requested" ? "pending" : p.status === "accepted" ? "in_progress" : p.status
         }));
         // Convert unmatched offers to pseudo-matches for Pendientes tab
+        // Only collect product IDs from non-cancelled trades
         const matchedProductIds = new Set<string>();
-        trades.forEach((t: any) => (t.participants || []).forEach((p: any) => matchedProductIds.add(p.product_id)));
+        trades.forEach((t: any) => {
+          if (t.status !== "cancelled" && t.status !== "rejected") {
+            (t.participants || []).forEach((p: any) => matchedProductIds.add(p.product_id));
+          }
+        });
         const pendingOffers = ((or_ as any).items || or_ || [])
           .filter((o: any) => o.status === "active" || o.status === "pending")
           .filter((o: any) => !matchedProductIds.has(o.product_id_offers) && !matchedProductIds.has(o.product_id_wants))
