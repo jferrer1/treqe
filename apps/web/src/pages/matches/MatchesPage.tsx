@@ -342,10 +342,9 @@ export function MatchesPage(){
     if (!hasToken) return;
     (async()=>{
       try {
-        const [mr, pr, or_] = await Promise.all([
+        const [mr, pr] = await Promise.all([
           api.get("/api/matches/"),
-          api.get("/api/purchases/"),
-          api.get("/api/offers/mine")
+          api.get("/api/purchases/")
         ]);
         const trades = ((mr as any).items || mr || []).map((m: any) => ({...m, type: "trade"}));
         const seen = new Set<string>();
