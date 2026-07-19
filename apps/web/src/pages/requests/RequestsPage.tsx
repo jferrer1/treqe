@@ -32,14 +32,14 @@ export function RequestsPage() {
     <div style={{fontFamily:"'IBM Plex Sans',sans-serif",background:"#F9F7F2",minHeight:"100vh"}}>
       <div className="treqe-header"><div className="treqe-header__left">
         <button className="treqe-header__back" onClick={() => navigate(-1)}><i className="fas fa-chevron-left"></i></button>
-        <span className="treqe-header__title">Mis solicitudes</span>
+        <span className="treqe-header__title">Mis ofertas</span>
       </div></div>
       <div style={{padding:"20px 16px",maxWidth:480,margin:"0 auto"}}>
         {loading ? <p style={{textAlign:"center",color:"#8A8580"}}>Cargando...</p> :
          offers.length === 0 ? (
           <div style={{textAlign:"center",padding:"40px 20px",color:"#8A8580",fontSize:".85rem"}}>
             <i className="fas fa-paper-plane" style={{fontSize:"2rem",display:"block",marginBottom:12,opacity:.3}}></i>
-            No has enviado solicitudes todavia
+            No has hecho ninguna oferta todavia
           </div>
         ) : offers.map(o => {
           const b = statusBadge(o.status);

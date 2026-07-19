@@ -48,13 +48,13 @@ function HubPage() {
       { n: "Mis Treqes", p: "/treqes", note: "" },
       { n: "Match notification", p: "/match/demo", note: "" },
       { n: "Seguimiento", p: "/seguimiento/demo", note: "" },
-      { n: "Pago", p: "/pago/demo/demo", note: "" },
+      { n: "Pago", p: "/pago/trade/PENDING", note: "match real" },
       { n: "Disputa", p: "/disputa/demo/demo", note: "" },
     ]},
     { cat: "Social", items: [
       { n: "Avisos", p: "/avisos", note: "" },
       { n: "Favoritos", p: "/favoritos", note: "" },
-      { n: "Mis solicitudes", p: "/mis-solicitudes", note: "" },
+      { n: "Mis ofertas", p: "/mis-solicitudes", note: "" },
     ]},
     { cat: "Legal & Info", items: [
       { n: "Aviso legal", p: "/legal/aviso", note: "" },
