@@ -1,100 +1,134 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, type FormEvent } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
-
-const BASE = import.meta.env.BASE_URL;
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
   const { login, register, user } = useAuthStore();
-  const [html, setHtml] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Redirect to catalog if already logged in
-  useEffect(() => { if (user) navigate("/catalogo", { replace: true }); }, [user, navigate]);
+  // Redirect if already logged in
+  if (user) { navigate("/catalogo", { replace: true }); return null; }
 
-  useEffect(() => {
-    fetch(`${BASE}mib/v10-registro.html`).then(r => r.text()).then(raw => {
-      const sm = raw.match(/<style>([\s\S]*?)<\/style>/);
-      const bm = raw.match(/<body>([\s\S]*?)<\/body>/);
-      let s = sm ? `<style>${sm[1]}</style>` : "";
-      let b = bm ? bm[1] : "";
-      b = b.replace(/<script[\s\S]*?<\/script>/g, "");
-      b = b.replace(/\s+on\w+="[^"]*"/g, "");
-      b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
-      b = b.replace("<form", '<div id="login-error-root"></div><form action="javascript:void(0)"');
-      b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (!email || !password) { setError("Todos los campos son obligatorios."); return; }
+    if (mode === "register" && !name.trim()) { setError("El nombre es obligatorio."); return; }
+    setLoading(true);
+    try {
       if (mode === "login") {
-        b = b.replace(/¿Ya tienes cuenta\? <a[^>]*>Iniciar sesión<\/a>/, '<span style="color:var(--text-sub)">¿No tienes cuenta? </span><a href="/registro" style="color:var(--text-sub);text-decoration:underline">Crear cuenta</a>');
+        await login(email, password);
       } else {
-        b = b.replace(/¿Ya tienes cuenta\? <a[^>]*>Iniciar sesión<\/a>/, '<span style="color:var(--text-sub)">¿Ya tienes cuenta? </span><a href="/login" style="color:var(--text-sub);text-decoration:underline">Iniciar sesión</a>');
+        await register(email, password, name.trim() || email.split("@")[0]);
       }
-      setHtml(s + b);
-    });
-  }, [mode]);
+      const err = useAuthStore.getState().error;
+      if (err) { setError(err); setLoading(false); return; }
+      navigate("/catalogo", { replace: true });
+    } catch {
+      setError("Error de conexión. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  useEffect(() => {
-    if (!html) return;
-    let retries = 0;
-    const iv = setInterval(() => {
-      const form = document.querySelector("form");
-      if (!form && retries < 20) { retries++; return; }
-      clearInterval(iv);
-      if (!form) return;
-      const nameGrp = form.querySelector(".form-group");
-      const title = document.querySelector("h2");
-      const sub = document.querySelector(".sub");
-      const submitBtn = form.querySelector('button[type="submit"]');
-      const termsDiv = document.querySelector(".checkbox-group");
+  return (
+    <div style={{ minHeight:"100vh",background:"#F9F7F2",fontFamily:"'IBM Plex Sans',sans-serif",display:"flex",flexDirection:"column" }}>
+      {/* Header */}
+      <div style={{ display:"flex",alignItems:"center",padding:"12px 16px",borderBottom:"1px solid #E5E0D8",background:"#F9F7F2" }}>
+        <button onClick={() => navigate(-1)} style={{ background:"none",border:"1px solid #E5E0D8",borderRadius:2,padding:"6px 12px",cursor:"pointer",fontFamily:"'IBM Plex Mono',monospace",fontSize:".55rem",textTransform:"uppercase",letterSpacing:".1em",color:"#55504B" }}>
+          ←
+        </button>
+      </div>
 
-      if (mode === "login") {
-        if (title) title.textContent = "Iniciar sesión";
-        if (sub) sub.textContent = "Accede a tu cuenta de Treqe.";
-        if (submitBtn) submitBtn.innerHTML = 'Iniciar sesión <i class="fas fa-arrow-right"></i>';
-        if (nameGrp) { (nameGrp as HTMLElement).style.display = "none"; const ni = nameGrp.querySelector('input') as HTMLInputElement; if (ni) ni.removeAttribute('required'); }
-        if (termsDiv) { (termsDiv as HTMLElement).style.display = "none"; const cb = termsDiv.querySelector('input') as HTMLInputElement; if (cb) cb.removeAttribute('required'); }
-      } else {
-        if (title) title.textContent = "Crear cuenta";
-        if (sub) sub.textContent = "Únete a la comunidad de intercambio circular.";
-        if (submitBtn) submitBtn.innerHTML = 'Crear cuenta <i class="fas fa-arrow-right"></i>';
-        if (nameGrp) (nameGrp as HTMLElement).style.display = "block";
-        if (termsDiv) (termsDiv as HTMLElement).style.display = "block";
-      }
+      {/* Form */}
+      <div style={{ flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem 1rem" }}>
+        <div style={{ background:"#FFF",border:"1px solid #E5E0D8",borderRadius:2,padding:"40px 36px",width:"100%",maxWidth:420 }}>
+          <h1 style={{ fontSize:"1.3rem",fontWeight:400,letterSpacing:"-.5px",color:"#1C1915",marginBottom:6 }}>
+            {mode === "login" ? "Iniciar sesión" : "Crear cuenta"}
+          </h1>
+          <p style={{ fontSize:".82rem",color:"#6B6560",marginBottom:28 }}>
+            {mode === "login" ? "Accede a tu cuenta de Treqe." : "Únete a la comunidad de intercambio circular."}
+          </p>
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = (form.querySelector('input[type="email"]') as HTMLInputElement)?.value;
-        const password = (form.querySelector('input[type="password"]') as HTMLInputElement)?.value;
-        if (!email || !password) return;
+          {error && (
+            <div style={{ padding:"12px 14px",background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:8,marginBottom:20 }}>
+              <p style={{ fontSize:".85rem",color:"#991B1B",margin:0,lineHeight:1.5 }}>
+                ⚠️ {error}
+              </p>
+              {mode === "login" && error.toLowerCase().includes("incorrect") && (
+                <p style={{ fontSize:".8rem",color:"#7F1D1D",margin:"8px 0 0",lineHeight:1.5 }}>
+                  <Link to="/recuperar-password" style={{ color:"#1C1915",fontWeight:500 }}>¿Olvidaste tu contraseña? Recuperar acceso</Link>
+                  <br />
+                  <Link to="/registro" style={{ color:"#6B6560",fontSize:".75rem" }}>¿No tienes cuenta? Regístrate aquí</Link>
+                </p>
+              )}
+            </div>
+          )}
 
-        // Clear previous error
-        const root = document.getElementById('login-error-root');
-        if (root) root.innerHTML = '';
+          <form onSubmit={handleSubmit} style={{ display:"flex",flexDirection:"column",gap:18 }}>
+            {mode === "register" && (
+              <label style={labelStyle}>
+                Nombre
+                <input type="text" value={name} onChange={e => setName(e.target.value)} style={inputStyle} placeholder="Tu nombre" autoFocus />
+              </label>
+            )}
+            <label style={labelStyle}>
+              Email
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} style={inputStyle} placeholder="tu@email.com" autoFocus={mode==="login"} />
+            </label>
+            <label style={labelStyle}>
+              Contraseña
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={inputStyle} placeholder="••••••••" />
+            </label>
 
-        if (mode === "login") {
-          await login(email, password);
-          const err = useAuthStore.getState().error;
-          if (err && root) {
-            root.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:16px;font-size:.85rem;color:#991B1B;font-family:\'IBM Plex Sans\',sans-serif;line-height:1.5">⚠️ <strong>Credenciales incorrectas.</strong> Revisa tu email y contraseña.<br><br><span style="color:#1C1915;font-weight:500;cursor:pointer;text-decoration:underline" onclick="window.location.hash=\'/recuperar-password\'">¿Olvidaste tu contraseña? Recuperar acceso</span><br><br><span style="color:#6B6560;font-size:.8rem;cursor:pointer;text-decoration:underline" onclick="window.location.hash=\'/registro\'">¿No tienes cuenta? Regístrate aquí</span></div>';
-            return;
-          }
-        } else {
-          const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
-          await register(email, password, nameInput?.value || email.split("@")[0]);
-          const err = useAuthStore.getState().error;
-          if (err && root) {
-            root.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:16px;font-size:.85rem;color:#991B1B">⚠️ ' + err + '</div>';
-            return;
-          }
-        }
-        if (useAuthStore.getState().user) navigate("/catalogo");
-      });
-    }, 100);
-    return () => clearInterval(iv);
-  }, [html, mode, login, register, navigate]);
+            {mode === "login" && (
+              <div style={{ textAlign:"right" }}>
+                <Link to="/recuperar-password" style={{ fontSize:".75rem",color:"#6B6560",textDecoration:"none",fontFamily:"'IBM Plex Mono',monospace" }}>
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
+            )}
 
-  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return <div dangerouslySetInnerHTML={{__html: html}} />;
+            <button type="submit" disabled={loading} style={{
+              padding:"12px 24px",fontFamily:"'IBM Plex Mono',monospace",fontSize:".65rem",
+              fontWeight:500,textTransform:"uppercase",letterSpacing:".1em",
+              background:"#1C1915",color:"#F9F7F2",border:"none",borderRadius:2,
+              cursor:loading?"not-allowed":"pointer",opacity:loading?.7:1,
+            }}>
+              {loading ? (mode === "login" ? "Entrando..." : "Creando cuenta...") : (mode === "login" ? "Entrar" : "Crear cuenta")}
+            </button>
+          </form>
+
+          <p style={{ marginTop:24,textAlign:"center",fontSize:".8rem",color:"#6B6560",borderTop:"1px solid #E5E0D8",paddingTop:20 }}>
+            {mode === "login" ? (
+              <>¿No tienes cuenta? <Link to="/registro" style={{ color:"#1C1915",fontWeight:500,fontFamily:"'IBM Plex Mono',monospace",fontSize:".7rem" }}>Regístrate gratis</Link></>
+            ) : (
+              <>¿Ya tienes cuenta? <Link to="/login" style={{ color:"#1C1915",fontWeight:500,fontFamily:"'IBM Plex Mono',monospace",fontSize:".7rem" }}>Inicia sesión</Link></>
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+const labelStyle: React.CSSProperties = {
+  display:"flex",flexDirection:"column",gap:6,
+  fontSize:".7rem",fontWeight:500,color:"#55504B",
+  fontFamily:"'IBM Plex Mono',monospace",
+  textTransform:"uppercase",letterSpacing:".05em",
+};
+const inputStyle: React.CSSProperties = {
+  padding:"10px 14px",fontSize:".9rem",
+  fontFamily:"'IBM Plex Sans',sans-serif",
+  border:"1px solid #E5E0D8",borderRadius:2,
+  background:"#F9F7F2",color:"#1C1915",outline:"none",
+};
 
 export function RegisterPage() { return <AuthPage mode="register" />; }
 export function LoginPage() { return <AuthPage mode="login" />; }
