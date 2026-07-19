@@ -37,6 +37,8 @@ export function MibPage({ page, noBottomNav }: Props) {
       let b = bm ? bm[1] : "";
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
+      // Re-add back button behavior — handles double spaces after onclick stripping
+      b = b.replace(/class="treqe-header__back"\s+aria-label=/g, 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       b = b.replace(/src="\/treqe-logo\.png"/g, `src="${BASE}treqe-logo.png"`);
       if (noBottomNav) b = b.replace(/<nav class="bottom-nav"[\s\S]*?<\/nav>/g, '');
