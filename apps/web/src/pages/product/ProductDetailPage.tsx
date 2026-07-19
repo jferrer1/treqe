@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
+import { useAuthStore } from "@/stores/authStore";
 import { rewriteMibLinks } from "@/lib/mibLinks";
 import { TradeModal } from "@/components/match/TradeModal";
 import { PurchaseModal } from "@/components/payment/PurchaseModal";
@@ -10,12 +11,13 @@ const BASE = import.meta.env.BASE_URL;
 interface ProductDetail {
   id: string; title: string; description: string | null;
   price: number; category: string; condition: string;
-  photos: string[]; status: string; weight: number | null;
+  photos: string[]; status: string; weight: number | null; user_id?: string;
 }
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
   const [html, setHtml] = useState("");
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [tradeOpen, setTradeOpen] = useState(false);
@@ -57,6 +59,10 @@ export function ProductDetailPage() {
       if (productData) {
         body = body.replace(/€[0-9,.]+/g, `\u20AC${String(productData.price).replace(".", ",")}`);
         body = body.replace(/Fender Stratocaster/g, productData.title);
+        // C5: Hide trade/purchase buttons for own products
+        if (user && productData.user_id === user.id) {
+          body = body.replace(/<button[^>]*>[^<]*(?:COMPRAR|SOLICITAR|Trueque|trueque|Comprar|comprar)[^<]*<\/button>/g, '');
+        }
       }
 
       body = rewriteMibLinks(body);
