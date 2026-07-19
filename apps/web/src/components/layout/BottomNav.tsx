@@ -72,7 +72,7 @@ export function BottomNav() {
             fontSize:".7rem",fontWeight:600,
             textTransform:"uppercase"
           }}>
-            {(user.full_name || user.email || "?").charAt(0)}
+            {(user.name || user.email || "?").charAt(0)}
           </div>
         ) : (
           <i className="far fa-user" />
