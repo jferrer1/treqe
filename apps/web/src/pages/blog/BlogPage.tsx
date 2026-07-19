@@ -37,7 +37,7 @@ export function BlogPage() {
     }
   }, [slug]);
 
-  const fmt = (d: string | null) => {
+  const fmt = (d: string | null | undefined) => {
     if (!d) return ""; try { return new Date(d).toLocaleDateString("es-ES", { day:"numeric", month:"long", year:"numeric" }); } catch { return d; }
   };
 
