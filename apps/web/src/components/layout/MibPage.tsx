@@ -70,9 +70,7 @@ export function MibPage({ page, noBottomNav }: Props) {
     return () => document.removeEventListener("click", h);
   }, [navigate]);
 
-  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-
-  // Replace profile icon with avatar when user is logged in
+  // Replace profile icon with avatar — MUST be before early return (hook count)
   useEffect(() => {
     if (!html) return;
     let attempts = 0;
@@ -88,7 +86,6 @@ export function MibPage({ page, noBottomNav }: Props) {
         if (text === 'Perfil') {
           const icon = link.querySelector('i.fa-user, i.far, i.fas');
           if (!currentUser && icon) {
-            // Not logged in — ensure user icon is shown
             if (!link.querySelector('i.fa-user')) {
               icon.outerHTML = '<i class="far fa-user"></i>';
             }
@@ -102,6 +99,8 @@ export function MibPage({ page, noBottomNav }: Props) {
     };
     setTimeout(tryUpdate, 100);
   }, [html, user]);
+
+  if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
 
   return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
