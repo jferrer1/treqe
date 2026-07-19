@@ -69,11 +69,29 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
         const password = (form.querySelector('input[type="password"]') as HTMLInputElement)?.value;
         if (!email || !password) return;
 
+        // Remove previous error if any
+        const prevErr = form.querySelector('.auth-error');
+        if (prevErr) prevErr.remove();
+
         if (mode === "login") {
           await login(email, password);
+          const err = useAuthStore.getState().error;
+          if (err) {
+            const errDiv = document.createElement('div');
+            errDiv.className = 'auth-error';
+            errDiv.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:14px;font-size:.85rem;color:#991B1B">⚠️ <strong>Credenciales incorrectas.</strong> Revisa tu email y contraseña.<br><br><a href="/recuperar-password" style="color:#1C1915;font-weight:500;text-decoration:underline">¿Olvidaste tu contraseña? Recuperar acceso</a><br><br><a href="/registro" style="color:#6B6560;font-size:.8rem">¿No tienes cuenta? Regístrate aquí</a></div>';
+            submitBtn?.parentNode?.insertBefore(errDiv, submitBtn);
+          }
         } else {
           const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
           await register(email, password, nameInput?.value || email.split("@")[0]);
+          const err = useAuthStore.getState().error;
+          if (err) {
+            const errDiv = document.createElement('div');
+            errDiv.className = 'auth-error';
+            errDiv.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:14px;font-size:.85rem;color:#991B1B">⚠️ ' + err + '</div>';
+            submitBtn?.parentNode?.insertBefore(errDiv, submitBtn);
+          }
         }
         if (useAuthStore.getState().user) navigate("/catalogo");
       });

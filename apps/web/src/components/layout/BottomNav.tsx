@@ -63,7 +63,20 @@ export function BottomNav() {
         <span>Avisos</span>
       </Link>
       <Link to={user ? "/perfil" : base} className={`nav-item ${isActive("/perfil") ? "active" : ""}`}>
-        <i className="far fa-user" />
+        {user ? (
+          <div style={{
+            width:28,height:28,borderRadius:2,
+            background:"#1C1915",color:"#F9F7F2",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            fontFamily:"'IBM Plex Mono',monospace",
+            fontSize:".7rem",fontWeight:600,
+            textTransform:"uppercase"
+          }}>
+            {(user.full_name || user.email || "?").charAt(0)}
+          </div>
+        ) : (
+          <i className="far fa-user" />
+        )}
         <span>Perfil</span>
       </Link>
     </nav>

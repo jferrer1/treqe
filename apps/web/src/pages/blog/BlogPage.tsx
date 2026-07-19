@@ -3,9 +3,9 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
 
 interface BlogPost {
-  id: string; slug: string; title: string; excerpt: string | null;
-  body: string; cover_image: string | null; author: string;
-  created_at: string | null;
+  id: number; slug: string; title: string; excerpt: string | null;
+  content: string; category: string; image_url: string | null;
+  read_time: number; published_at: string | null; featured: boolean;
 }
 
 export function BlogPage() {
@@ -19,13 +19,13 @@ export function BlogPage() {
     if (slug) {
       api.get<BlogPost>(`/api/blog/${slug}`).then(setPost).catch(() => setPost(null)).finally(() => setLoading(false));
     } else {
-      api.get<{ items: BlogPost[] }>("/api/blog/").then(r => setPosts(r.items || [])).catch(() => {}).finally(() => setLoading(false));
+      api.get<{ posts: BlogPost[] }>("/api/blog/?limit=50").then(r => setPosts(r.posts || [])).catch(() => {}).finally(() => setLoading(false));
     }
   }, [slug]);
 
   const formatDate = (d: string | null) => {
     if (!d) return "";
-    try { return new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }); } catch { return ""; }
+    try { const date = new Date(d); return date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }); } catch { return d; }
   };
 
   // Single post view
@@ -39,12 +39,12 @@ export function BlogPage() {
         {loading ? <p style={{ textAlign: "center", color: "#8A8580" }}>Cargando...</p> :
          !post ? <p style={{ textAlign: "center", color: "#8A8580", padding: 40 }}>Articulo no encontrado</p> : (
           <article>
-            {post.cover_image && <img src={post.cover_image} alt={post.title} style={{ width: "100%", borderRadius: 4, marginBottom: 16, objectFit: "cover", maxHeight: 300 }} />}
+            {post.image_url && <img src={post.image_url} alt={post.title} style={{ width: "100%", borderRadius: 4, marginBottom: 16, objectFit: "cover", maxHeight: 300 }} />}
             <div style={{ fontSize: ".65rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "#8A8580", marginBottom: 8 }}>
-              {post.author} {post.created_at ? " \u00B7 " + formatDate(post.created_at) : ""}
+              {post.category} {post.published_at ? " \u00B7 " + formatDate(post.published_at) : ""} {post.read_time ? " \u00B7 " + post.read_time + " min" : ""}
             </div>
             <h1 style={{ fontSize: "1.4rem", fontWeight: 700, lineHeight: 1.3, marginBottom: 16 }}>{post.title}</h1>
-            <div style={{ fontSize: ".9rem", lineHeight: 1.7, color: "#1C1915" }} dangerouslySetInnerHTML={{ __html: post.body }} />
+            <div style={{ fontSize: ".9rem", lineHeight: 1.7, color: "#1C1915" }} dangerouslySetInnerHTML={{ __html: post.content }} />
           </article>
         )}
       </div>
@@ -66,12 +66,14 @@ export function BlogPage() {
          posts.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px 20px", color: "#8A8580" }}>
             <i className="fas fa-pen-fancy" style={{ fontSize: "2rem", display: "block", marginBottom: 12, opacity: .3 }}></i>
-            <p style={{ fontSize: ".85rem" }}>Proximamente nuevos articulos</p>
+            <p style={{ fontSize: ".85rem" }}>Próximamente nuevos artículos</p>
           </div>
         ) : posts.map(p => (
           <Link key={p.id} to={`/blog/${p.slug}`} style={{ display: "block", textDecoration: "none", color: "inherit", background: "#FFF", border: "1px solid #E5E0D8", borderRadius: 4, padding: 16, marginBottom: 12 }}>
-            <div style={{ fontSize: ".6rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "#8A8580", marginBottom: 6 }}>
-              {p.author}{p.created_at ? " \u00B7 " + formatDate(p.created_at) : ""}
+            <div style={{ fontSize: ".6rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", color: "#8A8580", marginBottom: 6, display:"flex",gap:4,alignItems:"center" }}>
+              <span style={{background:"#E5E0D8",padding:"1px 7px",borderRadius:2,fontSize:".45rem",color:"#55504B"}}>{p.category}</span>
+              {p.published_at ? " \u00B7 " + formatDate(p.published_at) : ""}
+              {p.read_time ? " \u00B7 " + p.read_time + " min lectura" : ""}
             </div>
             <h2 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: 6, lineHeight: 1.3 }}>{p.title}</h2>
             {p.excerpt && <p style={{ fontSize: ".8rem", color: "#8A8580", lineHeight: 1.4 }}>{p.excerpt}</p>}
