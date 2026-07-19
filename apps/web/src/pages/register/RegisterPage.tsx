@@ -22,6 +22,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       // Re-add back button behavior
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
+      b = b.replace("<form", '<form action="javascript:void(0)"');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       // Fix toggle link
       // Replace toggle link — only the one that exists in the original HTML
