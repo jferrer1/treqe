@@ -40,9 +40,14 @@ export function RootLayout() {
     const t1 = setTimeout(update, 200);
     const t2 = setTimeout(update, 1000);
     // Watch for DOM changes that add new bottom-nav elements
-    const obs = new MutationObserver(() => { setTimeout(update, 50); });
-    obs.observe(document.body, { childList: true, subtree: true });
-    return () => { clearTimeout(t1); clearTimeout(t2); obs.disconnect(); };
+    let obs: MutationObserver | null = null;
+    try {
+      if (document.body) {
+        obs = new MutationObserver(() => { setTimeout(update, 50); });
+        obs.observe(document.body, { childList: true, subtree: true });
+      }
+    } catch { /* SSR or not ready */ }
+    return () => { clearTimeout(t1); clearTimeout(t2); obs?.disconnect(); };
   }, []);
 
   // Re-run when user changes
