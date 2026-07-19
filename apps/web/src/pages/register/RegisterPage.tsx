@@ -26,11 +26,9 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
       } else {
         await register(email, password, name.trim() || email.split("@")[0]);
       }
-      const err = useAuthStore.getState().error;
-      if (err) { setError(err); setLoading(false); return; }
       navigate("/catalogo", { replace: true });
-    } catch {
-      setError("Error de conexión. Inténtalo de nuevo.");
+    } catch (e: any) {
+      setError(e.message || "Error de conexión. Inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
