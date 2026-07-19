@@ -94,6 +94,22 @@ export function ProductDetailPage() {
     }
   }, [html]);
 
+  // C5: Remove trade/purchase buttons for own products via DOM
+  useEffect(() => {
+    if (!htmlPushed.current || !containerRef.current || !product || !user) return;
+    if (product.user_id !== user.id) return;
+    const timer = setTimeout(() => {
+      const btns = containerRef.current?.querySelectorAll('button');
+      btns?.forEach(btn => {
+        const text = btn.textContent || '';
+        if (/comprar|solicitar|trueque|intercambio|COMPRAR|SOLICITAR/i.test(text)) {
+          btn.remove();
+        }
+      });
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [html, product, user]);
+
   // Register gallery navigation functions on window (innerHTML scripts don't execute)
   useEffect(() => {
     (window as any).goToSlide = (i: number) => {
