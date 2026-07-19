@@ -8,7 +8,6 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const navigate = useNavigate();
   const { login, register, user } = useAuthStore();
   const [html, setHtml] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
 
   // Redirect to catalog if already logged in
   useEffect(() => { if (user) navigate("/catalogo", { replace: true }); }, [user, navigate]);
@@ -22,7 +21,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
       b = b.replace(/<script[\s\S]*?<\/script>/g, "");
       b = b.replace(/\s+on\w+="[^"]*"/g, "");
       b = b.replace('class="treqe-header__back" aria-label=', 'onclick="window.history.back()" class="treqe-header__back" aria-label=');
-      b = b.replace("<form", '<form action="javascript:void(0)"');
+      b = b.replace("<form", '<div id="login-error-root"></div><form');
       b = b.replace(/src="\.\.\/\.\.\/assets\/treqe-logo-mib\.png"/g, `src="${BASE}treqe-logo.png"`);
       if (mode === "login") {
         b = b.replace(/¿Ya tienes cuenta\? <a[^>]*>Iniciar sesión<\/a>/, '<span style="color:var(--text-sub)">¿No tienes cuenta? </span><a href="/registro" style="color:var(--text-sub);text-decoration:underline">Crear cuenta</a>');
@@ -63,24 +62,27 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        setErrorMsg("");
         const email = (form.querySelector('input[type="email"]') as HTMLInputElement)?.value;
         const password = (form.querySelector('input[type="password"]') as HTMLInputElement)?.value;
         if (!email || !password) return;
 
+        // Clear previous error
+        const root = document.getElementById('login-error-root');
+        if (root) root.innerHTML = '';
+
         if (mode === "login") {
           await login(email, password);
           const err = useAuthStore.getState().error;
-          if (err) {
-            setErrorMsg('⚠️ <strong>Credenciales incorrectas.</strong> Revisa tu email y contraseña.<br><br><a href="/recuperar-password" style="color:#1C1915;font-weight:500;text-decoration:underline">¿Olvidaste tu contraseña? Recuperar acceso</a><br><br><a href="/registro" style="color:#6B6560;font-size:.8rem">¿No tienes cuenta? Regístrate aquí</a>');
+          if (err && root) {
+            root.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:16px;font-size:.85rem;color:#991B1B;font-family:\'IBM Plex Sans\',sans-serif;line-height:1.5">⚠️ <strong>Credenciales incorrectas.</strong> Revisa tu email y contraseña.<br><br><span style="color:#1C1915;font-weight:500;cursor:pointer;text-decoration:underline" onclick="window.location.hash=\'/recuperar-password\'">¿Olvidaste tu contraseña? Recuperar acceso</span><br><br><span style="color:#6B6560;font-size:.8rem;cursor:pointer;text-decoration:underline" onclick="window.location.hash=\'/registro\'">¿No tienes cuenta? Regístrate aquí</span></div>';
             return;
           }
         } else {
           const nameInput = form.querySelector('input[type="text"]') as HTMLInputElement;
           await register(email, password, nameInput?.value || email.split("@")[0]);
           const err = useAuthStore.getState().error;
-          if (err) {
-            setErrorMsg('⚠️ ' + err);
+          if (err && root) {
+            root.innerHTML = '<div style="padding:12px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;margin-bottom:16px;font-size:.85rem;color:#991B1B">⚠️ ' + err + '</div>';
             return;
           }
         }
@@ -91,20 +93,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   }, [html, mode, login, register, navigate]);
 
   if (!html) return <div style={{padding:60,textAlign:"center",fontFamily:"var(--font-sans)"}}>Cargando...</div>;
-  return (
-    <div>
-      {errorMsg && (
-        <div style={{
-          maxWidth: 400, margin: "16px auto 0",
-          padding: "12px 16px", background: "#FEF2F2",
-          border: "1px solid #FECACA", borderRadius: 8,
-          fontSize: ".85rem", color: "#991B1B", lineHeight: 1.5,
-          fontFamily: "'IBM Plex Sans',sans-serif",
-        }} dangerouslySetInnerHTML={{__html: errorMsg}} />
-      )}
-      <div dangerouslySetInnerHTML={{__html: html}} />
-    </div>
-  );
+  return <div dangerouslySetInnerHTML={{__html: html}} />;
 }
 
 export function RegisterPage() { return <AuthPage mode="register" />; }
